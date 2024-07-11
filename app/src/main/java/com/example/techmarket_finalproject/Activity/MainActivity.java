@@ -1,14 +1,11 @@
 package com.example.techmarket_finalproject.Activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.techmarket_finalproject.Adapter.PopularAdapter;
@@ -29,6 +26,13 @@ public class MainActivity extends AppCompatActivity {
 
         statusBarColor();
         initRecyclerView();
+        bottomNavigation();
+    }
+
+    private void bottomNavigation() {
+        activityMainBinding.cartMenuButton.setOnClickListener(v -> {
+            startActivity(new Intent(MainActivity.this, CartActivity.class));
+        });
     }
 
     private void statusBarColor() {
