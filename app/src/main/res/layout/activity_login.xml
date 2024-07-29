@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activity.LoginActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="50dp"
                 android:text="Sign In"
-                android:textSize="18dp"
+                android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -32,7 +36,7 @@
                 android:layout_marginTop="50dp"
                 android:text="@string/welcome_back"
                 android:textColor="@color/black"
-                android:textSize="30dp"
+                android:textSize="30sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -47,7 +51,7 @@
                 android:paddingLeft="70dp"
                 android:paddingRight="70dp"
                 android:text="Signin with your email and password or continue with social media"
-                android:textSize="13dp"
+                android:textSize="13sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/welcomeback" />
@@ -68,7 +72,7 @@
                 app:layout_constraintTop_toBottomOf="@id/signin_with_your_email">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/email"
+                    android:id="@+id/email_input_signin"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:inputType="textEmailAddress"
@@ -91,7 +95,7 @@
                 app:layout_constraintTop_toBottomOf="@id/email_textinputlayout">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/password"
+                    android:id="@+id/password_input_signin"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:inputType="textPassword"
@@ -129,14 +133,14 @@
 
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/continue_button"
+                android:id="@+id/signin_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="55dp"
                 android:background="@drawable/continue_background"
                 android:paddingStart="50dp"
                 android:paddingEnd="50dp"
-                android:text="Continue"
+                android:text="@string/sign_in_btn"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="20sp"
@@ -150,7 +154,7 @@
                 android:layout_marginTop="30dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/continue_button">
+                app:layout_constraintTop_toBottomOf="@id/signin_button">
 
                 <TextView
                     android:id="@+id/dont_have_account"
@@ -183,7 +187,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="50dp"
                 android:text="Sign Up"
-                android:textSize="18dp"
+                android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -210,7 +214,7 @@
                 android:paddingLeft="70dp"
                 android:paddingRight="70dp"
                 android:text="Signin with your email and password or continue with social media"
-                android:textSize="13dp"
+                android:textSize="13sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/create_account" />
@@ -220,7 +224,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="50dp"
-                android:hint="Your Name"
+                android:hint="@string/your_name"
                 android:paddingStart="25dp"
                 android:paddingRight="25dp"
                 android:textColorHint="@color/green"
@@ -231,7 +235,7 @@
                 app:layout_constraintTop_toBottomOf="@id/signin_with_your_email2">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/name"
+                    android:id="@+id/username_input_signup"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:inputType="textEmailAddress"
@@ -255,7 +259,7 @@
                 app:layout_constraintTop_toBottomOf="@id/name_textinputlayout">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/email2"
+                    android:id="@+id/email_input_signup"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:inputType="textEmailAddress"
@@ -278,7 +282,7 @@
                 app:layout_constraintTop_toBottomOf="@id/email_textinputlayout2">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/password2"
+                    android:id="@+id/password_input_signup"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:inputType="textPassword"
@@ -303,7 +307,7 @@
                 app:layout_constraintTop_toBottomOf="@id/password_textinputlayout2">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/reenter_password"
+                    android:id="@+id/re_password_input_signup"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:inputType="textPassword"
@@ -354,4 +358,4 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
-</layout>
+</androidx.constraintlayout.widget.ConstraintLayout>

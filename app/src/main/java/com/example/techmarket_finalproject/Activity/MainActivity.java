@@ -1,22 +1,30 @@
 package com.example.techmarket_finalproject.Activity;
 
+import static com.example.techmarket_finalproject.Util.DatabaseManager.getUserFromDatabase;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Window;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.techmarket_finalproject.Adapter.PopularAdapter;
+import com.example.techmarket_finalproject.Model.User;
 import com.example.techmarket_finalproject.R;
+import com.example.techmarket_finalproject.Util.UserCallBack;
 import com.example.techmarket_finalproject.databinding.ActivityMainBinding;
 import com.example.techmarket_finalproject.domain.PopularDomain;
+import com.google.firebase.database.DatabaseError;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     ActivityMainBinding activityMainBinding;
+    private TextView welcomeUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,9 +32,25 @@ public class MainActivity extends AppCompatActivity {
         activityMainBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(activityMainBinding.getRoot());
 
+        welcomeUser = findViewById(R.id.welcome_user_name);
+
         statusBarColor();
         initRecyclerView();
         bottomNavigation();
+
+        String userId = getIntent().getStringExtra("userId");
+        getUserFromDatabase(userId, new UserCallBack() {
+            @Override
+            public void onSuccess(User user) {
+                welcomeUser.setText(user.getName());
+            }
+
+            @Override
+            public void onFailure(DatabaseError error) {
+
+            }
+        });
+
     }
 
     private void bottomNavigation() {
