@@ -25,6 +25,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     ActivityMainBinding activityMainBinding;
     private TextView welcomeUser;
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         initRecyclerView();
         bottomNavigation();
 
-        String userId = getIntent().getStringExtra("userId");
+        userId = getIntent().getStringExtra("userId");
         getUserFromDatabase(userId, new UserCallBack() {
             @Override
             public void onSuccess(User user) {
@@ -57,6 +58,15 @@ public class MainActivity extends AppCompatActivity {
         activityMainBinding.cartMenuButton.setOnClickListener(v -> {
             startActivity(new Intent(MainActivity.this, CartActivity.class));
         });
+
+        activityMainBinding.profileMenuButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("userId", userId);
+            intent.putExtras(bundle);
+            startActivity(intent);
+            finish();
+        });
     }
 
     private void statusBarColor() {
@@ -69,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         items.add(new PopularDomain("T-shirt black", "item_1", 15, 4, 500, "testttttttttttttttttttttttt"));
         items.add(new PopularDomain("Smart Watch", "item_2", 10, 4.5, 450, "testttttttttttttttttttttttt"));
         items.add(new PopularDomain("Phone", "item_3", 3, 4.9, 800, "testttttttttttttttttttttttt"));
+        items.add(new PopularDomain("Phone", "b_1", 3, 4.9, 800, "testttttttttttttttttttttttt"));
 
         activityMainBinding.popularView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         activityMainBinding.popularView.setAdapter(new PopularAdapter(items));

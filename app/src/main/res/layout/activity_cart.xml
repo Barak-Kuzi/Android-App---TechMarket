@@ -33,7 +33,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
-                android:padding="16dp">
+                android:paddingTop="8dp"
+                android:paddingBottom="16dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp">
 
                 <ImageView
                     android:id="@+id/backButtonViewCart"
@@ -305,9 +308,9 @@
                 style="@android:style/Widget.Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="24dp"
                 android:background="@drawable/button_background"
-                android:text="Order Now"
+                android:text="@string/order_now"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />

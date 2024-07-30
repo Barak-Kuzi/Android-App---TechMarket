@@ -1,6 +1,5 @@
 package com.example.techmarket_finalproject.Activity;
 
-import static androidx.core.content.ContextCompat.startActivity;
 import static com.example.techmarket_finalproject.Util.DatabaseManager.addUserToDatabase;
 
 import android.content.Intent;
@@ -16,20 +15,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.techmarket_finalproject.R;
-import com.example.techmarket_finalproject.Util.DatabaseManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 
 public class LoginActivity extends AppCompatActivity {
 
     private TextInputEditText emailInputSignIn, passwordInputSignIn,
             emailInputSignUp, passwordInputSignUp, usernameInputSignUp,
-            re_passwordInputSignUp;
+            re_passwordInputSignUp, addressInputSignUp, phoneInputSignUp;
     private Button signInButton, signUpButton;
     private ConstraintLayout signin_page, signup_page;
     private TextView moveToSignInPage, moveToSignUpPage;
@@ -54,24 +51,7 @@ public class LoginActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
 
-        firebaseAuth = FirebaseAuth.getInstance();
-
-        emailInputSignIn = findViewById(R.id.email_input_signin);
-        passwordInputSignIn = findViewById(R.id.password_input_signin);
-
-        usernameInputSignUp = findViewById(R.id.username_input_signup);
-        emailInputSignUp = findViewById(R.id.email_input_signup);
-        passwordInputSignUp = findViewById(R.id.password_input_signup);
-        re_passwordInputSignUp = findViewById(R.id.re_password_input_signup);
-
-        signInButton = findViewById(R.id.signin_button);
-        signUpButton = findViewById(R.id.signup_button);
-
-        signin_page = findViewById(R.id.signin_page);
-        signup_page = findViewById(R.id.signup_page);
-
-        moveToSignInPage = findViewById(R.id.signin);
-        moveToSignUpPage = findViewById(R.id.signup);
+        init();
 
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,9 +64,8 @@ public class LoginActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(Task<AuthResult> task) {
                                     if (task != null && task.isSuccessful()) {
-                                        //ADD USER PREFERENCES SAVING TO NEXT SCREEN
                                         String userId = firebaseAuth.getCurrentUser().getUid();
-                                        moveToMainActivity(userId);
+                                        moveToActivity(MainActivity.class, userId);
                                         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                                     } else {
                                         // Login failed, display an error message
@@ -107,6 +86,8 @@ public class LoginActivity extends AppCompatActivity {
                     String name = usernameInputSignUp.getText().toString();
                     String email = emailInputSignUp.getText().toString().trim();
                     String password = passwordInputSignUp.getText().toString().trim();
+                    String address = addressInputSignUp.getText().toString();
+                    String phone = phoneInputSignUp.getText().toString();
 
                     firebaseAuth.createUserWithEmailAndPassword(email, password)
                             .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
@@ -114,7 +95,7 @@ public class LoginActivity extends AppCompatActivity {
                                 public void onComplete(Task<AuthResult> task) {
                                     if (task != null && task.isSuccessful()) {
                                         String userId = firebaseAuth.getCurrentUser().getUid();
-                                        addUserToDatabase(userId, name, email, password, LoginActivity.this);
+                                        addUserToDatabase(LoginActivity.this, userId, name, email, password, address, phone);
                                         signup_page.setVisibility(View.GONE);
                                         signin_page.setVisibility(View.VISIBLE);
                                         clearFields();
@@ -156,6 +137,29 @@ public class LoginActivity extends AppCompatActivity {
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
+    private void init() {
+        firebaseAuth = FirebaseAuth.getInstance();
+
+        emailInputSignIn = findViewById(R.id.email_input_signin);
+        passwordInputSignIn = findViewById(R.id.password_input_signin);
+
+        usernameInputSignUp = findViewById(R.id.username_input_signup);
+        emailInputSignUp = findViewById(R.id.email_input_signup);
+        passwordInputSignUp = findViewById(R.id.password_input_signup);
+        re_passwordInputSignUp = findViewById(R.id.re_password_input_signup);
+        addressInputSignUp = findViewById(R.id.address_input_signup);
+        phoneInputSignUp = findViewById(R.id.phone_input_signup);
+
+        signInButton = findViewById(R.id.signin_button);
+        signUpButton = findViewById(R.id.signup_button);
+
+        signin_page = findViewById(R.id.signin_page);
+        signup_page = findViewById(R.id.signup_page);
+
+        moveToSignInPage = findViewById(R.id.signin);
+        moveToSignUpPage = findViewById(R.id.signup);
+    }
+
     private void clearFields() {
         usernameInputSignUp.setText("");
         emailInputSignUp.setText("");
@@ -163,8 +167,8 @@ public class LoginActivity extends AppCompatActivity {
         re_passwordInputSignUp.setText("");
     }
 
-    private void moveToMainActivity(String userId) {
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+    private void moveToActivity(Class<?> targetActivity, String userId) {
+        Intent intent = new Intent(LoginActivity.this, targetActivity);
         Bundle bundle = new Bundle();
         bundle.putString("userId", userId);
         intent.putExtras(bundle);

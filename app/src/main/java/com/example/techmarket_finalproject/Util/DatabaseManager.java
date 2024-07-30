@@ -71,9 +71,9 @@ public class DatabaseManager {
         void onFailure(Exception e);
     }
 
-    public static void addUserToDatabase(String userId, String name, String email, String password, Context context) {
+    public static void addUserToDatabase(Context context, String userId, String name, String email, String password, String address, String phone) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
-        User user = new User(userId, name, email, password);
+        User user = new User(userId, name, email, password, address, phone);
         databaseReference.child(user.getUserId()).setValue(user).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Toast.makeText(context, "User registered successfully.", Toast.LENGTH_SHORT).show();

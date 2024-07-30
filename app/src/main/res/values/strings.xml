@@ -8,4 +8,23 @@
     <string name="welcome_back">Welcome Back</string>
     <string name="sign_in_btn">Sign In</string>
     <string name="your_name">Your Name</string>
+    <string name="logout">Logout</string>
+    <string name="create_account">Create Account</string>
+    <string name="signin_with_your_email_and_password">Signin with your email and password</string>
+    <string name="address">Address</string>
+    <string name="phone">Phone</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="email_profile">Email:</string>
+    <string name="email_profile_example">name@example.com</string>
+    <string name="password_profile">Password:</string>
+    <string name="full_name_profile">Full Name</string>
+    <string name="full_name_lbl_profile">Full Name:</string>
+    <string name="address_of_the_user">Address of the user</string>
+    <string name="home_page">Home Page</string>
+    <string name="order_now">Order Now</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="don_t_have_an_account">Don\'t have an account?</string>
+    <string name="remember_me">Remember me</string>
+    <string name="sign_in">Sign In</string>
 </resources>
