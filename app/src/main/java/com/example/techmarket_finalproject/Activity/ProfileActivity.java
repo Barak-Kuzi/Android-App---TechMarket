@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,37 +27,31 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_profile);
 
-        init();
+        User user = (User) getIntent().getSerializableExtra("user");
 
-        // Get user data from database
-        String userId = getIntent().getStringExtra("userId");
-        getUserFromDatabase(userId, new UserCallBack() {
-            @Override
-            public void onSuccess(User user) {
-                fullNameLabel.setText(user.getName());
-                usernameProfile.setText(user.getName());
-                emailProfile.setText(user.getEmail());
-                phoneProfile.setText(user.getPhone());
-                addressProfile.setText(user.getAddress());
-            }
+        if (user != null) {
+            EdgeToEdge.enable(this);
+            setContentView(R.layout.activity_profile);
+            init();
 
-            @Override
-            public void onFailure(DatabaseError error) {
-                // Handle error
-            }
-        });
+            fullNameLabel.setText(user.getName());
+            usernameProfile.setText(user.getName());
+            emailProfile.setText(user.getEmail());
+            phoneProfile.setText(user.getPhone());
+            addressProfile.setText(user.getAddress());
+        } else {
+            Toast.makeText(this, "The Page is Loading...", Toast.LENGTH_SHORT).show();
+            finish();
+        }
 
         homePageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("userId", userId);
-                intent.putExtras(bundle);
+                intent.putExtra("user", user);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -64,10 +59,9 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ProfileActivity.this, EditProfileActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("userId", userId);
-                intent.putExtras(bundle);
+                intent.putExtra("user", user);
                 startActivity(intent);
+                finish();
             }
         });
 

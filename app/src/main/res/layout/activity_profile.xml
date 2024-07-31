@@ -236,7 +236,8 @@
                                 android:layout_weight="1"
                                 android:text="@string/full_name_lbl_profile"
                                 android:textColor="#FFFF00CC"
-                                android:textSize="18sp" />
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:id="@+id/username_text_profile"
@@ -272,7 +273,8 @@
                                 android:layout_weight="1"
                                 android:text="@string/email_profile"
                                 android:textColor="#FFFF00CC"
-                                android:textSize="18sp" />
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:id="@+id/email_text_profile"
@@ -308,7 +310,8 @@
                                 android:layout_weight="1"
                                 android:text="@string/password_profile"
                                 android:textColor="#FFFF00CC"
-                                android:textSize="18sp" />
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:id="@+id/password_chane_btn"
@@ -344,7 +347,8 @@
                                 android:layout_weight="1"
                                 android:text="Phone:"
                                 android:textColor="#FFFF00CC"
-                                android:textSize="18sp" />
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:id="@+id/phone_text_profile"
@@ -380,7 +384,8 @@
                                 android:layout_weight="1"
                                 android:text="Address:"
                                 android:textColor="#FFFF00CC"
-                                android:textSize="18sp" />
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:id="@+id/address_text_profile"

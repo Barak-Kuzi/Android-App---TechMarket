@@ -22,9 +22,9 @@
                 android:id="@+id/signin_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
-                android:text="@string/sign_in"
-                android:textSize="18sp"
+                android:layout_marginTop="40dp"
+                android:text="@string/sign_in_page"
+                android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -33,10 +33,10 @@
                 android:id="@+id/welcomeback"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="40dp"
                 android:text="@string/welcome_back"
                 android:textColor="@color/black"
-                android:textSize="30sp"
+                android:textSize="32sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -46,18 +46,18 @@
                 android:id="@+id/signin_with_your_email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="8dp"
                 android:gravity="center"
                 android:paddingLeft="70dp"
                 android:paddingRight="70dp"
-                android:text="Signin with your email and password or continue with social media"
+                android:text="@string/signin_with_your_email_and_password"
                 android:textSize="13sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/welcomeback" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/email_textinputlayout"
+                android:id="@+id/email_input_layout_signin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="50dp"
@@ -81,7 +81,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/password_textinputlayout"
+                android:id="@+id/password_input_layout_signin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
@@ -92,7 +92,7 @@
                 app:endIconMode="password_toggle"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/email_textinputlayout">
+                app:layout_constraintTop_toBottomOf="@id/email_input_layout_signin">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/password_input_signin"
@@ -111,7 +111,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/password_textinputlayout" />
+                app:layout_constraintTop_toBottomOf="@id/password_input_layout_signin" />
 
             <TextView
                 android:id="@+id/rememberme_textview"
@@ -136,7 +136,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="55dp"
-                android:background="@drawable/continue_background"
+                android:background="@drawable/continue_btn_background"
                 android:paddingStart="50dp"
                 android:paddingEnd="50dp"
                 android:text="@string/sign_in_btn"
@@ -184,8 +184,8 @@
                 android:id="@+id/signup_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="48dp"
-                android:text="@string/sign_up"
+                android:layout_marginTop="40dp"
+                android:text="@string/sign_up_page"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -195,7 +195,7 @@
                 android:id="@+id/create_account"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="16dp"
                 android:text="@string/create_account"
                 android:textColor="@color/black"
                 android:textSize="32sp"
@@ -315,7 +315,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/password_textinputlayout2"
+                android:id="@+id/password_input_layout_signup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
@@ -340,18 +340,18 @@
 
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/reenter_password_textinputlayout"
+                android:id="@+id/re_password_input_layout_signup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:hint="Re-enter Password"
+                android:hint="@string/re_enter_password"
                 android:paddingStart="25dp"
                 android:paddingEnd="25dp"
                 android:textColorHint="@color/green"
                 app:endIconMode="password_toggle"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/password_textinputlayout2">
+                app:layout_constraintTop_toBottomOf="@id/password_input_layout_signup">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/re_password_input_signup"
@@ -367,22 +367,22 @@
                 android:id="@+id/signup_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:background="@drawable/continue_background"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/continue_btn_background"
                 android:paddingStart="50dp"
                 android:paddingEnd="50dp"
-                android:text="Sign Up"
+                android:text="@string/sign_up"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/reenter_password_textinputlayout" />
+                app:layout_constraintTop_toBottomOf="@id/re_password_input_layout_signup" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="24dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/signup_button">

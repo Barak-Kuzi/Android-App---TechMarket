@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import com.example.techmarket_finalproject.Activity.LoginActivity;
 import com.example.techmarket_finalproject.Model.User;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -21,54 +22,6 @@ public class DatabaseManager {
     public DatabaseManager() {
         // Initialize Firebase Database reference
         databaseReference = FirebaseDatabase.getInstance().getReference();
-    }
-
-    // Method to add data to the database
-    public void addData(String path, Object data, DatabaseOperationListener listener) {
-        databaseReference.child(path).setValue(data)
-                .addOnSuccessListener(aVoid -> listener.onSuccess())
-                .addOnFailureListener(e -> listener.onFailure(e));
-    }
-
-    // Method to update data in the database
-    public void updateData(String path, Object data, DatabaseOperationListener listener) {
-        databaseReference.child(path).updateChildren((Map<String, Object>) data)
-                .addOnSuccessListener(aVoid -> listener.onSuccess())
-                .addOnFailureListener(e -> listener.onFailure(e));
-    }
-
-    // Method to delete data from the database
-    public void deleteData(String path, DatabaseOperationListener listener) {
-        databaseReference.child(path).removeValue()
-                .addOnSuccessListener(aVoid -> listener.onSuccess())
-                .addOnFailureListener(e -> listener.onFailure(e));
-    }
-
-    // Method to retrieve data from the database
-    public void getData(String path, DataRetrievalListener listener) {
-        databaseReference.child(path).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                listener.onDataRetrieved(dataSnapshot);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                listener.onFailure(databaseError.toException());
-            }
-        });
-    }
-
-    // Listener interface for database operations
-    public interface DatabaseOperationListener {
-        void onSuccess();
-        void onFailure(Exception e);
-    }
-
-    // Listener interface for data retrieval
-    public interface DataRetrievalListener {
-        void onDataRetrieved(DataSnapshot dataSnapshot);
-        void onFailure(Exception e);
     }
 
     public static void addUserToDatabase(Context context, String userId, String name, String email, String password, String address, String phone) {
@@ -103,4 +56,14 @@ public class DatabaseManager {
         });
     }
 
+    public static void updateUserInDatabase(Context context, String userId, Map<String, Object> userMap) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
+        databaseReference.child(userId).updateChildren(userMap).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Toast.makeText(context, "User updated successfully.", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(context, "Failed to update user.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }

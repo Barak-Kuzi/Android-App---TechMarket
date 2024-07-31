@@ -8,29 +8,17 @@
     tools:context=".Activity.EditProfileActivity">
 
     <TextView
-        android:id="@+id/signup_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
-        android:text="Sign Up"
-        android:textSize="20sp"
-
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
         android:id="@+id/create_account"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Edit Your Profile"
+        android:layout_marginTop="48dp"
+        android:text="Edit Profile"
         android:textColor="@color/black"
         android:textSize="32sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/signup_textview" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/username_input_layout_signup"
@@ -57,30 +45,6 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/email_input_layout_signup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:hint="@string/email"
-        android:paddingStart="25dp"
-        android:paddingEnd="25dp"
-        android:textColorHint="@color/green"
-        app:endIconDrawable="@drawable/email"
-        app:endIconMode="custom"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/username_input_layout_signup">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/email_input_signup"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:inputType="textEmailAddress"
-            android:textColor="@color/black" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/address_input_layout_signup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -93,7 +57,7 @@
         app:endIconMode="custom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/email_input_layout_signup">
+        app:layout_constraintTop_toBottomOf="@id/username_input_layout_signup">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/address_input_signup"
@@ -129,7 +93,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/password_textinputlayout2"
+        android:id="@+id/password_input_layout_signup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
@@ -154,7 +118,7 @@
 
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/reenter_password_textinputlayout"
+        android:id="@+id/re_password_input_layout_signup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
@@ -165,7 +129,7 @@
         app:endIconMode="password_toggle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/password_textinputlayout2">
+        app:layout_constraintTop_toBottomOf="@id/password_input_layout_signup">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/re_password_input_signup"
@@ -182,15 +146,31 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:background="@drawable/continue_background"
+        android:layout_marginStart="24dp"
+        android:background="@drawable/continue_btn_background"
         android:paddingStart="50dp"
         android:paddingEnd="50dp"
-        android:text="Update Profile"
+        android:text="Confirm"
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/reenter_password_textinputlayout" />
+        app:layout_constraintTop_toBottomOf="@id/re_password_input_layout_signup" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/cancel_update_profile_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/cancel_btn_background"
+        android:paddingStart="50dp"
+        android:paddingEnd="50dp"
+        android:text="Cancel"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/update_profile_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/update_profile_button"
+        app:layout_constraintTop_toTopOf="@+id/update_profile_button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
