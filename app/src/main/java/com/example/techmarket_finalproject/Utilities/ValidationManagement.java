@@ -1,4 +1,4 @@
-package com.example.techmarket_finalproject.Util;
+package com.example.techmarket_finalproject.Utilities;
 
 public class ValidationManagement {
     private boolean emailIsValid, passwordIsValid, rePasswordIsValid, usernameIsValid, phoneIsValid, addressIsValid;

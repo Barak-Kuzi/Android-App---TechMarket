@@ -1,23 +1,35 @@
-package com.example.techmarket_finalproject.domain;
+package com.example.techmarket_finalproject.Models;
 
 import java.io.Serializable;
 
-public class PopularDomain implements Serializable {
+public class Product implements Serializable {
+    private String productId;
     private String title;
-    private String imageUrl;
+    private int imageResourceId;
     private int review;
     private double score;
-    private int numberInCart;
     private double price;
     private String description;
 
-    public PopularDomain(String title, String imageUrl, int review, double score, double price, String description) {
+    public Product() {
+    }
+
+    public Product(String productId, String title, int imageResourceId, int review, double score, double price, String description) {
+        this.productId = productId;
         this.title = title;
-        this.imageUrl = imageUrl;
+        this.imageResourceId = imageResourceId;
         this.review = review;
         this.score = score;
         this.price = price;
         this.description = description;
+    }
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
     }
 
     public String getTitle() {
@@ -28,12 +40,12 @@ public class PopularDomain implements Serializable {
         this.title = title;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public int getImageResourceId() {
+        return imageResourceId;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImageResourceId(int imageResourceId) {
+        this.imageResourceId = imageResourceId;
     }
 
     public int getReview() {
@@ -52,14 +64,6 @@ public class PopularDomain implements Serializable {
         this.score = score;
     }
 
-    public int getNumberInCart() {
-        return numberInCart;
-    }
-
-    public void setNumberInCart(int numberInCart) {
-        this.numberInCart = numberInCart;
-    }
-
     public double getPrice() {
         return price;
     }
@@ -75,4 +79,5 @@ public class PopularDomain implements Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
+
 }

@@ -1,6 +1,6 @@
-package com.example.techmarket_finalproject.Util;
+package com.example.techmarket_finalproject.Interfaces;
 
-import com.example.techmarket_finalproject.Model.User;
+import com.example.techmarket_finalproject.Models.User;
 import com.google.firebase.database.DatabaseError;
 
 public interface UserCallBack {

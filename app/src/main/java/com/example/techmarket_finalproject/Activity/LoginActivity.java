@@ -1,27 +1,27 @@
 package com.example.techmarket_finalproject.Activity;
 
-import static com.example.techmarket_finalproject.Util.DatabaseManager.addUserToDatabase;
-import static com.example.techmarket_finalproject.Util.DatabaseManager.getUserFromDatabase;
+import static com.example.techmarket_finalproject.Utilities.DatabaseManager.addUserToDatabase;
+import static com.example.techmarket_finalproject.Utilities.DatabaseManager.getUserFromDatabase;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 
-import com.example.techmarket_finalproject.Model.User;
+import com.example.techmarket_finalproject.Models.User;
 import com.example.techmarket_finalproject.R;
-import com.example.techmarket_finalproject.Util.UserCallBack;
-import com.example.techmarket_finalproject.Util.ValidationManagement;
+import com.example.techmarket_finalproject.Interfaces.UserCallBack;
+import com.example.techmarket_finalproject.Utilities.ValidationManagement;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
@@ -60,7 +60,9 @@ public class LoginActivity extends AppCompatActivity {
                             View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
                             View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
             );
-            getWindow().setStatusBarColor(Color.TRANSPARENT);
+//            getWindow().setStatusBarColor(Color.TRANSPARENT);
+            Window window = LoginActivity.this.getWindow();
+            window.setStatusBarColor(ContextCompat.getColor(LoginActivity.this, R.color.green));
         }
 
         if (getSupportActionBar() != null) {  //hide action bar

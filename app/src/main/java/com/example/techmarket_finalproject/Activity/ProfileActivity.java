@@ -1,7 +1,5 @@
 package com.example.techmarket_finalproject.Activity;
 
-import static com.example.techmarket_finalproject.Util.DatabaseManager.getUserFromDatabase;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -13,10 +11,8 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
-import com.example.techmarket_finalproject.Model.User;
+import com.example.techmarket_finalproject.Models.User;
 import com.example.techmarket_finalproject.R;
-import com.example.techmarket_finalproject.Util.UserCallBack;
-import com.google.firebase.database.DatabaseError;
 
 public class ProfileActivity extends AppCompatActivity {
 

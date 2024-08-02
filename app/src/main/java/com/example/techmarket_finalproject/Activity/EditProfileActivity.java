@@ -11,10 +11,10 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
-import com.example.techmarket_finalproject.Model.User;
+import com.example.techmarket_finalproject.Models.User;
 import com.example.techmarket_finalproject.R;
-import com.example.techmarket_finalproject.Util.DatabaseManager;
-import com.example.techmarket_finalproject.Util.ValidationManagement;
+import com.example.techmarket_finalproject.Utilities.DatabaseManager;
+import com.example.techmarket_finalproject.Utilities.ValidationManagement;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
