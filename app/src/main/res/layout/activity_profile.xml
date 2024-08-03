@@ -108,8 +108,8 @@
                                 android:orientation="vertical">
 
                                 <androidx.constraintlayout.widget.ConstraintLayout
-                                    android:layout_width="60dp"
-                                    android:layout_height="60dp"
+                                    android:layout_width="64dp"
+                                    android:layout_height="64dp"
                                     android:layout_gravity="center_horizontal"
                                     android:layout_margin="12dp"
                                     android:background="@drawable/circle_background">
@@ -148,17 +148,17 @@
                                 android:orientation="vertical">
 
                                 <androidx.constraintlayout.widget.ConstraintLayout
-                                    android:layout_width="60dp"
-                                    android:layout_height="60dp"
+                                    android:layout_width="64dp"
+                                    android:layout_height="64dp"
                                     android:layout_gravity="center_horizontal"
                                     android:layout_margin="12dp"
                                     android:background="@drawable/circle_background">
 
                                     <ImageView
-                                        android:id="@+id/settings_img"
+                                        android:id="@+id/edit_profile_img"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:src="@drawable/settings"
+                                        android:src="@drawable/edit_profile_icon"
                                         app:layout_constraintBottom_toBottomOf="parent"
                                         app:layout_constraintEnd_toEndOf="parent"
                                         app:layout_constraintStart_toStartOf="parent"
@@ -166,7 +166,7 @@
                                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                                 <TextView
-                                    android:id="@+id/settings_text"
+                                    android:id="@+id/edit_profile_text"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="8dp"
@@ -178,6 +178,7 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/admin_panel_button"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_margin="10dp"
@@ -187,17 +188,17 @@
                                 android:orientation="vertical">
 
                                 <androidx.constraintlayout.widget.ConstraintLayout
-                                    android:layout_width="60dp"
-                                    android:layout_height="60dp"
+                                    android:layout_width="64dp"
+                                    android:layout_height="64dp"
                                     android:layout_gravity="center_horizontal"
                                     android:layout_margin="12dp"
                                     android:background="@drawable/circle_background">
 
                                     <ImageView
-                                        android:id="@+id/notification_img"
+                                        android:id="@+id/admin_panel_img"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:src="@drawable/notification"
+                                        android:src="@drawable/admin_icon"
                                         app:layout_constraintBottom_toBottomOf="parent"
                                         app:layout_constraintEnd_toEndOf="parent"
                                         app:layout_constraintStart_toStartOf="parent"
@@ -205,11 +206,11 @@
                                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                                 <TextView
-                                    android:id="@+id/notification_text"
+                                    android:id="@+id/admin_panel_text"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="8dp"
-                                    android:text="Notification"
+                                    android:text="@string/admin_panel"
                                     android:textAlignment="center"
                                     android:textColor="@color/black"
                                     android:textSize="13sp"

@@ -22,7 +22,7 @@
                 android:id="@+id/signin_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="48dp"
                 android:text="@string/sign_in_page"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -148,6 +148,7 @@
                 app:layout_constraintTop_toBottomOf="@id/rememberme_textview" />
 
             <LinearLayout
+                android:id="@+id/linearLayout2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
@@ -170,6 +171,21 @@
                     android:textColor="@color/green" />
 
             </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="32dp"
+                android:indeterminate="true"
+                android:indeterminateDrawable="@drawable/progress_bar_background"
+                android:progress="0"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <!-- SignUp Page -->

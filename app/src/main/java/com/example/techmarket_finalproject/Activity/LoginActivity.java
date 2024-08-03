@@ -8,9 +8,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,9 +21,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
+import com.example.techmarket_finalproject.Interfaces.GenericCallBack;
+import com.example.techmarket_finalproject.Models.Product;
 import com.example.techmarket_finalproject.Models.User;
 import com.example.techmarket_finalproject.R;
 import com.example.techmarket_finalproject.Interfaces.UserCallBack;
+import com.example.techmarket_finalproject.Utilities.ProductManager;
 import com.example.techmarket_finalproject.Utilities.ValidationManagement;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -29,6 +35,8 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseError;
+
+import java.util.ArrayList;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -44,6 +52,8 @@ public class LoginActivity extends AppCompatActivity {
     private Button signInButton, signUpButton;
     private ConstraintLayout signin_page, signup_page;
     private TextView moveToSignInPage, moveToSignUpPage;
+
+    ProgressBar progressBar;
 
     private FirebaseAuth firebaseAuth;
 
@@ -77,36 +87,55 @@ public class LoginActivity extends AppCompatActivity {
                 String email = emailInputSignIn.getText().toString().trim();
                 String password = passwordInputSignIn.getText().toString().trim();
 
+                // Hide the keyboard
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                if (imm != null) {
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                }
+
+                progressBar.setVisibility(View.VISIBLE); // Show ProgressBar
+
                 firebaseAuth.signInWithEmailAndPassword(email, password)
                         .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-
                             @Override
                             public void onComplete(Task<AuthResult> task) {
+
+                                progressBar.setVisibility(View.GONE); // Hide ProgressBar
+
                                 if (task != null && task.isSuccessful()) {
                                     String userId = firebaseAuth.getCurrentUser().getUid();
                                     getUserFromDatabase(userId, new UserCallBack() {
                                         @Override
                                         public void onSuccess(User user) {
-                                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                            intent.putExtra("user", user);
-                                            startActivity(intent);
+                                            ProductManager.initialize(LoginActivity.this, new GenericCallBack<ArrayList<Product>>() {
+                                                @Override
+                                                public void onResponse(ArrayList<Product> response) {
+                                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                                    intent.putExtra("user", user);
+                                                    startActivity(intent);
+                                                    finish();
+                                                }
+
+                                                @Override
+                                                public void onFailure(DatabaseError error) {
+                                                    Toast.makeText(LoginActivity.this, "Failed to load products.", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
                                         }
 
                                         @Override
                                         public void onFailure(DatabaseError error) {
-
+                                            Toast.makeText(LoginActivity.this, "Failed to load user.", Toast.LENGTH_SHORT).show();
                                         }
                                     });
-
-//                                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                                 } else {
-                                    Toast.makeText(LoginActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
             }
         });
+
 
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,12 +154,15 @@ public class LoginActivity extends AppCompatActivity {
                             public void onComplete(Task<AuthResult> task) {
                                 if (task != null && task.isSuccessful()) {
                                     String userId = firebaseAuth.getCurrentUser().getUid();
-                                    addUserToDatabase(LoginActivity.this, userId, name, email, password, address, phone);
+                                    addUserToDatabase(LoginActivity.this, userId, name, email, password, address, phone, false);
                                     signup_page.setVisibility(View.GONE);
                                     signin_page.setVisibility(View.VISIBLE);
                                     clearFields();
                                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                                 } else {
+                                    if (task.getException() != null) {
+                                        Log.e("SignUpError", "Sign Up Failed", task.getException());
+                                    }
                                     Toast.makeText(LoginActivity.this, "Sign Up Failed", Toast.LENGTH_SHORT).show();
                                 }
                             }
@@ -210,6 +242,8 @@ public class LoginActivity extends AppCompatActivity {
         signInButton.setEnabled(false);
         signUpButton.setEnabled(false);
 
+
+        progressBar = findViewById(R.id.progressBar);
     }
 
     private void clearFields() {

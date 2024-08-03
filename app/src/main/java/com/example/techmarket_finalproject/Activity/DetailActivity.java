@@ -1,6 +1,7 @@
 package com.example.techmarket_finalproject.Activity;
 
 import static com.example.techmarket_finalproject.Utilities.DatabaseManager.addProductToCartInDatabase;
+import static com.example.techmarket_finalproject.Utilities.DatabaseManager.updateFavoriteProductsInDatabase;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -50,8 +51,30 @@ public class DetailActivity extends AppCompatActivity {
         activityDetailBinding.titleDetailText.setText(product.getTitle());
         activityDetailBinding.priceDetailText.setText("$" + product.getPrice());
         activityDetailBinding.descriptionDetailText.setText(product.getDescription());
-        activityDetailBinding.reviewsDetailText.setText(String.valueOf(product.getReview()));
+
         activityDetailBinding.ratingDetailText.setText(String.valueOf(product.getScore()));
+        activityDetailBinding.ratingBar.setRating((float) product.getScore());
+
+        if (user.isFavoriteProduct(product.getProductId())) {
+            activityDetailBinding.heartButton.setImageResource(R.drawable.heart);
+        } else {
+            activityDetailBinding.heartButton.setImageResource(R.drawable.empty_heart);
+        }
+
+
+        activityDetailBinding.heartButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (user.isFavoriteProduct(product.getProductId())) {
+                    user.removeFavoriteProduct(product.getProductId());
+                    activityDetailBinding.heartButton.setImageResource(R.drawable.empty_heart);
+                } else {
+                    user.addFavoriteProduct(product.getProductId());
+                    activityDetailBinding.heartButton.setImageResource(R.drawable.heart);
+                }
+                updateFavoriteProductsInDatabase(getApplicationContext(), user.getUserId(), user.getFavoriteProducts());
+            }
+        });
 
         activityDetailBinding.addToCartButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,7 +91,6 @@ public class DetailActivity extends AppCompatActivity {
         });
 
         activityDetailBinding.backButton.setOnClickListener(v ->{
-            Log.d("cart", user.getCart().toString());
             Intent intent = new Intent(DetailActivity.this, MainActivity.class);
             intent.putExtra("user", user);
             startActivity(intent);

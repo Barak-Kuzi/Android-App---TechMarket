@@ -16,6 +16,7 @@ import com.example.techmarket_finalproject.Adapters.PopularProductsAdapter;
 import com.example.techmarket_finalproject.Models.User;
 import com.example.techmarket_finalproject.R;
 
+import com.example.techmarket_finalproject.Utilities.ProductManager;
 import com.example.techmarket_finalproject.databinding.ActivityMainBinding;
 import com.example.techmarket_finalproject.Models.Product;
 
@@ -63,6 +64,13 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
+
+        activityMainBinding.favoritesMenuButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, FavoriteProductsActivity.class);
+            intent.putExtra("user", user);
+            startActivity(intent);
+            finish();
+        });
     }
 
     private void statusBarColor() {
@@ -71,15 +79,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initRecyclerView(User user) {
-        ArrayList<Product> products = new ArrayList<>();
-        products.add(new Product("P1", "T-shirt black", R.drawable.item_1, 15, 4, 500, "Description for T-shirt black"));
-        products.add(new Product("P2", "Smart Watch", R.drawable.item_2, 10, 4.5, 450, "Description for Smart Watch"));
-        products.add(new Product("P3", "Phone", R.drawable.item_3, 3, 4.9, 800, "Description for Phone"));
-        products.add(new Product("P4", "Phone", R.drawable.b_1, 3, 4.9, 800, "Description for Phone"));
-
-        addAllProductsToDatabase(this, products);
+        ArrayList<Product> products = ProductManager.getAllProducts();
 
         activityMainBinding.popularProductsView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         activityMainBinding.popularProductsView.setAdapter(new PopularProductsAdapter(products, user));
     }
+
 }

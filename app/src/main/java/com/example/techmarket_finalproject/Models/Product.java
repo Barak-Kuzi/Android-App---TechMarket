@@ -10,6 +10,7 @@ public class Product implements Serializable {
     private double score;
     private double price;
     private String description;
+    private boolean isFavorite;
 
     public Product() {
     }
@@ -22,6 +23,15 @@ public class Product implements Serializable {
         this.score = score;
         this.price = price;
         this.description = description;
+        this.isFavorite = false;
+    }
+
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
     }
 
     public String getProductId() {

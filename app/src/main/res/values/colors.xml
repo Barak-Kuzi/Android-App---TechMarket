@@ -13,4 +13,6 @@
     <color name="green">#00CF73</color>
     <color name="green2">#00B75F</color>
     <color name="purple">#874AFF</color>
+    <color name="heart_color">#D32F2F</color>
+    <color name="star_color">#FFC106</color>
 </resources>

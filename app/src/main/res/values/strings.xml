@@ -30,4 +30,17 @@
     <string name="sign_up_page">Sign Up Page</string>
     <string name="sign_up">Sign Up</string>
     <string name="sign_in_page">Sign In Page</string>
+    <string name="admin_panel">Admin Panel</string>
+    <string name="adding_new_product">Adding New Product</string>
+    <string name="product_id">Product ID</string>
+    <string name="product_name">Product Name</string>
+    <string name="product_price">Product Price</string>
+    <string name="product_description">Product Description</string>
+    <string name="product_review">Product Review</string>
+    <string name="add_product">Add Product</string>
+    <string name="rating">Rating</string>
+    <string name="add_to_cart">Add to Cart</string>
+    <string name="my_cart">My Cart</string>
+    <string name="my_favorite_products">My Favorite Products</string>
+
 </resources>

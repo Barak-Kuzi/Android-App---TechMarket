@@ -6,7 +6,6 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
-
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -17,6 +16,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TechMarket_FinalProject"
         tools:targetApi="31">
+        <activity
+            android:name=".Activity.FavoriteProductsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.AdminActivity"
+            android:exported="false" />
         <activity
             android:name=".Activity.EditProfileActivity"
             android:exported="false" />

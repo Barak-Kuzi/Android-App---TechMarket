@@ -4,12 +4,16 @@ import static com.example.techmarket_finalproject.Utilities.DatabaseManager.addP
 import static com.example.techmarket_finalproject.Utilities.DatabaseManager.removeProductFromCartInDatabase;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.techmarket_finalproject.Interfaces.UpdateQuantityProductsListener;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class User implements Serializable {
     private String userId;
@@ -19,12 +23,15 @@ public class User implements Serializable {
     private String address;
     private String phone;
     private HashMap<String, Integer> cart;
+    private boolean isAdmin;
+    private List<String> favoriteProducts;
 
     public User() {
         this.cart = new HashMap<>();
+        this.favoriteProducts = new ArrayList<>();
     }
 
-    public User(String userId, String name, String email, String password, String address, String phone) {
+    public User(String userId, String name, String email, String password, String address, String phone, boolean isAdmin) {
         this.userId = userId;
         this.name = name;
         this.email = email;
@@ -32,6 +39,37 @@ public class User implements Serializable {
         this.address = address;
         this.phone = phone;
         this.cart = new HashMap<>();
+        this.isAdmin = isAdmin;
+        this.favoriteProducts = new ArrayList<>();
+    }
+
+    // Getter and setter for favoriteProducts
+    public List<String> getFavoriteProducts() {
+        return favoriteProducts;
+    }
+
+    public void setFavoriteProducts(List<String> favoriteProducts) {
+        this.favoriteProducts = favoriteProducts;
+    }
+
+    public void addFavoriteProduct(String productId) {
+        this.favoriteProducts.add(productId);
+    }
+
+    public void removeFavoriteProduct(String productId) {
+        this.favoriteProducts.remove(productId);
+    }
+
+    public boolean isFavoriteProduct(String productId) {
+        return this.favoriteProducts.contains(productId);
+    }
+
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
     }
 
     public String getUserId() {

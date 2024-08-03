@@ -18,24 +18,49 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class DatabaseManager {
     private static final String TAG = "DatabaseManager";    // TAG for logging
 
-    public static void addUserToDatabase(Context context, String userId, String name, String email, String password, String address, String phone) {
+//    public static void addUserToDatabase(Context context, String userId, String name, String email, String password, String address, String phone, boolean isAdmin) {
+//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
+//        User user = new User(userId, name, email, password, address, phone, isAdmin);
+//
+//        user.setCart(new HashMap<>());
+//        user.setFavoriteProducts(new HashSet<>());
+//
+//        databaseReference.child(user.getUserId()).setValue(user).addOnCompleteListener(task -> {
+//            if (task.isSuccessful()) {
+//                Toast.makeText(context, "User registered successfully.", Toast.LENGTH_SHORT).show();
+//            } else {
+//                Toast.makeText(context, "Failed to register user.", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
+
+    public static void addUserToDatabase(Context context, String userId, String name, String email, String password, String address, String phone, boolean isAdmin) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
-        User user = new User(userId, name, email, password, address, phone);
+        User user = new User(userId, name, email, password, address, phone, isAdmin);
 
         user.setCart(new HashMap<>());
+        user.setFavoriteProducts(new ArrayList<>());
 
-        databaseReference.child(user.getUserId()).setValue(user).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Toast.makeText(context, "User registered successfully.", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(context, "Failed to register user.", Toast.LENGTH_SHORT).show();
-            }
-        });
+        try {
+            databaseReference.child(user.getUserId()).setValue(user).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Toast.makeText(context, "User registered successfully.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, "Failed to register user.", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (Exception e) {
+            Log.e(TAG, "Error adding user to database", e);
+            Toast.makeText(context, "An error occurred while registering the user.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public static void getUserFromDatabase(String userId, UserCallBack callback) {
@@ -122,4 +147,17 @@ public class DatabaseManager {
             }
         });
     }
+
+    public static void updateFavoriteProductsInDatabase(Context context, String userId, List<String> favoriteProducts) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").child(userId).child("favoriteProducts");
+        databaseReference.setValue(favoriteProducts).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Toast.makeText(context, "Favorites updated successfully.", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(context, "Failed to update favorites.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
 }

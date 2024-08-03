@@ -1,7 +1,5 @@
 package com.example.techmarket_finalproject.Activity;
 
-import static com.example.techmarket_finalproject.Utilities.DatabaseManager.getAllProductsFromDatabase;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -14,14 +12,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.techmarket_finalproject.Adapters.CartAdapter;
 
-import com.example.techmarket_finalproject.Interfaces.GenericCallBack;
 import com.example.techmarket_finalproject.Models.Product;
 import com.example.techmarket_finalproject.Models.User;
 import com.example.techmarket_finalproject.R;
 import com.example.techmarket_finalproject.Interfaces.UpdateQuantityProductsListener;
 
+import com.example.techmarket_finalproject.Utilities.ProductManager;
 import com.example.techmarket_finalproject.databinding.ActivityCartBinding;
-import com.google.firebase.database.DatabaseError;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -29,7 +26,6 @@ import java.util.Set;
 public class CartActivity extends AppCompatActivity {
 
     ActivityCartBinding activityCartBinding;
-    private ArrayList<Product> allProducts;
     private ArrayList<Product> filteredProducts;
 
     @Override
@@ -44,7 +40,7 @@ public class CartActivity extends AppCompatActivity {
             setContentView(activityCartBinding.getRoot());
 
             statusBarColor();
-            setVariable(user);
+            setButton(user);
             initList(user);
 
         } else {
@@ -62,36 +58,21 @@ public class CartActivity extends AppCompatActivity {
         if (user.cartIsEmpty()) {
             activityCartBinding.emptyCartText.setVisibility(View.VISIBLE);
             activityCartBinding.scrollViewItems.setVisibility(View.GONE);
-
         } else {
             activityCartBinding.emptyCartText.setVisibility(View.GONE);
             activityCartBinding.scrollViewItems.setVisibility(View.VISIBLE);
         }
 
-        // Initialize the product lists
-        allProducts = new ArrayList<>();
         filteredProducts = new ArrayList<>();
-
-        getAllProductsFromDatabase(new GenericCallBack<ArrayList<Product>>() {
-            @Override
-            public void onResponse(ArrayList<Product> response) {
-                allProducts = response;
-                filterProductsByKeys(user.getCart().keySet());
-                initRecyclerView(user);
-                calculateTotalPrice(user);
-            }
-
-            @Override
-            public void onFailure(DatabaseError error) {
-                Toast.makeText(CartActivity.this, "Failed to load products.", Toast.LENGTH_SHORT).show();
-            }
-        });
-
+        filterProductsByKeys(user.getCart().keySet());
+        initRecyclerView(user);
+        calculateTotalPrice(user);
     }
 
     private void filterProductsByKeys(Set<String> keys) {
-        for (Product product : allProducts) {
-            if (keys.contains(product.getProductId())) {
+        for (String key : keys) {
+            Product product = ProductManager.getProductById(key);
+            if (product != null) {
                 filteredProducts.add(product);
             }
         }
@@ -125,7 +106,7 @@ public class CartActivity extends AppCompatActivity {
         activityCartBinding.totalOrderText.setText("$" + total);
     }
 
-    private void setVariable(User user) {
+    private void setButton(User user) {
         activityCartBinding.backButtonViewCart.setOnClickListener(v -> {
             Intent intent = new Intent(CartActivity.this, MainActivity.class);
             intent.putExtra("user", user);

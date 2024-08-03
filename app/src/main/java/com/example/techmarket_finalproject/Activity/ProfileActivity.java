@@ -2,6 +2,7 @@ package com.example.techmarket_finalproject.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -17,7 +18,7 @@ import com.example.techmarket_finalproject.R;
 public class ProfileActivity extends AppCompatActivity {
 
     private TextView fullNameLabel, usernameProfile, emailProfile, phoneProfile, addressProfile;
-    private LinearLayout homePageButton, editProfileButton;
+    private LinearLayout homePageButton, editProfileButton, adminPanelButton;
     private AppCompatButton logoutButton;
 
     @Override
@@ -36,6 +37,8 @@ public class ProfileActivity extends AppCompatActivity {
             emailProfile.setText(user.getEmail());
             phoneProfile.setText(user.getPhone());
             addressProfile.setText(user.getAddress());
+
+            Log.d("ProfileActivity", "User: " + user.isAdmin());
         } else {
             Toast.makeText(this, "The Page is Loading...", Toast.LENGTH_SHORT).show();
             finish();
@@ -61,6 +64,20 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+        adminPanelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (user.isAdmin()) {
+                    Intent intent = new Intent(ProfileActivity.this, AdminActivity.class);
+                    intent.putExtra("user", user);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Toast.makeText(ProfileActivity.this, "You are not an admin.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,6 +95,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         homePageButton = findViewById(R.id.home_page_button);
         editProfileButton = findViewById(R.id.edit_profile_button);
+        adminPanelButton = findViewById(R.id.admin_panel_button);
         logoutButton = findViewById(R.id.logout_button);
     }
 }
