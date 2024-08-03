@@ -1,9 +1,9 @@
 package com.example.techmarket_finalproject.Models;
 
-import static com.example.techmarket_finalproject.Utilities.DatabaseManager.addProductToCartOfDB;
+import static com.example.techmarket_finalproject.Utilities.DatabaseManager.addProductToCartInDatabase;
+import static com.example.techmarket_finalproject.Utilities.DatabaseManager.removeProductFromCartInDatabase;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.example.techmarket_finalproject.Interfaces.UpdateQuantityProductsListener;
 
@@ -128,7 +128,7 @@ public class User implements Serializable {
         if (this.cart.containsKey(productId)) {
             this.cart.put(productId, this.cart.get(productId) + 1);
         }
-        addProductToCartOfDB(context, userId, productId, this.cart.get(productId), this);
+        addProductToCartInDatabase(context, userId, productId, this.cart.get(productId));
         updateQuantityProductsListener.update();
     }
 
@@ -137,10 +137,10 @@ public class User implements Serializable {
             int currentQuantity = this.cart.get(productId);
             if (currentQuantity > 1) {
                 this.cart.put(productId, currentQuantity - 1);
-                addProductToCartOfDB(context, userId, productId, this.cart.get(productId), this);
+                addProductToCartInDatabase(context, userId, productId, this.cart.get(productId));
             } else {
                 this.cart.remove(productId);
-                addProductToCartOfDB(context, userId, productId, 0, this);
+                removeProductFromCartInDatabase(context, userId, productId);
             }
             updateQuantityProductsListener.update();
         }

@@ -20,9 +20,9 @@ import java.util.HashMap;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.Viewholder> {
 
-    private ArrayList<Product> products;
-    private User user;
-    private HashMap<String, Integer> userCart;
+    private final ArrayList<Product> products;
+    private final User user;
+    private final HashMap<String, Integer> userCart;
     private Context context;
     private ViewholderCartBinding viewholderCartBinding;
     private UpdateQuantityProductsListener updateQuantityProductsListener;
@@ -67,7 +67,13 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.Viewholder> {
 
         holder.binding.minusButton.setOnClickListener(v -> {
             user.decreaseQuantity(product.getProductId(), v.getContext(), user.getUserId(), () -> {
-                notifyItemChanged(position);
+                if (user.productInCart(product.getProductId())) {
+                    notifyItemChanged(position);
+                } else {
+                    products.remove(position);
+                    notifyItemRemoved(position);
+                    notifyItemRangeChanged(position, products.size());
+                }
                 updateQuantityProductsListener.update();
             });
         });

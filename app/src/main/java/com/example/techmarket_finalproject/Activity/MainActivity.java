@@ -1,10 +1,9 @@
 package com.example.techmarket_finalproject.Activity;
 
-import static com.example.techmarket_finalproject.Utilities.DatabaseManager.addProductsToDatabase;
+import static com.example.techmarket_finalproject.Utilities.DatabaseManager.addAllProductsToDatabase;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -78,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         products.add(new Product("P3", "Phone", R.drawable.item_3, 3, 4.9, 800, "Description for Phone"));
         products.add(new Product("P4", "Phone", R.drawable.b_1, 3, 4.9, 800, "Description for Phone"));
 
-        addProductsToDatabase(this, products);
+        addAllProductsToDatabase(this, products);
 
         activityMainBinding.popularProductsView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         activityMainBinding.popularProductsView.setAdapter(new PopularProductsAdapter(products, user));

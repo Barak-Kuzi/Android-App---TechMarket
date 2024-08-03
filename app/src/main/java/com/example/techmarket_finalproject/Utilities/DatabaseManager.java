@@ -69,7 +69,7 @@ public class DatabaseManager {
         });
     }
 
-    public static void addProductToCartOfDB(Context context, String userId, String productId, int quantity, User user) {
+    public static void addProductToCartInDatabase(Context context, String userId, String productId, int quantity) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").child(userId).child("cart");
         databaseReference.child(productId).setValue(quantity).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -80,7 +80,18 @@ public class DatabaseManager {
         });
     }
 
-    public static void addProductsToDatabase(Context context, ArrayList<Product> products) {
+    public static void removeProductFromCartInDatabase(Context context, String userId, String productId) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").child(userId).child("cart");
+        databaseReference.child(productId).removeValue().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Toast.makeText(context, "Product removed from cart successfully.", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(context, "Failed to remove product from cart.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public static void addAllProductsToDatabase(Context context, ArrayList<Product> products) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("products");
         for (Product product : products) {
             databaseReference.child(product.getProductId()).setValue(product).addOnCompleteListener(task -> {

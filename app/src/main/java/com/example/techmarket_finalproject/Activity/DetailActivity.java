@@ -1,6 +1,6 @@
 package com.example.techmarket_finalproject.Activity;
 
-import static com.example.techmarket_finalproject.Utilities.DatabaseManager.addProductToCartOfDB;
+import static com.example.techmarket_finalproject.Utilities.DatabaseManager.addProductToCartInDatabase;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,8 +23,6 @@ public class DetailActivity extends AppCompatActivity {
     private ActivityDetailBinding activityDetailBinding;
     private Product product;
     private User user;
-    private int numberOrder = 1;
-//    private ManagmentCart managmentCart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +32,6 @@ public class DetailActivity extends AppCompatActivity {
 
         statusBarColor();
         getBundles();
-//        managmentCart = new ManagmentCart(this);
     }
 
     private void statusBarColor() {
@@ -45,8 +42,6 @@ public class DetailActivity extends AppCompatActivity {
     private void getBundles() {
         this.product = (Product) getIntent().getSerializableExtra("product");
         this.user = (User) getIntent().getSerializableExtra("user");
-
-//        int drawableResourcesId = this.getResources().getIdentifier(object.getImageResourceId(), "drawable", this.getPackageName());
 
         Glide.with(this)
                 .load(product.getImageResourceId())
@@ -61,14 +56,12 @@ public class DetailActivity extends AppCompatActivity {
         activityDetailBinding.addToCartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                product.setNumberInCart(numberOrder);
-//                managmentCart.insertFood(product);
                 if (user.productInCart(product.getProductId())) {
                     int quantity = user.getQuantity(product.getProductId()) + 1;
-                    addProductToCartOfDB(getApplicationContext(), user.getUserId(), product.getProductId(), quantity, user);
+                    addProductToCartInDatabase(getApplicationContext(), user.getUserId(), product.getProductId(), quantity);
                     user.setItemToCart(product.getProductId(), quantity);
                 } else {
-                    addProductToCartOfDB(getApplicationContext(), user.getUserId(), product.getProductId(), 1, user);
+                    addProductToCartInDatabase(getApplicationContext(), user.getUserId(), product.getProductId(), 1);
                     user.setItemToCart(product.getProductId(), 1);
                 }
             }

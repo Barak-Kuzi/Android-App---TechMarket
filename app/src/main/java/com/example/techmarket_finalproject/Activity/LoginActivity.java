@@ -98,7 +98,7 @@ public class LoginActivity extends AppCompatActivity {
                                         }
                                     });
 
-                                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+//                                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                                 } else {
                                     Toast.makeText(LoginActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
