@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.techmarket_finalproject.Interfaces.GenericCallBack;
+import com.example.techmarket_finalproject.Models.Category;
 import com.example.techmarket_finalproject.Models.Product;
 import com.google.firebase.database.DatabaseError;
 
@@ -47,5 +48,15 @@ public class ProductManager {
 
     public static ArrayList<Product> getAllProducts() {
         return new ArrayList<>(productCache.values());
+    }
+
+    public static ArrayList<Product> getProductsByCategory(Category category) {
+        ArrayList<Product> filteredProducts = new ArrayList<>();
+        for (Product product : productCache.values()) {
+            if (product.getCategory() == category) {
+                filteredProducts.add(product);
+            }
+        }
+        return filteredProducts;
     }
 }

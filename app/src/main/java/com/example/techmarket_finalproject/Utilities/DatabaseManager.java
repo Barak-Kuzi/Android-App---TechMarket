@@ -6,8 +6,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.techmarket_finalproject.Activity.StoreProductsActivity;
 import com.example.techmarket_finalproject.Interfaces.GenericCallBack;
 import com.example.techmarket_finalproject.Interfaces.UserCallBack;
+import com.example.techmarket_finalproject.Models.Category;
 import com.example.techmarket_finalproject.Models.Product;
 import com.example.techmarket_finalproject.Models.User;
 import com.google.firebase.database.DataSnapshot;
@@ -26,21 +28,24 @@ import java.util.Set;
 public class DatabaseManager {
     private static final String TAG = "DatabaseManager";    // TAG for logging
 
-//    public static void addUserToDatabase(Context context, String userId, String name, String email, String password, String address, String phone, boolean isAdmin) {
-//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
-//        User user = new User(userId, name, email, password, address, phone, isAdmin);
-//
-//        user.setCart(new HashMap<>());
-//        user.setFavoriteProducts(new HashSet<>());
-//
-//        databaseReference.child(user.getUserId()).setValue(user).addOnCompleteListener(task -> {
-//            if (task.isSuccessful()) {
-//                Toast.makeText(context, "User registered successfully.", Toast.LENGTH_SHORT).show();
-//            } else {
-//                Toast.makeText(context, "Failed to register user.", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
+    public static void initializeDatabaseWithProducts(Context context) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("products");
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()) {
+                    ArrayList<Product> products = DataManager.getAllProducts();
+                    addAllProductsToDatabase(context, products);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e(TAG, "Failed to check products in database.", databaseError.toException());
+            }
+        });
+    }
+
 
     public static void addUserToDatabase(Context context, String userId, String name, String email, String password, String address, String phone, boolean isAdmin) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
@@ -159,5 +164,25 @@ public class DatabaseManager {
         });
     }
 
+    public static void getProductsByCategory(Category category, GenericCallBack<ArrayList<Product>> callback) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("products");
+        databaseReference.orderByChild("category").equalTo(category.name()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ArrayList<Product> products = new ArrayList<>();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Product product = snapshot.getValue(Product.class);
+                    products.add(product);
+                }
+                callback.onResponse(products);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e(TAG, "Failed to read products from database.", databaseError.toException());
+                callback.onFailure(databaseError);
+            }
+        });
+    }
 
 }

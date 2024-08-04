@@ -1,7 +1,5 @@
 package com.example.techmarket_finalproject.Activity;
 
-import static com.example.techmarket_finalproject.Utilities.DatabaseManager.addAllProductsToDatabase;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
@@ -16,6 +14,7 @@ import com.example.techmarket_finalproject.Adapters.PopularProductsAdapter;
 import com.example.techmarket_finalproject.Models.User;
 import com.example.techmarket_finalproject.R;
 
+import com.example.techmarket_finalproject.Utilities.DatabaseManager;
 import com.example.techmarket_finalproject.Utilities.ProductManager;
 import com.example.techmarket_finalproject.databinding.ActivityMainBinding;
 import com.example.techmarket_finalproject.Models.Product;
@@ -43,6 +42,9 @@ public class MainActivity extends AppCompatActivity {
             initRecyclerView(user);
             bottomNavigation(user);
 
+            // Initialize database with products if not already done
+            DatabaseManager.initializeDatabaseWithProducts(this);
+
         } else {
             Toast.makeText(this, "The Page is Loading...", Toast.LENGTH_SHORT).show();
             finish();
@@ -67,6 +69,13 @@ public class MainActivity extends AppCompatActivity {
 
         activityMainBinding.favoritesMenuButton.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, FavoriteProductsActivity.class);
+            intent.putExtra("user", user);
+            startActivity(intent);
+            finish();
+        });
+
+        activityMainBinding.viewAllProducts.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, StoreProductsActivity.class);
             intent.putExtra("user", user);
             startActivity(intent);
             finish();

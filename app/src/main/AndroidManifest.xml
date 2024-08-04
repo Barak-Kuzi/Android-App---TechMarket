@@ -17,6 +17,9 @@
         android:theme="@style/Theme.TechMarket_FinalProject"
         tools:targetApi="31">
         <activity
+            android:name=".Activity.StoreProductsActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activity.FavoriteProductsActivity"
             android:exported="false" />
         <activity

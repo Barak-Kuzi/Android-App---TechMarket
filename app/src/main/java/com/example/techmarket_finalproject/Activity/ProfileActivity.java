@@ -38,7 +38,6 @@ public class ProfileActivity extends AppCompatActivity {
             phoneProfile.setText(user.getPhone());
             addressProfile.setText(user.getAddress());
 
-            Log.d("ProfileActivity", "User: " + user.isAdmin());
         } else {
             Toast.makeText(this, "The Page is Loading...", Toast.LENGTH_SHORT).show();
             finish();

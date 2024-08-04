@@ -11,11 +11,12 @@ public class Product implements Serializable {
     private double price;
     private String description;
     private boolean isFavorite;
+    private Category category;
 
     public Product() {
     }
 
-    public Product(String productId, String title, int imageResourceId, int review, double score, double price, String description) {
+    public Product(String productId, String title, int imageResourceId, int review, double score, double price, String description, Category category) {
         this.productId = productId;
         this.title = title;
         this.imageResourceId = imageResourceId;
@@ -24,6 +25,15 @@ public class Product implements Serializable {
         this.price = price;
         this.description = description;
         this.isFavorite = false;
+        this.category = category;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public boolean isFavorite() {

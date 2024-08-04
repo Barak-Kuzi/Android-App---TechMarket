@@ -49,7 +49,6 @@ public class FavoriteProductsActivity extends AppCompatActivity {
             Toast.makeText(this, "The Page is Loading...", Toast.LENGTH_SHORT).show();
             finish();
         }
-
     }
 
     private void statusBarColor() {
@@ -75,7 +74,6 @@ public class FavoriteProductsActivity extends AppCompatActivity {
         activityFavoriteProductsBinding.favoriteProductsRecyclerView.setLayoutManager(
                 new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
-        Log.d("FavoriteProducts", "initRecyclerView: " + favoriteProducts.toString());
         activityFavoriteProductsBinding.favoriteProductsRecyclerView.setAdapter(new FavoriteProductsAdapter(favoriteProducts, user));
     }
 

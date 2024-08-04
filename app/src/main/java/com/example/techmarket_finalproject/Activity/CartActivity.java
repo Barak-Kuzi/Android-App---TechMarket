@@ -57,10 +57,10 @@ public class CartActivity extends AppCompatActivity {
     private void initList(User user) {
         if (user.cartIsEmpty()) {
             activityCartBinding.emptyCartText.setVisibility(View.VISIBLE);
-            activityCartBinding.scrollViewItems.setVisibility(View.GONE);
+            activityCartBinding.cartView.setVisibility(View.GONE);
         } else {
             activityCartBinding.emptyCartText.setVisibility(View.GONE);
-            activityCartBinding.scrollViewItems.setVisibility(View.VISIBLE);
+            activityCartBinding.cartView.setVisibility(View.VISIBLE);
         }
 
         filteredProducts = new ArrayList<>();
@@ -92,7 +92,7 @@ public class CartActivity extends AppCompatActivity {
 
     private void calculateTotalPrice(User user) {
         double percentTax = 0.02;
-        double deliveryPrice = 10;
+        double deliveryPrice = user.cartIsEmpty() ? 0 : 10;
 
         double totalCartPrice = user.getTotalPrice(filteredProducts);
 

@@ -2,16 +2,21 @@ package com.example.techmarket_finalproject.Activity;
 
 import static com.example.techmarket_finalproject.Utilities.DatabaseManager.addAllProductsToDatabase;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
+import com.example.techmarket_finalproject.Models.Category;
 import com.example.techmarket_finalproject.Models.Product;
 import com.example.techmarket_finalproject.Models.User;
 import com.example.techmarket_finalproject.R;
@@ -22,7 +27,8 @@ import java.util.ArrayList;
 public class AdminActivity extends AppCompatActivity {
 
     private TextInputEditText productIdInput, productNameInput, productPriceInput, productRatingInput, productReviewsInput, productDescriptionInput;
-    private AppCompatButton addProductButton;
+    private AutoCompleteTextView productCategoryDropdown;
+    private AppCompatButton addProductButton, cancelAddProductButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +41,7 @@ public class AdminActivity extends AppCompatActivity {
             setContentView(R.layout.activity_admin);
 
             initViews();
+            setupCategorySpinner();
 
             addProductButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -45,17 +52,30 @@ public class AdminActivity extends AppCompatActivity {
                     double productRating = Double.parseDouble(productRatingInput.getText().toString().trim());
                     int productReviews = Integer.parseInt(productReviewsInput.getText().toString().trim());
                     String productDescription = productDescriptionInput.getText().toString().trim();
+                    Category productCategory = Category.valueOf(productCategoryDropdown.getText().toString().trim());
 
-                    Product newProduct = new Product(productId, productName, R.drawable.default_image, productReviews, productRating, productPrice, productDescription);
+                    Product newProduct = new Product(productId, productName, R.drawable.default_image, productReviews, productRating, productPrice, productDescription, productCategory);
+
+                    // Add product to the database
                     ArrayList<Product> products = new ArrayList<>();
                     products.add(newProduct);
-
                     addAllProductsToDatabase(AdminActivity.this, products);
+
                     Toast.makeText(AdminActivity.this, "Product added successfully.", Toast.LENGTH_SHORT).show();
                 }
             });
 
-            Log.d("ProfileActivity", "User: " + user.isAdmin());
+            cancelAddProductButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(AdminActivity.this, ProfileActivity.class);
+                    intent.putExtra("user", user);
+                    startActivity(intent);
+                    finish();
+                }
+            });
+
+
         } else {
             Toast.makeText(this, "The Page is Loading...", Toast.LENGTH_SHORT).show();
             finish();
@@ -70,6 +90,13 @@ public class AdminActivity extends AppCompatActivity {
         productRatingInput = findViewById(R.id.product_rating_input);
         productReviewsInput = findViewById(R.id.product_review_input);
         productDescriptionInput = findViewById(R.id.product_description_input);
+        productCategoryDropdown = findViewById(R.id.product_category_dropdown);
         addProductButton = findViewById(R.id.add_product_button);
+        cancelAddProductButton = findViewById(R.id.cancel_add_product_button);
+    }
+
+    private void setupCategorySpinner() {
+        ArrayAdapter<Category> adapter = new ArrayAdapter<>(this, R.layout.dropdown_item, Category.values());
+        productCategoryDropdown.setAdapter(adapter);
     }
 }
