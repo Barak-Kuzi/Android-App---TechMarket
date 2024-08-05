@@ -47,5 +47,10 @@
     <string name="your_cart_is_empty">Your Cart Is Empty</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
+    <string name="favorite_products_message">You have not selected any\n favorite products yet.\n\nHope you find a favorite product</string>
+
+    <string name="intro_title"><font color="#48D461">TechMarket</font> is the cheapest e-shopping destination!</string>
+    <string name="into_sub_title">Get the latest electronics.\nShop now and get the best deals!</string>
+    <string name="let_s_get_started">Let\'s Get Started</string>
 
 </resources>

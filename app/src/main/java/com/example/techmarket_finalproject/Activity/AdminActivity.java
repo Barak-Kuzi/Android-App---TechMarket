@@ -4,19 +4,16 @@ import static com.example.techmarket_finalproject.Utilities.DatabaseManager.addA
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
-import com.example.techmarket_finalproject.Models.Category;
+import com.example.techmarket_finalproject.Models.CategoryEnum;
 import com.example.techmarket_finalproject.Models.Product;
 import com.example.techmarket_finalproject.Models.User;
 import com.example.techmarket_finalproject.R;
@@ -52,7 +49,7 @@ public class AdminActivity extends AppCompatActivity {
                     double productRating = Double.parseDouble(productRatingInput.getText().toString().trim());
                     int productReviews = Integer.parseInt(productReviewsInput.getText().toString().trim());
                     String productDescription = productDescriptionInput.getText().toString().trim();
-                    Category productCategory = Category.valueOf(productCategoryDropdown.getText().toString().trim());
+                    CategoryEnum productCategory = CategoryEnum.valueOf(productCategoryDropdown.getText().toString().trim());
 
                     Product newProduct = new Product(productId, productName, R.drawable.default_image, productReviews, productRating, productPrice, productDescription, productCategory);
 
@@ -96,7 +93,7 @@ public class AdminActivity extends AppCompatActivity {
     }
 
     private void setupCategorySpinner() {
-        ArrayAdapter<Category> adapter = new ArrayAdapter<>(this, R.layout.dropdown_item, Category.values());
+        ArrayAdapter<CategoryEnum> adapter = new ArrayAdapter<>(this, R.layout.dropdown_item, CategoryEnum.values());
         productCategoryDropdown.setAdapter(adapter);
     }
 }

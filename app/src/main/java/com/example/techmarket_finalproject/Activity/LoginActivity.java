@@ -81,6 +81,12 @@ public class LoginActivity extends AppCompatActivity {
 
         init();
 
+        // Check if the Intent has the extra to show the SignUp page
+        if (getIntent().getBooleanExtra("showSignUp", false)) {
+            signin_page.setVisibility(View.GONE);
+            signup_page.setVisibility(View.VISIBLE);
+        }
+
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

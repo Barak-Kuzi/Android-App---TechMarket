@@ -67,6 +67,14 @@ public class FavoriteProductsActivity extends AppCompatActivity {
             finish();
         });
 
+        if (user.getFavoriteProducts().isEmpty()) {
+            activityFavoriteProductsBinding.emptyFavoriteProductsMessage.setVisibility(android.view.View.VISIBLE);
+            activityFavoriteProductsBinding.favoriteProductsRecyclerView.setVisibility(android.view.View.GONE);
+        } else {
+            activityFavoriteProductsBinding.emptyFavoriteProductsMessage.setVisibility(android.view.View.GONE);
+            activityFavoriteProductsBinding.favoriteProductsRecyclerView.setVisibility(android.view.View.VISIBLE);
+        }
+
         initRecyclerView(user);
     }
 

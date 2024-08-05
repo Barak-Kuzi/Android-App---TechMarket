@@ -2,6 +2,7 @@ package com.example.techmarket_finalproject.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import com.example.techmarket_finalproject.Activity.DetailActivity;
 import com.example.techmarket_finalproject.Models.Product;
 import com.example.techmarket_finalproject.Models.User;
 import com.example.techmarket_finalproject.databinding.ViewholderPopularProductBinding;
+import com.example.techmarket_finalproject.databinding.ViewholderPopularProductsBinding;
 
 import java.util.ArrayList;
 
@@ -23,7 +25,7 @@ public class PopularProductsAdapter extends RecyclerView.Adapter<PopularProducts
     private final ArrayList<Product> products;
     private User user;
     private Context context;
-    private ViewholderPopularProductBinding productBinding;
+    private ViewholderPopularProductsBinding viewholderPopularProductsBinding;
 
     public PopularProductsAdapter(ArrayList<Product> products, User user) {
         this.products = products;
@@ -33,27 +35,28 @@ public class PopularProductsAdapter extends RecyclerView.Adapter<PopularProducts
     @NonNull
     @Override
     public PopularProductsAdapter.Viewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        this.productBinding = ViewholderPopularProductBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        this.viewholderPopularProductsBinding = ViewholderPopularProductsBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         this.context = parent.getContext();
-        return new Viewholder(productBinding);
+        return new Viewholder(viewholderPopularProductsBinding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull PopularProductsAdapter.Viewholder holder, int position) {
         Product product = products.get(position);
 
-        productBinding.titleText.setText(product.getTitle());
-        productBinding.priceText.setText("$" + product.getPrice());
-        productBinding.scoreText.setText(String.valueOf(product.getScore()));
-        productBinding.reviewText.setText(String.valueOf(product.getReview()));
-
-//        int drawableResourced = holder.itemView.getResources().getIdentifier(product.getImageResourceId(),
-//                "drawable", holder.itemView.getContext().getPackageName());
+        viewholderPopularProductsBinding.productTitleText.setText(product.getTitle());
+        viewholderPopularProductsBinding.oldPriceProductText.setText("$" + product.getPrice());
+        viewholderPopularProductsBinding.oldPriceProductText
+                .setPaintFlags(viewholderPopularProductsBinding.oldPriceProductText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        viewholderPopularProductsBinding.newPriceProductText.setText("$" + product.getPrice());
+        viewholderPopularProductsBinding.ratingBarProduct.setRating((float) product.getScore());
+        viewholderPopularProductsBinding.ratingProductText.setText("(" + product.getScore() + ")");
+        viewholderPopularProductsBinding.reviewsProductText.setText(String.valueOf(product.getReview()));
 
         Glide.with(context)
                 .load(product.getImageResourceId())
                 .transform(new GranularRoundedCorners(30, 30, 0, 0))
-                .into(productBinding.productImage);
+                .into(viewholderPopularProductsBinding.productImageView);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,8 +79,9 @@ public class PopularProductsAdapter extends RecyclerView.Adapter<PopularProducts
     }
 
     public class Viewholder extends RecyclerView.ViewHolder {
-        public Viewholder(ViewholderPopularProductBinding productBinding) {
-            super(productBinding.getRoot());
+
+        public Viewholder(ViewholderPopularProductsBinding viewholderPopularProductsBinding) {
+            super(viewholderPopularProductsBinding.getRoot());
         }
     }
 }

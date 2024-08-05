@@ -7,17 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".Activity.FavoriteProductsActivity">
 
-    <!--    <TextView-->
-    <!--        android:id="@+id/emptyCartText"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:text="Your Cart Is Empty"-->
-    <!--        android:visibility="gone"-->
-    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toTopOf="parent" />-->
-
     <ScrollView
         android:id="@+id/scrollViewItems"
         android:layout_width="match_parent"
@@ -58,10 +47,25 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/empty_favorite_products_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/favorite_products_message"
+                android:textAlignment="center"
+                android:textColor="@color/red"
+                android:textSize="24sp"
+                android:textStyle="bold|italic"
+                android:visibility="gone" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/favorite_products_recycler_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:visibility="visible" />
         </LinearLayout>
     </ScrollView>
 

@@ -3,11 +3,9 @@ package com.example.techmarket_finalproject.Utilities;
 import static com.example.techmarket_finalproject.Utilities.DatabaseManager.getAllProductsFromDatabase;
 
 import android.content.Context;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.example.techmarket_finalproject.Interfaces.GenericCallBack;
-import com.example.techmarket_finalproject.Models.Category;
+import com.example.techmarket_finalproject.Models.CategoryEnum;
 import com.example.techmarket_finalproject.Models.Product;
 import com.google.firebase.database.DatabaseError;
 
@@ -50,7 +48,7 @@ public class ProductManager {
         return new ArrayList<>(productCache.values());
     }
 
-    public static ArrayList<Product> getProductsByCategory(Category category) {
+    public static ArrayList<Product> getProductsByCategory(CategoryEnum category) {
         ArrayList<Product> filteredProducts = new ArrayList<>();
         for (Product product : productCache.values()) {
             if (product.getCategory() == category) {

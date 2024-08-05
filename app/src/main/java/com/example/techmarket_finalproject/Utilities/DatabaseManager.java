@@ -6,10 +6,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.example.techmarket_finalproject.Activity.StoreProductsActivity;
 import com.example.techmarket_finalproject.Interfaces.GenericCallBack;
 import com.example.techmarket_finalproject.Interfaces.UserCallBack;
 import com.example.techmarket_finalproject.Models.Category;
+import com.example.techmarket_finalproject.Models.CategoryEnum;
 import com.example.techmarket_finalproject.Models.Product;
 import com.example.techmarket_finalproject.Models.User;
 import com.google.firebase.database.DataSnapshot;
@@ -20,10 +20,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class DatabaseManager {
     private static final String TAG = "DatabaseManager";    // TAG for logging
@@ -164,7 +162,7 @@ public class DatabaseManager {
         });
     }
 
-    public static void getProductsByCategory(Category category, GenericCallBack<ArrayList<Product>> callback) {
+    public static void getProductsByCategory(CategoryEnum category, GenericCallBack<ArrayList<Product>> callback) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("products");
         databaseReference.orderByChild("category").equalTo(category.name()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -180,6 +178,47 @@ public class DatabaseManager {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.e(TAG, "Failed to read products from database.", databaseError.toException());
+                callback.onFailure(databaseError);
+            }
+        });
+    }
+
+    public static void setBannerSliderImages(Context context, GenericCallBack<ArrayList<SliderItems>> callback) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("banners");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ArrayList<SliderItems> sliderItems = new ArrayList<>();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    SliderItems sliderItem = snapshot.getValue(SliderItems.class);
+                    sliderItems.add(sliderItem);
+                }
+                callback.onResponse(sliderItems);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e(TAG, "Failed to read banner slider images from database.", databaseError.toException());
+                callback.onFailure(databaseError);
+            }
+        });
+    }
+
+    public static void getAllCategoriesFromDatabase(GenericCallBack<ArrayList<Category>> callback) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("categories");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ArrayList<Category> categories = new ArrayList<>();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Category category = snapshot.getValue(Category.class);
+                    categories.add(category);
+                }
+                callback.onResponse(categories);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
                 callback.onFailure(databaseError);
             }
         });
