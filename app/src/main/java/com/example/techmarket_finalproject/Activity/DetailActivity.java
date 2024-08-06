@@ -37,7 +37,7 @@ public class DetailActivity extends AppCompatActivity {
 
     private void statusBarColor() {
         Window window = DetailActivity.this.getWindow();
-        window.setStatusBarColor(ContextCompat.getColor(DetailActivity.this, R.color.purple_Dark));
+        window.setStatusBarColor(ContextCompat.getColor(DetailActivity.this, R.color.new_green));
     }
 
     private void getBundles() {

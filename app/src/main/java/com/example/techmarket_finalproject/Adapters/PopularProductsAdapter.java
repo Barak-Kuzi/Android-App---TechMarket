@@ -15,7 +15,6 @@ import com.bumptech.glide.load.resource.bitmap.GranularRoundedCorners;
 import com.example.techmarket_finalproject.Activity.DetailActivity;
 import com.example.techmarket_finalproject.Models.Product;
 import com.example.techmarket_finalproject.Models.User;
-import com.example.techmarket_finalproject.databinding.ViewholderPopularProductBinding;
 import com.example.techmarket_finalproject.databinding.ViewholderPopularProductsBinding;
 
 import java.util.ArrayList;

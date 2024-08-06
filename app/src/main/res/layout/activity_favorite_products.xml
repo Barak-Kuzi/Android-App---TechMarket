@@ -10,7 +10,9 @@
     <ScrollView
         android:id="@+id/scrollViewItems"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation_bar">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -32,7 +34,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="8dp"
-                    android:src="@drawable/arrow" />
+                    android:src="@drawable/arrow"
+                    android:background="@drawable/coupon_background"/>
 
                 <TextView
                     android:id="@+id/textView19"
@@ -43,8 +46,8 @@
                     android:text="@string/my_favorite_products"
                     android:textAlignment="center"
                     android:textColor="@color/black"
-                    android:textSize="25sp"
-                    android:textStyle="bold" />
+                    android:textSize="28sp"
+                    android:fontFamily="@font/kanit_semi_bold_italic"/>
             </LinearLayout>
 
             <TextView
@@ -69,5 +72,11 @@
         </LinearLayout>
     </ScrollView>
 
+    <include
+        android:id="@+id/bottom_navigation_bar"
+        layout="@layout/bottom_navigation_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

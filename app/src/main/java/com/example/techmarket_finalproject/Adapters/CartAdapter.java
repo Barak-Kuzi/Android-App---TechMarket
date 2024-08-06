@@ -45,18 +45,20 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.Viewholder> {
     @Override
     public void onBindViewHolder(@NonNull CartAdapter.Viewholder holder, @SuppressLint("RecyclerView") int position) {
         Product product = products.get(position);
-        int quantity = userCart.get(product.getProductId());
-        double price = product.getPrice();
+        int productQuantity = userCart.get(product.getProductId());
+        double productPrice = product.getPrice();
+        double totalPrice = productPrice * productQuantity;
+        String formattedTotalPrice = String.format("%.2f", totalPrice);
 
-        holder.binding.titleTextOrder.setText(product.getTitle());
-        holder.binding.priceForOneItemText.setText("$" + product.getPrice());
-        holder.binding.totalPriceText.setText("$" + Math.round(price * quantity));
-        holder.binding.amountItemsText.setText(String.valueOf(quantity));
+        holder.binding.productTitleCart.setText(product.getTitle());
+        holder.binding.priceForOneProductCart.setText("$" + product.getPrice());
+        holder.binding.totalProductPriceCart.setText("$" + formattedTotalPrice);
+        holder.binding.quantityProductText.setText(String.valueOf(productQuantity));
 
         Glide.with(context)
                 .load(product.getImageResourceId())
                 .transform(new GranularRoundedCorners(30, 30, 0, 0))
-                .into(holder.binding.itemImageOrder);
+                .into(holder.binding.productImageCart);
 
         holder.binding.plusButton.setOnClickListener(v -> {
             user.increaseQuantity(product.getProductId(), v.getContext(), user.getUserId(), () -> {

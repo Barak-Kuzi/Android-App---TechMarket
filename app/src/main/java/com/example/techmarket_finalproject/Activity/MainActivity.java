@@ -1,6 +1,7 @@
 package com.example.techmarket_finalproject.Activity;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.Window;
 import android.widget.TextView;
@@ -28,6 +29,8 @@ import com.example.techmarket_finalproject.Utilities.ProductManager;
 import com.example.techmarket_finalproject.Utilities.SliderItems;
 import com.example.techmarket_finalproject.databinding.ActivityMainBinding;
 import com.example.techmarket_finalproject.Models.Product;
+import com.google.android.material.bottomappbar.BottomAppBar;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DatabaseError;
 
 import java.util.ArrayList;
@@ -50,8 +53,7 @@ public class MainActivity extends AppCompatActivity implements CategoryAdapter.O
             activityMainBinding = ActivityMainBinding.inflate(getLayoutInflater());
             setContentView(activityMainBinding.getRoot());
 
-//            welcomeUser = findViewById(R.id.welcome_user_name);
-//            welcomeUser.setText(user.getName());
+            activityMainBinding.userNameTextView.setText(user.getName());
 
             statusBarColor();
 
@@ -62,18 +64,20 @@ public class MainActivity extends AppCompatActivity implements CategoryAdapter.O
             initCategoryRecyclerView();
 
             initProductsRecyclerView();
-//            initCategoryButtons(user);
-            bottomNavigation();
+
+            initBottomNavigationBar();
 
             // Initialize database with products if not already done
             DatabaseManager.initializeDatabaseWithProducts(this);
+
+
+
 
         } else {
             Toast.makeText(this, "The Page is Loading...", Toast.LENGTH_SHORT).show();
             finish();
         }
-
-    }
+}
 
     private void initBannerSlider() {
         activityMainBinding.progressBarBanners.setVisibility(TextView.VISIBLE);
@@ -122,45 +126,35 @@ public class MainActivity extends AppCompatActivity implements CategoryAdapter.O
         });
     }
 
-    private void initCategoryButtons(User user) {
-//        activityMainBinding.phonesCategoryButton.setOnClickListener(v -> {
-//            Intent intent = new Intent(MainActivity.this, StoreProductsActivity.class);
-//            intent.putExtra("user", user);
-//            intent.putExtra("category", Category.CELL_PHONES);
-//            startActivity(intent);
-//            finish();
-//        });
-//
-//        activityMainBinding.viewAllProducts.setOnClickListener(v -> {
-//            Intent intent = new Intent(MainActivity.this, StoreProductsActivity.class);
-//            intent.putExtra("user", user);
-//            intent.putExtra("category", Category.ALL_PRODUCTS);
-//            startActivity(intent);
-//            finish();
-//        });
-    }
-
-    private void bottomNavigation() {
-        activityMainBinding.cartMenuButton.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, CartActivity.class);
-            intent.putExtra("user", user);
-            startActivity(intent);
-            finish();
+    private void initBottomNavigationBar() {
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_bar);
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.menu_home) {
+                return true;
+            } else if (itemId == R.id.menu_cart) {
+                Intent intent = new Intent(MainActivity.this, CartActivity.class);
+                intent.putExtra("user", user);
+                startActivity(intent);
+                finish();
+                return true;
+            } else if (itemId == R.id.menu_favorites) {
+                Intent intent = new Intent(MainActivity.this, FavoriteProductsActivity.class);
+                intent.putExtra("user", user);
+                startActivity(intent);
+                finish();
+                return true;
+            } else if (itemId == R.id.menu_profile) {
+                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                intent.putExtra("user", user);
+                startActivity(intent);
+                finish();
+                return true;
+            } else {
+                return false;
+            }
         });
-
-        activityMainBinding.profileMenuButton.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-            intent.putExtra("user", user);
-            startActivity(intent);
-            finish();
-        });
-
-        activityMainBinding.favoritesMenuButton.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, FavoriteProductsActivity.class);
-            intent.putExtra("user", user);
-            startActivity(intent);
-            finish();
-        });
+        bottomNavigationView.setSelectedItemId(R.id.menu_home);
     }
 
     private void statusBarColor() {

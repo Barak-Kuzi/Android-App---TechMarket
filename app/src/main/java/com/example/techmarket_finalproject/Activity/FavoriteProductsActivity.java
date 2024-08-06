@@ -22,6 +22,7 @@ import com.example.techmarket_finalproject.Models.User;
 import com.example.techmarket_finalproject.R;
 import com.example.techmarket_finalproject.Utilities.ProductManager;
 import com.example.techmarket_finalproject.databinding.ActivityFavoriteProductsBinding;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,12 +31,13 @@ import java.util.Set;
 public class FavoriteProductsActivity extends AppCompatActivity {
     ActivityFavoriteProductsBinding activityFavoriteProductsBinding;
     private ArrayList<Product> favoriteProducts;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        User user = (User) getIntent().getSerializableExtra("user");
+        user = (User) getIntent().getSerializableExtra("user");
 
         if (user != null) {
 
@@ -43,7 +45,8 @@ public class FavoriteProductsActivity extends AppCompatActivity {
             filterProductsByKeys(user.getFavoriteProducts());
 
             statusBarColor();
-            initViews(user);
+            initViews();
+            initBottomNavigationBar();
 
         } else {
             Toast.makeText(this, "The Page is Loading...", Toast.LENGTH_SHORT).show();
@@ -53,10 +56,10 @@ public class FavoriteProductsActivity extends AppCompatActivity {
 
     private void statusBarColor() {
         Window window = FavoriteProductsActivity.this.getWindow();
-        window.setStatusBarColor(ContextCompat.getColor(FavoriteProductsActivity.this, R.color.purple_Dark));
+        window.setStatusBarColor(ContextCompat.getColor(FavoriteProductsActivity.this, R.color.new_green));
     }
 
-    private void initViews(User user) {
+    private void initViews() {
         activityFavoriteProductsBinding = ActivityFavoriteProductsBinding.inflate(getLayoutInflater());
         setContentView(activityFavoriteProductsBinding.getRoot());
 
@@ -92,5 +95,36 @@ public class FavoriteProductsActivity extends AppCompatActivity {
                 favoriteProducts.add(product);
             }
         }
+    }
+
+    private void initBottomNavigationBar() {
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_bar);
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.menu_home) {
+                Intent intent = new Intent(FavoriteProductsActivity.this, MainActivity.class);
+                intent.putExtra("user", user);
+                startActivity(intent);
+                finish();
+                return true;
+            } else if (itemId == R.id.menu_cart) {
+                Intent intent = new Intent(FavoriteProductsActivity.this, CartActivity.class);
+                intent.putExtra("user", user);
+                startActivity(intent);
+                finish();
+                return true;
+            } else if (itemId == R.id.menu_favorites) {
+                return true;
+            } else if (itemId == R.id.menu_profile) {
+                Intent intent = new Intent(FavoriteProductsActivity.this, ProfileActivity.class);
+                intent.putExtra("user", user);
+                startActivity(intent);
+                finish();
+                return true;
+            } else {
+                return false;
+            }
+        });
+        bottomNavigationView.setSelectedItemId(R.id.menu_favorites);
     }
 }

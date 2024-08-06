@@ -2,7 +2,6 @@ package com.example.techmarket_finalproject.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -14,23 +13,26 @@ import androidx.appcompat.widget.AppCompatButton;
 
 import com.example.techmarket_finalproject.Models.User;
 import com.example.techmarket_finalproject.R;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class ProfileActivity extends AppCompatActivity {
 
     private TextView fullNameLabel, usernameProfile, emailProfile, phoneProfile, addressProfile;
     private LinearLayout homePageButton, editProfileButton, adminPanelButton;
     private AppCompatButton logoutButton;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        User user = (User) getIntent().getSerializableExtra("user");
+        user = (User) getIntent().getSerializableExtra("user");
 
         if (user != null) {
             EdgeToEdge.enable(this);
             setContentView(R.layout.activity_profile);
-            init();
+            initViews();
+            initBottomNavigationBar();
 
             fullNameLabel.setText(user.getName());
             usernameProfile.setText(user.getName());
@@ -85,7 +87,7 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
-    private void init() {
+    private void initViews() {
         fullNameLabel = findViewById(R.id.fullName_label);
         usernameProfile = findViewById(R.id.username_text_profile);
         emailProfile = findViewById(R.id.email_text_profile);
@@ -96,5 +98,36 @@ public class ProfileActivity extends AppCompatActivity {
         editProfileButton = findViewById(R.id.edit_profile_button);
         adminPanelButton = findViewById(R.id.admin_panel_button);
         logoutButton = findViewById(R.id.logout_button);
+    }
+
+    private void initBottomNavigationBar() {
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_bar);
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.menu_home) {
+                Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+                intent.putExtra("user", user);
+                startActivity(intent);
+                finish();
+                return true;
+            } else if (itemId == R.id.menu_cart) {
+                Intent intent = new Intent(ProfileActivity.this, CartActivity.class);
+                intent.putExtra("user", user);
+                startActivity(intent);
+                finish();
+                return true;
+            } else if (itemId == R.id.menu_favorites) {
+                Intent intent = new Intent(ProfileActivity.this, FavoriteProductsActivity.class);
+                intent.putExtra("user", user);
+                startActivity(intent);
+                finish();
+                return true;
+            } else if (itemId == R.id.menu_profile) {
+                return true;
+            } else {
+                return false;
+            }
+        });
+        bottomNavigationView.setSelectedItemId(R.id.menu_profile);
     }
 }

@@ -52,5 +52,12 @@
     <string name="intro_title"><font color="#48D461">TechMarket</font> is the cheapest e-shopping destination!</string>
     <string name="into_sub_title">Get the latest electronics.\nShop now and get the best deals!</string>
     <string name="let_s_get_started">Let\'s Get Started</string>
+    <string name="welcome">Welcome,</string>
+    <string name="user_name">User Name</string>
+    <string name="subtotal">Subtotal:</string>
+    <string name="delivery_fee">Delivery Fee:</string>
+    <string name="discount">Discount:</string>
+    <string name="enter_your_coupon">Enter Your Coupon</string>
+    <string name="apply">Apply</string>
 
 </resources>
