@@ -3,6 +3,7 @@ package com.example.techmarket_finalproject.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -11,6 +12,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
+import com.example.techmarket_finalproject.Models.CategoryEnum;
 import com.example.techmarket_finalproject.Models.User;
 import com.example.techmarket_finalproject.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -21,6 +23,7 @@ public class ProfileActivity extends AppCompatActivity {
     private LinearLayout homePageButton, editProfileButton, adminPanelButton;
     private AppCompatButton logoutButton;
     private User user;
+    private ImageView profileImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +42,7 @@ public class ProfileActivity extends AppCompatActivity {
             emailProfile.setText(user.getEmail());
             phoneProfile.setText(user.getPhone());
             addressProfile.setText(user.getAddress());
+
 
         } else {
             Toast.makeText(this, "The Page is Loading...", Toast.LENGTH_SHORT).show();
@@ -88,6 +92,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void initViews() {
+        profileImageView = findViewById(R.id.profile_image_view);
         fullNameLabel = findViewById(R.id.fullName_label);
         usernameProfile = findViewById(R.id.username_text_profile);
         emailProfile = findViewById(R.id.email_text_profile);
@@ -106,6 +111,13 @@ public class ProfileActivity extends AppCompatActivity {
             int itemId = item.getItemId();
             if (itemId == R.id.menu_home) {
                 Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+                intent.putExtra("user", user);
+                startActivity(intent);
+                finish();
+                return true;
+            } else if (itemId == R.id.menu_browse) {
+                Intent intent = new Intent(ProfileActivity.this, StoreProductsActivity.class);
+                intent.putExtra("category", CategoryEnum.ALL_PRODUCTS);
                 intent.putExtra("user", user);
                 startActivity(intent);
                 finish();
@@ -130,4 +142,5 @@ public class ProfileActivity extends AppCompatActivity {
         });
         bottomNavigationView.setSelectedItemId(R.id.menu_profile);
     }
+
 }

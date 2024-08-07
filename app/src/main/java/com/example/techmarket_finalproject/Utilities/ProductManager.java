@@ -3,6 +3,7 @@ package com.example.techmarket_finalproject.Utilities;
 import static com.example.techmarket_finalproject.Utilities.DatabaseManager.getAllProductsFromDatabase;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.techmarket_finalproject.Interfaces.GenericCallBack;
 import com.example.techmarket_finalproject.Models.CategoryEnum;
@@ -11,6 +12,7 @@ import com.google.firebase.database.DatabaseError;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ProductManager {
@@ -25,6 +27,7 @@ public class ProductManager {
                 public void onResponse(ArrayList<Product> response) {
                     for (Product product : response) {
                         productCache.put(product.getProductId(), product);
+                        allProducts.add(product);
                     }
                     isInitialized = true;
                     callback.onResponse(response);
@@ -48,6 +51,12 @@ public class ProductManager {
         return new ArrayList<>(productCache.values());
     }
 
+    private static final List<Product> allProducts = new ArrayList<>();
+
+    public static List<Product> getAllProductsList() {
+        return allProducts;
+    }
+
     public static ArrayList<Product> getProductsByCategory(CategoryEnum category) {
         ArrayList<Product> filteredProducts = new ArrayList<>();
         for (Product product : productCache.values()) {
@@ -56,5 +65,15 @@ public class ProductManager {
             }
         }
         return filteredProducts;
+    }
+
+    public static List<Product> searchProductsByName(String query) {
+        List<Product> result = new ArrayList<>();
+        for (Product product : allProducts) {
+            if (product.getTitle().toLowerCase().trim().contains(query.toLowerCase())) {
+                result.add(product);
+            }
+        }
+        return result;
     }
 }

@@ -10,8 +10,8 @@
 
     <View
         android:id="@+id/view6"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+        android:layout_width="88dp"
+        android:layout_height="88dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
@@ -22,8 +22,8 @@
 
     <ImageView
         android:id="@+id/itemImageOrder"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
         app:layout_constraintBottom_toBottomOf="@+id/view6"
         app:layout_constraintEnd_toEndOf="@+id/view6"
         app:layout_constraintStart_toStartOf="@+id/view6"
@@ -34,6 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="2dp"
         android:text="Title"
         android:textColor="@color/black"
         android:textSize="18sp"
@@ -46,9 +47,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:text="0"
-        android:textColor="@color/purple_Light"
-        android:textSize="18sp"
+        android:layout_marginBottom="4dp"
+        android:text="$570.00"
+        android:textColor="@color/new_black"
+        android:textSize="19sp"
         app:layout_constraintBottom_toBottomOf="@+id/view6"
         app:layout_constraintStart_toEndOf="@+id/view6" />
 

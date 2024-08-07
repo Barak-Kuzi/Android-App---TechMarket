@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.techmarket_finalproject.Activity.LoginActivity;
 import com.example.techmarket_finalproject.Interfaces.GenericCallBack;
 import com.example.techmarket_finalproject.Interfaces.UserCallBack;
 import com.example.techmarket_finalproject.Models.Category;
@@ -224,4 +225,19 @@ public class DatabaseManager {
         });
     }
 
+    public static void addNewListenerForUser() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").child(LoginActivity.getCurrentUser().getUserId());
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User user = snapshot.getValue(User.class);
+                LoginActivity.setCurrentUser(user);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // pass
+            }
+        });
+    }
 }

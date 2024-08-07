@@ -54,4 +54,11 @@ dependencies {
     implementation("com.google.firebase:firebase-database")
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-storage")
+
+    implementation("com.stripe:stripe-java:26.0.0")
+    implementation("com.stripe:stripe-android:20.48.2")
+    implementation("com.android.volley:volley:1.2.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.4")
+
+    implementation("com.github.kittinunf.fuel:fuel:2.3.1")
 }

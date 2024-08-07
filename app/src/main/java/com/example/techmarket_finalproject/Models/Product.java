@@ -12,6 +12,7 @@ public class Product implements Serializable {
     private String description;
     private boolean isFavorite;
     private CategoryEnum category;
+    private String imageUri;
 
     public Product() {
     }
@@ -26,6 +27,26 @@ public class Product implements Serializable {
         this.description = description;
         this.isFavorite = false;
         this.category = category;
+    }
+
+    public Product(String productId, String title, String imageUri, int review, double score, double price, String description, CategoryEnum category) {
+        this.productId = productId;
+        this.title = title;
+        this.imageUri = imageUri;
+        this.review = review;
+        this.score = score;
+        this.price = price;
+        this.description = description;
+        this.isFavorite = false;
+        this.category = category;
+    }
+
+    public String getImageUri() {
+        return imageUri;
+    }
+
+    public void setImageUri(String imageUri) {
+        this.imageUri = imageUri;
     }
 
     public CategoryEnum getCategory() {

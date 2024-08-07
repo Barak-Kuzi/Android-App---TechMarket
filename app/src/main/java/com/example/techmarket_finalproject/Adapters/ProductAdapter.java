@@ -11,9 +11,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.techmarket_finalproject.Activity.DetailActivity;
 import com.example.techmarket_finalproject.Models.Product;
 import com.example.techmarket_finalproject.Models.User;
+import com.example.techmarket_finalproject.Utilities.ImageLoader;
 import com.example.techmarket_finalproject.databinding.ViewholderStoreProductBinding;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
 
@@ -23,6 +25,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     public ProductAdapter(ArrayList<Product> productList, User user) {
         this.productList = productList;
+        this.user = user;
+    }
+
+    public ProductAdapter(List<Product> productList, User user) {
+        this.productList = (ArrayList<Product>) productList;
         this.user = user;
     }
 
@@ -53,6 +60,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         return productList.size();
     }
 
+    public void updateProducts(List<Product> newProducts) {
+        this.productList = (ArrayList<Product>) newProducts;
+        notifyDataSetChanged();
+    }
+
     public static class ProductViewHolder extends RecyclerView.ViewHolder {
         private final ViewholderStoreProductBinding binding;
 
@@ -64,7 +76,13 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         public void bind(Product product) {
             binding.titleTextOrder.setText(product.getTitle());
             binding.priceForOneItemText.setText(String.valueOf("$" + product.getPrice()));
-            binding.itemImageOrder.setImageResource(product.getImageResourceId());
+
+            if (product.getImageUri() != null && !product.getImageUri().isEmpty()) {
+                ImageLoader.loadImage(binding.itemImageOrder, product.getImageUri());
+            } else {
+                ImageLoader.loadImage(binding.itemImageOrder, product.getImageResourceId());
+            }
+
         }
     }
 }

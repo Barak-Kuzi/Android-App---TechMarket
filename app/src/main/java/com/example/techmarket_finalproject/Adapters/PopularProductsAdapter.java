@@ -15,6 +15,7 @@ import com.bumptech.glide.load.resource.bitmap.GranularRoundedCorners;
 import com.example.techmarket_finalproject.Activity.DetailActivity;
 import com.example.techmarket_finalproject.Models.Product;
 import com.example.techmarket_finalproject.Models.User;
+import com.example.techmarket_finalproject.Utilities.ImageLoader;
 import com.example.techmarket_finalproject.databinding.ViewholderPopularProductsBinding;
 
 import java.util.ArrayList;
@@ -42,30 +43,8 @@ public class PopularProductsAdapter extends RecyclerView.Adapter<PopularProducts
     @Override
     public void onBindViewHolder(@NonNull PopularProductsAdapter.Viewholder holder, int position) {
         Product product = products.get(position);
+        holder.bind(product);
 
-        viewholderPopularProductsBinding.productTitleText.setText(product.getTitle());
-        viewholderPopularProductsBinding.oldPriceProductText.setText("$" + product.getPrice());
-        viewholderPopularProductsBinding.oldPriceProductText
-                .setPaintFlags(viewholderPopularProductsBinding.oldPriceProductText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        viewholderPopularProductsBinding.newPriceProductText.setText("$" + product.getPrice());
-        viewholderPopularProductsBinding.ratingBarProduct.setRating((float) product.getScore());
-        viewholderPopularProductsBinding.ratingProductText.setText("(" + product.getScore() + ")");
-        viewholderPopularProductsBinding.reviewsProductText.setText(String.valueOf(product.getReview()));
-
-        Glide.with(context)
-                .load(product.getImageResourceId())
-                .transform(new GranularRoundedCorners(30, 30, 0, 0))
-                .into(viewholderPopularProductsBinding.productImageView);
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, DetailActivity.class);
-                intent.putExtra("product", products.get(position));
-                intent.putExtra("user", user);
-                context.startActivity(intent);
-            }
-        });
     }
 
     @Override
@@ -73,14 +52,35 @@ public class PopularProductsAdapter extends RecyclerView.Adapter<PopularProducts
         return products.size();
     }
 
-    public Product getProduct(int position) {
-        return this.products.get(position);
-    }
-
     public class Viewholder extends RecyclerView.ViewHolder {
+        private final ViewholderPopularProductsBinding binding;
 
-        public Viewholder(ViewholderPopularProductsBinding viewholderPopularProductsBinding) {
-            super(viewholderPopularProductsBinding.getRoot());
+        public Viewholder(ViewholderPopularProductsBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+        }
+
+        public void bind(Product product) {
+            binding.productTitleText.setText(product.getTitle());
+            binding.oldPriceProductText.setText("$" + product.getPrice());
+            binding.oldPriceProductText.setPaintFlags(binding.oldPriceProductText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            binding.newPriceProductText.setText("$" + product.getPrice());
+            binding.ratingBarProduct.setRating((float) product.getScore());
+            binding.ratingProductText.setText("(" + product.getScore() + ")");
+            binding.reviewsProductText.setText(String.valueOf(product.getReview()));
+
+            if (product.getImageUri() != null && !product.getImageUri().isEmpty()) {
+                ImageLoader.loadImage(binding.productImageView, product.getImageUri());
+            } else {
+                ImageLoader.loadImage(binding.productImageView, product.getImageResourceId());
+            }
+
+            itemView.setOnClickListener(v -> {
+                Intent intent = new Intent(context, DetailActivity.class);
+                intent.putExtra("product", product);
+                intent.putExtra("user", user);
+                context.startActivity(intent);
+            });
         }
     }
 }

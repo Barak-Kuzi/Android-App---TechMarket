@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.techmarket_finalproject.Adapters.CartAdapter;
 import com.example.techmarket_finalproject.Adapters.FavoriteProductsAdapter;
 import com.example.techmarket_finalproject.Interfaces.UpdateQuantityProductsListener;
+import com.example.techmarket_finalproject.Models.CategoryEnum;
 import com.example.techmarket_finalproject.Models.Product;
 import com.example.techmarket_finalproject.Models.User;
 import com.example.techmarket_finalproject.R;
@@ -103,6 +104,13 @@ public class FavoriteProductsActivity extends AppCompatActivity {
             int itemId = item.getItemId();
             if (itemId == R.id.menu_home) {
                 Intent intent = new Intent(FavoriteProductsActivity.this, MainActivity.class);
+                intent.putExtra("user", user);
+                startActivity(intent);
+                finish();
+                return true;
+            } else if (itemId == R.id.menu_browse) {
+                Intent intent = new Intent(FavoriteProductsActivity.this, StoreProductsActivity.class);
+                intent.putExtra("category", CategoryEnum.ALL_PRODUCTS);
                 intent.putExtra("user", user);
                 startActivity(intent);
                 finish();

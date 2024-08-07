@@ -1,8 +1,8 @@
 package com.example.techmarket_finalproject.Activity;
 
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,7 +29,6 @@ import com.example.techmarket_finalproject.Utilities.ProductManager;
 import com.example.techmarket_finalproject.Utilities.SliderItems;
 import com.example.techmarket_finalproject.databinding.ActivityMainBinding;
 import com.example.techmarket_finalproject.Models.Product;
-import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DatabaseError;
 
@@ -42,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements CategoryAdapter.O
     private User user;
     ArrayList<SliderItems> sliderItems;
     private ArrayList<Category> categories;
+    private ArrayList<Product> products;
+    private PopularProductsAdapter productsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +55,12 @@ public class MainActivity extends AppCompatActivity implements CategoryAdapter.O
             setContentView(activityMainBinding.getRoot());
 
             activityMainBinding.userNameTextView.setText(user.getName());
+            activityMainBinding.shoppingBagLayout.setOnClickListener(v -> {
+                Intent intent = new Intent(MainActivity.this, CartActivity.class);
+                intent.putExtra("user", user);
+                startActivity(intent);
+                finish();
+            });
 
             statusBarColor();
 
@@ -63,6 +70,10 @@ public class MainActivity extends AppCompatActivity implements CategoryAdapter.O
             categories = new ArrayList<>();
             initCategoryRecyclerView();
 
+            products = new ArrayList<>();
+            productsAdapter = new PopularProductsAdapter(products, user);
+            activityMainBinding.recyclerViewProducts.setLayoutManager(new GridLayoutManager(MainActivity.this, 2));
+            activityMainBinding.recyclerViewProducts.setAdapter(productsAdapter);
             initProductsRecyclerView();
 
             initBottomNavigationBar();
@@ -71,13 +82,11 @@ public class MainActivity extends AppCompatActivity implements CategoryAdapter.O
             DatabaseManager.initializeDatabaseWithProducts(this);
 
 
-
-
         } else {
             Toast.makeText(this, "The Page is Loading...", Toast.LENGTH_SHORT).show();
             finish();
         }
-}
+    }
 
     private void initBannerSlider() {
         activityMainBinding.progressBarBanners.setVisibility(TextView.VISIBLE);
@@ -132,6 +141,13 @@ public class MainActivity extends AppCompatActivity implements CategoryAdapter.O
             int itemId = item.getItemId();
             if (itemId == R.id.menu_home) {
                 return true;
+            } else if (itemId == R.id.menu_browse) {
+                Intent intent = new Intent(MainActivity.this, StoreProductsActivity.class);
+                intent.putExtra("category", CategoryEnum.ALL_PRODUCTS);
+                intent.putExtra("user", user);
+                startActivity(intent);
+                finish();
+                return true;
             } else if (itemId == R.id.menu_cart) {
                 Intent intent = new Intent(MainActivity.this, CartActivity.class);
                 intent.putExtra("user", user);
@@ -164,29 +180,43 @@ public class MainActivity extends AppCompatActivity implements CategoryAdapter.O
 
     private void initProductsRecyclerView() {
         activityMainBinding.progressBarProducts.setVisibility(TextView.VISIBLE);
-        ArrayList<Product> products = ProductManager.getAllProducts();
-
-//        activityMainBinding.popularProductsView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-//        activityMainBinding.popularProductsView.setAdapter(new PopularProductsAdapter(products, user));
-        activityMainBinding.recyclerViewProducts.setLayoutManager(new GridLayoutManager(MainActivity.this, 2));
-        activityMainBinding.recyclerViewProducts.setAdapter(new PopularProductsAdapter(products, user));
+        ArrayList<Product> fetchedProducts = ProductManager.getAllProducts();
+        products.clear();
+        products.addAll(fetchedProducts);
+        productsAdapter.notifyDataSetChanged();
         activityMainBinding.progressBarProducts.setVisibility(TextView.GONE);
     }
-
 
     @Override
     public void onCategoryClick(int position) {
         if (categories != null && !categories.isEmpty() && position >= 0 && position < categories.size()) {
             Category clickedCategory = categories.get(position);
             Intent intent = new Intent(MainActivity.this, StoreProductsActivity.class);
-
-            if (clickedCategory.getTitle().equals("Phones")) {
-                intent.putExtra("user", user);
-                intent.putExtra("category", CategoryEnum.CELL_PHONES);
-//                startActivity(intent);
-//                return;
+            Log.d("Category", clickedCategory.getTitle());
+            switch (clickedCategory.getTitle()) {
+                case "Phones":
+                    intent.putExtra("category", CategoryEnum.CELL_PHONES);
+                    break;
+                case "Smartwatches":
+                    intent.putExtra("category", CategoryEnum.SMART_WATCHES);
+                    break;
+                case "Laptops":
+                    intent.putExtra("category", CategoryEnum.LAPTOPS);
+                    break;
+                case "Headphones":
+                    intent.putExtra("category", CategoryEnum.HEADPHONES);
+                    break;
+                case "Desktops":
+                    intent.putExtra("category", CategoryEnum.DESKTOPS);
+                    break;
+                case "Televisions":
+                    intent.putExtra("category", CategoryEnum.TELEVISIONS);
+                    break;
+                case "See all":
+                    intent.putExtra("category", CategoryEnum.ALL_PRODUCTS);
+                    break;
             }
-
+            intent.putExtra("user", user);
             startActivity(intent);
             finish();
         } else {

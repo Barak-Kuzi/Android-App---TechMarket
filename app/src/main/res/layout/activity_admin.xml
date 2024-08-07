@@ -22,7 +22,7 @@
                 android:id="@+id/admin_panel_text_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="48dp"
                 android:text="@string/admin_panel"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -30,7 +30,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/adding_new_product"
+                android:id="@+id/adding_new_product_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -46,16 +46,16 @@
                 android:id="@+id/product_id_input_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="48dp"
+                android:layout_marginTop="32dp"
                 android:hint="@string/product_id"
                 android:paddingStart="25dp"
                 android:paddingEnd="25dp"
                 android:textColorHint="@color/green"
-                app:endIconDrawable="@drawable/person_outline"
+                app:endIconDrawable="@drawable/id_black_icon"
                 app:endIconMode="custom"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/adding_new_product">
+                app:layout_constraintTop_toBottomOf="@id/adding_new_product_label">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/product_id_input"
@@ -75,7 +75,7 @@
                 android:paddingStart="25dp"
                 android:paddingEnd="25dp"
                 android:textColorHint="@color/green"
-                app:endIconDrawable="@drawable/email"
+                app:endIconDrawable="@drawable/name_icon"
                 app:endIconMode="custom"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -99,7 +99,7 @@
                 android:paddingStart="25dp"
                 android:paddingEnd="25dp"
                 android:textColorHint="@color/green"
-                app:endIconDrawable="@drawable/address"
+                app:endIconDrawable="@drawable/dollar_icon"
                 app:endIconMode="custom"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -123,7 +123,7 @@
                 android:paddingStart="25dp"
                 android:paddingEnd="25dp"
                 android:textColorHint="@color/green"
-                app:endIconDrawable="@drawable/phone"
+                app:endIconDrawable="@drawable/rating_icon"
                 app:endIconMode="custom"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -147,7 +147,8 @@
                 android:paddingStart="25dp"
                 android:paddingEnd="25dp"
                 android:textColorHint="@color/green"
-                app:endIconMode="password_toggle"
+                app:endIconDrawable="@drawable/review_icon"
+                app:endIconMode="custom"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/product_rating_input_layout">
@@ -170,7 +171,8 @@
                 android:paddingStart="25dp"
                 android:paddingEnd="25dp"
                 android:textColorHint="@color/green"
-                app:endIconMode="password_toggle"
+                app:endIconDrawable="@drawable/description_icon"
+                app:endIconMode="custom"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/product_review_input_layout">
@@ -191,13 +193,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:hint="@string/category_product"
+                android:labelFor="@+id/product_category_dropdown"
                 android:paddingStart="25dp"
                 android:paddingEnd="25dp"
+                app:hintTextAppearance="@style/TextLabel"
+                android:textColorHint="@color/green"
+                app:boxStrokeColor="@color/new_black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/product_description_input_layout"
-                app:startIconDrawable="@drawable/category_icon"
-                android:labelFor="@+id/product_category_dropdown">
+                app:startIconDrawable="@drawable/category_icon">
 
                 <AutoCompleteTextView
                     android:id="@+id/product_category_dropdown"
@@ -208,8 +213,35 @@
                     android:paddingStart="48dp"
                     android:paddingTop="16dp"
                     android:paddingBottom="16dp"
-                    android:text="@string/select_category" />
+                    android:text="@string/select_category"
+                     />
             </com.google.android.material.textfield.TextInputLayout>
+
+            <ImageView
+                android:id="@+id/product_image_view"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/grey_background"
+                android:scaleType="centerCrop"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/product_category_input_layout" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/select_image_button"
+                android:layout_width="130dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="32dp"
+                android:background="@drawable/category_button_background"
+                android:text="Select Image"
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/product_image_view"
+                app:layout_constraintStart_toEndOf="@+id/product_image_view"
+                app:layout_constraintTop_toTopOf="@+id/product_image_view" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/add_product_button"
@@ -226,7 +258,7 @@
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/product_category_input_layout" />
+                app:layout_constraintTop_toBottomOf="@id/product_image_view" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/cancel_add_product_button"

@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.GranularRoundedCorners;
 import com.example.techmarket_finalproject.Interfaces.UpdateQuantityProductsListener;
 import com.example.techmarket_finalproject.Models.User;
+import com.example.techmarket_finalproject.Utilities.ImageLoader;
 import com.example.techmarket_finalproject.databinding.ViewholderCartBinding;
 import com.example.techmarket_finalproject.Models.Product;
 
@@ -55,10 +56,11 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.Viewholder> {
         holder.binding.totalProductPriceCart.setText("$" + formattedTotalPrice);
         holder.binding.quantityProductText.setText(String.valueOf(productQuantity));
 
-        Glide.with(context)
-                .load(product.getImageResourceId())
-                .transform(new GranularRoundedCorners(30, 30, 0, 0))
-                .into(holder.binding.productImageCart);
+        if (product.getImageUri() != null && !product.getImageUri().isEmpty()) {
+            ImageLoader.loadImage(holder.binding.productImageCart, product.getImageUri());
+        } else {
+            ImageLoader.loadImage(holder.binding.productImageCart, product.getImageResourceId());
+        }
 
         holder.binding.plusButton.setOnClickListener(v -> {
             user.increaseQuantity(product.getProductId(), v.getContext(), user.getUserId(), () -> {

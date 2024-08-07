@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -17,7 +18,17 @@
         android:roundIcon="@mipmap/ic_logo_app_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TechMarket_FinalProject"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".Activity.SearchActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.ImageSelectionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.PaymentActivity"
+            android:exported="false" />
         <activity
             android:name=".Activity.IntroActivity"
             android:exported="false" />
@@ -57,6 +68,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>

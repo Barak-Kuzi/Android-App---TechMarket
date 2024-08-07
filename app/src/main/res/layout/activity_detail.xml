@@ -138,11 +138,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="140dp"
+                    android:fontFamily="@font/kanit_medium_italic"
                     android:text="4.0"
                     android:textColor="@color/black"
                     android:textSize="18sp"
                     android:textStyle="normal"
-                    android:fontFamily="@font/kanit_medium_italic"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -151,10 +151,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
+                    android:fontFamily="@font/kanit_medium_italic"
                     android:text="@string/rating"
                     android:textColor="@color/black"
                     android:textSize="18sp"
-                    android:fontFamily="@font/kanit_medium_italic"
                     app:layout_constraintBottom_toBottomOf="@+id/ratingDetailText"
                     app:layout_constraintStart_toEndOf="@+id/ratingDetailText"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -186,7 +186,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
-                android:text="description"
+                android:text="@string/description_example"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 
@@ -200,10 +200,54 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="32dp"
                 android:background="@drawable/continue_btn_background"
+                android:fontFamily="@font/kanit_semi_bold_italic"
                 android:text="@string/add_to_cart"
                 android:textColor="@color/white"
-                android:textSize="24sp"
-                android:fontFamily="@font/kanit_semi_bold_italic" />
+                android:textSize="24sp" />
+
+            <LinearLayout
+                android:id="@+id/edit_delete_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/edit_product_button"
+                    style="@android:style/Widget.Button"
+                    android:layout_width="220dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/category_button_selected_background"
+                    android:fontFamily="@font/kanit_medium_italic"
+                    android:padding="4dp"
+                    android:text="@string/edit_product"
+                    android:textColor="@color/black"
+                    android:textSize="22sp" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/delete_product_button"
+                    style="@android:style/Widget.Button"
+                    android:layout_width="220dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/delete_button_background"
+                    android:fontFamily="@font/kanit_medium_italic"
+                    android:padding="4dp"
+                    android:text="@string/delete_product"
+                    android:textColor="@color/black"
+                    android:textSize="22sp" />
+
+            </LinearLayout>
+
+
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

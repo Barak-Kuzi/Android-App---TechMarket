@@ -15,6 +15,7 @@ import com.example.techmarket_finalproject.Models.Product;
 import com.example.techmarket_finalproject.Models.User;
 import com.example.techmarket_finalproject.R;
 import com.example.techmarket_finalproject.Utilities.DatabaseManager;
+import com.example.techmarket_finalproject.Utilities.ImageLoader;
 import com.example.techmarket_finalproject.databinding.ViewholderFavoriteProductsBinding;
 
 import java.util.ArrayList;
@@ -47,10 +48,11 @@ public class FavoriteProductsAdapter extends RecyclerView.Adapter<FavoriteProduc
         holder.binding.priceForOneItemText.setText("$" + product.getPrice());
         holder.binding.heartButton.setImageResource(R.drawable.heart);
 
-        Glide.with(context)
-                .load(product.getImageResourceId())
-                .transform(new GranularRoundedCorners(30, 30, 0, 0))
-                .into(holder.binding.itemImageOrder);
+        if (product.getImageUri() != null && !product.getImageUri().isEmpty()) {
+            ImageLoader.loadImage(holder.binding.itemImageOrder, product.getImageUri());
+        } else {
+            ImageLoader.loadImage(holder.binding.itemImageOrder, product.getImageResourceId());
+        }
 
         holder.binding.heartButton.setOnClickListener(v -> {
             user.removeFavoriteProduct(product.getProductId());

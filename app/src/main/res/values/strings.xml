@@ -60,4 +60,8 @@
     <string name="enter_your_coupon">Enter Your Coupon</string>
     <string name="apply">Apply</string>
 
+    <string name="description_example">Smart Watch A with multiple features including fitness tracking, sleep monitoring, customizable watch faces, and notifications for calls, texts, and apps. It also has a sleek design and is water-resistant up to 50 meters.</string>
+    <string name="delete_product">Delete Product</string>
+    <string name="update_product">Update Product</string>
+    <string name="edit_product">Edit Product</string>
 </resources>

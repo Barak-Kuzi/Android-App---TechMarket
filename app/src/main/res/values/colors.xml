@@ -9,11 +9,16 @@
     <color name="red">#FFD32F2F</color>
     <color name="purple_Dark">#521C98</color>
     <color name="purple_Light">#A421D2</color>
+
     <color name="grey">#E9E9E9</color>
+
     <color name="light_grey">#EFEFEF</color>
     <color name="light_grey2">#E3E2E2</color>
+    <color name="light_grey3">#DAD9D9</color>
+
     <color name="dark_grey">#AAAAAA</color>
     <color name="dark_grey2">#616161</color>
+
     <color name="grey_button">#DAD8D8</color>
     <color name="green">#00CF73</color>
     <color name="green2">#00B75F</color>
@@ -24,5 +29,6 @@
     <color name="new_green">#48D461</color>
     <color name="new_black">#2A2A2A</color>
     <color name="new_grey">#F1F1F1</color>
+    <color name="new_red">#CC5C5C</color>
 
 </resources>

@@ -26,6 +26,7 @@ import com.example.techmarket_finalproject.Models.Product;
 import com.example.techmarket_finalproject.Models.User;
 import com.example.techmarket_finalproject.R;
 import com.example.techmarket_finalproject.Interfaces.UserCallBack;
+import com.example.techmarket_finalproject.Utilities.DatabaseManager;
 import com.example.techmarket_finalproject.Utilities.ProductManager;
 import com.example.techmarket_finalproject.Utilities.ValidationManagement;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -55,9 +56,18 @@ public class LoginActivity extends AppCompatActivity {
 
     ProgressBar progressBar;
 
+    private static User currentUser;
     private FirebaseAuth firebaseAuth;
 
     private final ValidationManagement validationManagement = new ValidationManagement();
+
+    public static User getCurrentUser() {
+        return currentUser;
+    }
+
+    public static void setCurrentUser(User user) {
+        currentUser = user;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,6 +127,8 @@ public class LoginActivity extends AppCompatActivity {
                                                 @Override
                                                 public void onResponse(ArrayList<Product> response) {
                                                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                                    currentUser = user;
+                                                    DatabaseManager.addNewListenerForUser();
                                                     intent.putExtra("user", user);
                                                     startActivity(intent);
                                                     finish();

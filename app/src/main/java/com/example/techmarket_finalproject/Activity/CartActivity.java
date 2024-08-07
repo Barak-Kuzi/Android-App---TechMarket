@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.techmarket_finalproject.Adapters.CartAdapter;
 
+import com.example.techmarket_finalproject.Models.CategoryEnum;
 import com.example.techmarket_finalproject.Models.Product;
 import com.example.techmarket_finalproject.Models.User;
 import com.example.techmarket_finalproject.R;
@@ -39,7 +40,7 @@ public class CartActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-         user = (User) getIntent().getSerializableExtra("user");
+        user = (User) getIntent().getSerializableExtra("user");
 
         if (user != null) {
 
@@ -174,6 +175,13 @@ public class CartActivity extends AppCompatActivity {
             int itemId = item.getItemId();
             if (itemId == R.id.menu_home) {
                 Intent intent = new Intent(CartActivity.this, MainActivity.class);
+                intent.putExtra("user", user);
+                startActivity(intent);
+                finish();
+                return true;
+            } else if (itemId == R.id.menu_browse) {
+                Intent intent = new Intent(CartActivity.this, StoreProductsActivity.class);
+                intent.putExtra("category", CategoryEnum.ALL_PRODUCTS);
                 intent.putExtra("user", user);
                 startActivity(intent);
                 finish();
