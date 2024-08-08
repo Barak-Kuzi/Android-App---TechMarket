@@ -29,13 +29,13 @@
                 android:paddingEnd="16dp"
                 android:paddingBottom="16dp">
 
-                <ImageView
-                    android:id="@+id/back_button_favorite_products"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="8dp"
-                    android:src="@drawable/arrow"
-                    android:background="@drawable/coupon_background"/>
+<!--                <ImageView-->
+<!--                    android:id="@+id/back_button_favorite_products"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:padding="8dp"-->
+<!--                    android:src="@drawable/arrow"-->
+<!--                    android:background="@drawable/coupon_background"/>-->
 
                 <TextView
                     android:id="@+id/textView19"

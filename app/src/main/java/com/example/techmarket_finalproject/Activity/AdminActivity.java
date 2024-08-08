@@ -25,6 +25,8 @@ import com.example.techmarket_finalproject.Models.CategoryEnum;
 import com.example.techmarket_finalproject.Models.Product;
 import com.example.techmarket_finalproject.Models.User;
 import com.example.techmarket_finalproject.R;
+import com.example.techmarket_finalproject.Utilities.AppUtils;
+import com.example.techmarket_finalproject.Utilities.DatabaseManager;
 import com.example.techmarket_finalproject.Utilities.ImageLoader;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -38,6 +40,7 @@ public class AdminActivity extends AppCompatActivity {
     private AppCompatButton addProductButton, cancelAddProductButton;
 
     Uri selectedImageUri;
+    String selectedImageUriString;
     private ImageView productImageView;
     private AppCompatButton selectImageButton;
     private static final int IMAGE_SELECTION_REQUEST_CODE = 1;
@@ -48,14 +51,14 @@ public class AdminActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        user = (User) getIntent().getSerializableExtra("user");
+        user = LoginActivity.getCurrentUser();
         product = (Product) getIntent().getSerializableExtra("product");
 
         if (user != null) {
             EdgeToEdge.enable(this);
             setContentView(R.layout.activity_admin);
 
-            statusBarColor();
+            AppUtils.statusBarColor(this);
             initViews();
             setupCategorySpinner();
             editOrAddProduct();
@@ -70,31 +73,35 @@ public class AdminActivity extends AppCompatActivity {
                     int productReviews = Integer.parseInt(productReviewsInput.getText().toString().trim());
                     String productDescription = productDescriptionInput.getText().toString().trim();
                     CategoryEnum productCategory = CategoryEnum.valueOf(productCategoryDropdown.getText().toString().trim());
+                    Product newProduct;
+                    if (product != null) {
+                        newProduct = new Product(productId, productName, selectedImageUriString, productReviews, productRating, productPrice, productDescription, productCategory);
+                    } else {
+                        newProduct = new Product(productId, productName, selectedImageUri.toString(), productReviews, productRating, productPrice, productDescription, productCategory);
+                    }
 
-                    Product newProduct = new Product(productId, productName, selectedImageUri.toString(), productReviews, productRating, productPrice, productDescription, productCategory);
 
-                    // Add product to the database
-                    ArrayList<Product> products = new ArrayList<>();
-                    products.add(newProduct);
-                    addAllProductsToDatabase(AdminActivity.this, products);
-
-                    Toast.makeText(AdminActivity.this, "Product added successfully.", Toast.LENGTH_SHORT).show();
+                    DatabaseManager.addProductToDatabase(AdminActivity.this, newProduct);
                 }
             });
 
             cancelAddProductButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(AdminActivity.this, ProfileActivity.class);
-                    intent.putExtra("user", user);
-                    startActivity(intent);
-                    finish();
+                    if (product != null) {
+                        Intent intent = new Intent(AdminActivity.this, DetailActivity.class);
+                        intent.putExtra("product", product);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        startActivity(new Intent(AdminActivity.this, ProfileActivity.class));
+                        finish();
+                    }
                 }
             });
 
             selectImageButton.setOnClickListener(v -> {
                 Intent intent = new Intent(AdminActivity.this, ImageSelectionActivity.class);
-                intent.putExtra("user", user);
                 startActivityForResult(intent, IMAGE_SELECTION_REQUEST_CODE);
             });
 
@@ -105,11 +112,6 @@ public class AdminActivity extends AppCompatActivity {
 
     }
 
-    private void statusBarColor() {
-        Window window = AdminActivity.this.getWindow();
-        window.setStatusBarColor(ContextCompat.getColor(AdminActivity.this, R.color.new_green));
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -117,7 +119,6 @@ public class AdminActivity extends AppCompatActivity {
             String selectedImageUriString = data.getStringExtra("selectedImageUri");
             if (selectedImageUriString != null) {
                 selectedImageUri = Uri.parse(selectedImageUriString);
-                Log.d("AdminActivity", "Selected image URI: " + selectedImageUri);
                 Glide.with(this).load(selectedImageUri).into(productImageView);
             }
         }
@@ -154,6 +155,7 @@ public class AdminActivity extends AppCompatActivity {
             productReviewsInput.setText(String.valueOf(product.getReview()));
             productDescriptionInput.setText(product.getDescription());
             productCategoryDropdown.setText(product.getCategory().toString());
+            selectedImageUriString = product.getImageUri();
             if (product.getImageUri() != null && !product.getImageUri().isEmpty()) {
                 ImageLoader.loadImage(productImageView, product.getImageUri());
             } else {

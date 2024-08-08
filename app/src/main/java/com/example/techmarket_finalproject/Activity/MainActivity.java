@@ -3,12 +3,12 @@ package com.example.techmarket_finalproject.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,14 +22,13 @@ import com.example.techmarket_finalproject.Interfaces.GenericCallBack;
 import com.example.techmarket_finalproject.Models.Category;
 import com.example.techmarket_finalproject.Models.CategoryEnum;
 import com.example.techmarket_finalproject.Models.User;
-import com.example.techmarket_finalproject.R;
 
+import com.example.techmarket_finalproject.Utilities.AppUtils;
 import com.example.techmarket_finalproject.Utilities.DatabaseManager;
 import com.example.techmarket_finalproject.Utilities.ProductManager;
 import com.example.techmarket_finalproject.Utilities.SliderItems;
 import com.example.techmarket_finalproject.databinding.ActivityMainBinding;
 import com.example.techmarket_finalproject.Models.Product;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DatabaseError;
 
 import java.util.ArrayList;
@@ -48,21 +47,21 @@ public class MainActivity extends AppCompatActivity implements CategoryAdapter.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        user = (User) getIntent().getSerializableExtra("user");
+        user = LoginActivity.getCurrentUser();
+
 
         if (user != null) {
+
             activityMainBinding = ActivityMainBinding.inflate(getLayoutInflater());
             setContentView(activityMainBinding.getRoot());
 
             activityMainBinding.userNameTextView.setText(user.getName());
             activityMainBinding.shoppingBagLayout.setOnClickListener(v -> {
-                Intent intent = new Intent(MainActivity.this, CartActivity.class);
-                intent.putExtra("user", user);
-                startActivity(intent);
+                startActivity(new Intent(MainActivity.this, CartActivity.class));
                 finish();
             });
 
-            statusBarColor();
+            AppUtils.statusBarColor(this);
 
             sliderItems = new ArrayList<>();
             initBannerSlider();
@@ -71,16 +70,21 @@ public class MainActivity extends AppCompatActivity implements CategoryAdapter.O
             initCategoryRecyclerView();
 
             products = new ArrayList<>();
-            productsAdapter = new PopularProductsAdapter(products, user);
+            productsAdapter = new PopularProductsAdapter(products);
             activityMainBinding.recyclerViewProducts.setLayoutManager(new GridLayoutManager(MainActivity.this, 2));
             activityMainBinding.recyclerViewProducts.setAdapter(productsAdapter);
             initProductsRecyclerView();
 
-            initBottomNavigationBar();
+            AppUtils.initNavigationBar(this, activityMainBinding.bottomNavigationBar.getRoot());
 
             // Initialize database with products if not already done
             DatabaseManager.initializeDatabaseWithProducts(this);
 
+            // Refresh products list
+            if (ProductManager.isProductDeleted()) {
+                refreshProductList();
+                ProductManager.setProductDeleted(false);
+            }
 
         } else {
             Toast.makeText(this, "The Page is Loading...", Toast.LENGTH_SHORT).show();
@@ -135,49 +139,6 @@ public class MainActivity extends AppCompatActivity implements CategoryAdapter.O
         });
     }
 
-    private void initBottomNavigationBar() {
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_bar);
-        bottomNavigationView.setOnItemSelectedListener(item -> {
-            int itemId = item.getItemId();
-            if (itemId == R.id.menu_home) {
-                return true;
-            } else if (itemId == R.id.menu_browse) {
-                Intent intent = new Intent(MainActivity.this, StoreProductsActivity.class);
-                intent.putExtra("category", CategoryEnum.ALL_PRODUCTS);
-                intent.putExtra("user", user);
-                startActivity(intent);
-                finish();
-                return true;
-            } else if (itemId == R.id.menu_cart) {
-                Intent intent = new Intent(MainActivity.this, CartActivity.class);
-                intent.putExtra("user", user);
-                startActivity(intent);
-                finish();
-                return true;
-            } else if (itemId == R.id.menu_favorites) {
-                Intent intent = new Intent(MainActivity.this, FavoriteProductsActivity.class);
-                intent.putExtra("user", user);
-                startActivity(intent);
-                finish();
-                return true;
-            } else if (itemId == R.id.menu_profile) {
-                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-                intent.putExtra("user", user);
-                startActivity(intent);
-                finish();
-                return true;
-            } else {
-                return false;
-            }
-        });
-        bottomNavigationView.setSelectedItemId(R.id.menu_home);
-    }
-
-    private void statusBarColor() {
-        Window window = MainActivity.this.getWindow();
-        window.setStatusBarColor(ContextCompat.getColor(MainActivity.this, R.color.new_green));
-    }
-
     private void initProductsRecyclerView() {
         activityMainBinding.progressBarProducts.setVisibility(TextView.VISIBLE);
         ArrayList<Product> fetchedProducts = ProductManager.getAllProducts();
@@ -192,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements CategoryAdapter.O
         if (categories != null && !categories.isEmpty() && position >= 0 && position < categories.size()) {
             Category clickedCategory = categories.get(position);
             Intent intent = new Intent(MainActivity.this, StoreProductsActivity.class);
-            Log.d("Category", clickedCategory.getTitle());
+
             switch (clickedCategory.getTitle()) {
                 case "Phones":
                     intent.putExtra("category", CategoryEnum.CELL_PHONES);
@@ -216,11 +177,27 @@ public class MainActivity extends AppCompatActivity implements CategoryAdapter.O
                     intent.putExtra("category", CategoryEnum.ALL_PRODUCTS);
                     break;
             }
-            intent.putExtra("user", user);
             startActivity(intent);
             finish();
         } else {
             Toast.makeText(this, "Invalid category selected.", Toast.LENGTH_SHORT).show();
         }
     }
+
+    private void refreshProductList() {
+        DatabaseManager.getAllProductsFromDatabase(new GenericCallBack<ArrayList<Product>>() {
+            @Override
+            public void onResponse(ArrayList<Product> response) {
+                products.clear();
+                products.addAll(response);
+                productsAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(DatabaseError databaseError) {
+                Toast.makeText(MainActivity.this, "Failed to refresh products.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 }

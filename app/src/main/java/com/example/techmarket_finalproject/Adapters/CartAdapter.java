@@ -2,6 +2,7 @@ package com.example.techmarket_finalproject.Adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.GranularRoundedCorners;
+import com.example.techmarket_finalproject.Activity.DetailActivity;
 import com.example.techmarket_finalproject.Interfaces.UpdateQuantityProductsListener;
 import com.example.techmarket_finalproject.Models.User;
 import com.example.techmarket_finalproject.Utilities.ImageLoader;
@@ -81,6 +83,13 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.Viewholder> {
                 updateQuantityProductsListener.update();
             });
         });
+
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, DetailActivity.class);
+            intent.putExtra("product", product);
+            context.startActivity(intent);
+        });
+
     }
 
     @Override

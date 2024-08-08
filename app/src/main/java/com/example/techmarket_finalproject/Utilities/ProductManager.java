@@ -18,7 +18,9 @@ import java.util.Map;
 public class ProductManager {
     private static final String TAG = "ProductManager";
     private static final Map<String, Product> productCache = new HashMap<>();
+    private static final List<Product> allProducts = new ArrayList<>();
     private static boolean isInitialized = false;
+    private static boolean productDeleted = false;
 
     public static void initialize(Context context, GenericCallBack<ArrayList<Product>> callback) {
         if (!isInitialized) {
@@ -51,8 +53,6 @@ public class ProductManager {
         return new ArrayList<>(productCache.values());
     }
 
-    private static final List<Product> allProducts = new ArrayList<>();
-
     public static List<Product> getAllProductsList() {
         return allProducts;
     }
@@ -76,4 +76,13 @@ public class ProductManager {
         }
         return result;
     }
+
+    public static boolean isProductDeleted() {
+        return productDeleted;
+    }
+
+    public static void setProductDeleted(boolean productDeleted) {
+        ProductManager.productDeleted = productDeleted;
+    }
+
 }

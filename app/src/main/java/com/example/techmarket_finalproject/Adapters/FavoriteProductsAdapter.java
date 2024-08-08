@@ -65,7 +65,6 @@ public class FavoriteProductsAdapter extends RecyclerView.Adapter<FavoriteProduc
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, DetailActivity.class);
             intent.putExtra("product", product);
-            intent.putExtra("user", user);
             context.startActivity(intent);
         });
 

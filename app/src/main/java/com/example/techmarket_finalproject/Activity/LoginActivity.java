@@ -10,7 +10,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -19,13 +18,13 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
 
 import com.example.techmarket_finalproject.Interfaces.GenericCallBack;
 import com.example.techmarket_finalproject.Models.Product;
 import com.example.techmarket_finalproject.Models.User;
 import com.example.techmarket_finalproject.R;
 import com.example.techmarket_finalproject.Interfaces.UserCallBack;
+import com.example.techmarket_finalproject.Utilities.AppUtils;
 import com.example.techmarket_finalproject.Utilities.DatabaseManager;
 import com.example.techmarket_finalproject.Utilities.ProductManager;
 import com.example.techmarket_finalproject.Utilities.ValidationManagement;
@@ -56,10 +55,11 @@ public class LoginActivity extends AppCompatActivity {
 
     ProgressBar progressBar;
 
-    private static User currentUser;
     private FirebaseAuth firebaseAuth;
 
     private final ValidationManagement validationManagement = new ValidationManagement();
+
+    private static User currentUser;
 
     public static User getCurrentUser() {
         return currentUser;
@@ -80,9 +80,7 @@ public class LoginActivity extends AppCompatActivity {
                             View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
                             View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
             );
-//            getWindow().setStatusBarColor(Color.TRANSPARENT);
-            Window window = LoginActivity.this.getWindow();
-            window.setStatusBarColor(ContextCompat.getColor(LoginActivity.this, R.color.green));
+            AppUtils.statusBarColor(this);
         }
 
         if (getSupportActionBar() != null) {  //hide action bar
@@ -109,14 +107,14 @@ public class LoginActivity extends AppCompatActivity {
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 }
 
-                progressBar.setVisibility(View.VISIBLE); // Show ProgressBar
+                progressBar.setVisibility(View.VISIBLE);
 
                 firebaseAuth.signInWithEmailAndPassword(email, password)
                         .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(Task<AuthResult> task) {
 
-                                progressBar.setVisibility(View.GONE); // Hide ProgressBar
+                                progressBar.setVisibility(View.GONE);
 
                                 if (task != null && task.isSuccessful()) {
                                     String userId = firebaseAuth.getCurrentUser().getUid();
@@ -126,11 +124,9 @@ public class LoginActivity extends AppCompatActivity {
                                             ProductManager.initialize(LoginActivity.this, new GenericCallBack<ArrayList<Product>>() {
                                                 @Override
                                                 public void onResponse(ArrayList<Product> response) {
-                                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                                     currentUser = user;
                                                     DatabaseManager.addNewListenerForUser();
-                                                    intent.putExtra("user", user);
-                                                    startActivity(intent);
+                                                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                                     finish();
                                                 }
 

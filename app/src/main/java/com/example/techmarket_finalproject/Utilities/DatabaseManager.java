@@ -152,6 +152,28 @@ public class DatabaseManager {
         });
     }
 
+    public static void addProductToDatabase(Context context, Product product) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("products");
+        databaseReference.child(product.getProductId()).setValue(product).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Toast.makeText(context, "Product added successfully.", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(context, "Failed to add product.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public static void removeProductFromDatabase(Context context, String productId) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("products");
+        databaseReference.child(productId).removeValue().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Toast.makeText(context, "Product deleted successfully.", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(context, "Failed to delete product.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     public static void updateFavoriteProductsInDatabase(Context context, String userId, List<String> favoriteProducts) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").child(userId).child("favoriteProducts");
         databaseReference.setValue(favoriteProducts).addOnCompleteListener(task -> {
@@ -159,27 +181,6 @@ public class DatabaseManager {
                 Toast.makeText(context, "Favorites updated successfully.", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(context, "Failed to update favorites.", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    public static void getProductsByCategory(CategoryEnum category, GenericCallBack<ArrayList<Product>> callback) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("products");
-        databaseReference.orderByChild("category").equalTo(category.name()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                ArrayList<Product> products = new ArrayList<>();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Product product = snapshot.getValue(Product.class);
-                    products.add(product);
-                }
-                callback.onResponse(products);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e(TAG, "Failed to read products from database.", databaseError.toException());
-                callback.onFailure(databaseError);
             }
         });
     }

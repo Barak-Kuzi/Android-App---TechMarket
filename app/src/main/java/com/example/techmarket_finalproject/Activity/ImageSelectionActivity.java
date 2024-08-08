@@ -22,21 +22,19 @@ public class ImageSelectionActivity extends AppCompatActivity {
 
     ActivityImageSelectionBinding activityImageSelectionBinding;
     private ImageAdapter imageAdapter;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        User user = (User) getIntent().getSerializableExtra("user");
+        user = LoginActivity.getCurrentUser();
 
         if (user != null) {
             activityImageSelectionBinding = ActivityImageSelectionBinding.inflate(getLayoutInflater());
             setContentView(activityImageSelectionBinding.getRoot());
 
             activityImageSelectionBinding.backButtonToAdminPanel.setOnClickListener(v -> {
-                Intent intent = new Intent(ImageSelectionActivity.this, AdminActivity.class);
-                intent.putExtra("user", user);
-                startActivity(intent);
                 finish();
             });
 

@@ -3,13 +3,11 @@ package com.example.techmarket_finalproject.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.Window;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.techmarket_finalproject.Adapters.ProductAdapter;
@@ -17,9 +15,9 @@ import com.example.techmarket_finalproject.Models.CategoryEnum;
 import com.example.techmarket_finalproject.Models.Product;
 import com.example.techmarket_finalproject.Models.User;
 import com.example.techmarket_finalproject.R;
+import com.example.techmarket_finalproject.Utilities.AppUtils;
 import com.example.techmarket_finalproject.Utilities.ProductManager;
 import com.example.techmarket_finalproject.databinding.ActivityStoreProductsBinding;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 
@@ -34,15 +32,17 @@ public class StoreProductsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        user = (User) getIntent().getSerializableExtra("user");
+        user = LoginActivity.getCurrentUser();
         CategoryEnum category = (CategoryEnum) getIntent().getSerializableExtra("category");
 
         if (user != null) {
             productList = new ArrayList<>();
-            statusBarColor();
-            initViews(user);
+            AppUtils.statusBarColor(this);
+            initViews();
             setupCategoryButtons();
-            initBottomNavigationBar();
+
+            AppUtils.initNavigationBar(this, activityStoreProductsBinding.bottomNavigationBar.getRoot());
+            activityStoreProductsBinding.bottomNavigationBar.getRoot().setSelectedItemId(R.id.menu_browse);
 
             if (category != null) {
                 selectCategory(category);
@@ -85,21 +85,9 @@ public class StoreProductsActivity extends AppCompatActivity {
         }
     }
 
-    private void statusBarColor() {
-        Window window = StoreProductsActivity.this.getWindow();
-        window.setStatusBarColor(ContextCompat.getColor(StoreProductsActivity.this, R.color.new_green));
-    }
-
-    private void initViews(User user) {
+    private void initViews() {
         activityStoreProductsBinding = ActivityStoreProductsBinding.inflate(getLayoutInflater());
         setContentView(activityStoreProductsBinding.getRoot());
-
-//        activityStoreProductsBinding.backButtonToHomePage.setOnClickListener(v -> {
-//            Intent intent = new Intent(StoreProductsActivity.this, MainActivity.class);
-//            intent.putExtra("user", user);
-//            startActivity(intent);
-//            finish();
-//        });
 
         activityStoreProductsBinding.cartView.setLayoutManager(new LinearLayoutManager(this));
         productAdapter = new ProductAdapter(productList, user);
@@ -111,7 +99,6 @@ public class StoreProductsActivity extends AppCompatActivity {
                 String query = searchField.getText().toString();
                 Intent intent = new Intent(StoreProductsActivity.this, SearchActivity.class);
                 intent.putExtra("query", query);
-                intent.putExtra("user", user);
                 startActivity(intent);
                 return true;
             }
@@ -150,41 +137,5 @@ public class StoreProductsActivity extends AppCompatActivity {
         productAdapter.notifyDataSetChanged();
     }
 
-    private void initBottomNavigationBar() {
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_bar);
-        bottomNavigationView.setOnItemSelectedListener(item -> {
-            int itemId = item.getItemId();
-            if (itemId == R.id.menu_home) {
-                Intent intent = new Intent(StoreProductsActivity.this, MainActivity.class);
-                intent.putExtra("user", user);
-                startActivity(intent);
-                finish();
-                return true;
-            } else if (itemId == R.id.menu_browse) {
-                return true;
-            } else if (itemId == R.id.menu_cart) {
-                Intent intent = new Intent(StoreProductsActivity.this, CartActivity.class);
-                intent.putExtra("user", user);
-                startActivity(intent);
-                finish();
-                return true;
-            } else if (itemId == R.id.menu_favorites) {
-                Intent intent = new Intent(StoreProductsActivity.this, FavoriteProductsActivity.class);
-                intent.putExtra("user", user);
-                startActivity(intent);
-                finish();
-                return true;
-            } else if (itemId == R.id.menu_profile) {
-                Intent intent = new Intent(StoreProductsActivity.this, ProfileActivity.class);
-                intent.putExtra("user", user);
-                startActivity(intent);
-                finish();
-                return true;
-            } else {
-                return false;
-            }
-        });
-        bottomNavigationView.setSelectedItemId(R.id.menu_browse);
-    }
 
 }

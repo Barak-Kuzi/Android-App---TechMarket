@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingStart="8dp"
-            android:paddingTop="16dp"
+            android:paddingTop="8dp"
             android:paddingEnd="8dp"
             android:paddingBottom="8dp">
 
@@ -31,15 +31,15 @@
                 android:paddingStart="16dp"
                 android:paddingTop="8dp"
                 android:paddingEnd="16dp"
-                android:paddingBottom="16dp">
+                android:paddingBottom="8dp">
 
-                <ImageView
-                    android:id="@+id/backButtonViewCart"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/coupon_background"
-                    android:padding="8dp"
-                    android:src="@drawable/arrow" />
+<!--                <ImageView-->
+<!--                    android:id="@+id/backButtonViewCart"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:background="@drawable/coupon_background"-->
+<!--                    android:padding="8dp"-->
+<!--                    android:src="@drawable/arrow" />-->
 
                 <TextView
                     android:id="@+id/textView19"
@@ -70,9 +70,9 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/cartView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="400dp"
                 android:visibility="visible"
-                tools:itemCount="3"
+                tools:itemCount="4"
                 tools:listitem="@layout/viewholder_cart" />
 
             <LinearLayout
@@ -240,6 +240,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="16dp"
+                android:layout_marginBottom="24dp"
                 android:background="@drawable/checkout_btn_background"
                 android:fontFamily="@font/kanit_regular"
                 android:paddingStart="56dp"

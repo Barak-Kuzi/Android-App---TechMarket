@@ -65,6 +65,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         notifyDataSetChanged();
     }
 
+    public void updateData(List<Product> newProductList) {
+        this.productList = (ArrayList<Product>) newProductList;
+        notifyDataSetChanged();
+    }
+
     public static class ProductViewHolder extends RecyclerView.ViewHolder {
         private final ViewholderStoreProductBinding binding;
 

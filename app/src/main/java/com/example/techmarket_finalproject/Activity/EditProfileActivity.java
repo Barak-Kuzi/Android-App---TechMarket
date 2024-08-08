@@ -35,11 +35,14 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private final ValidationManagement validationManagement = new ValidationManagement();
 
+    private User user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        User user = (User) getIntent().getSerializableExtra("user");
+//        User user = (User) getIntent().getSerializableExtra("user");
+        user = LoginActivity.getCurrentUser();
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
@@ -83,7 +86,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 DatabaseManager.updateUserInDatabase(EditProfileActivity.this, user.getUserId(), userMap);
 
                 Intent intent = new Intent(EditProfileActivity.this, ProfileActivity.class);
-                intent.putExtra("user", user);
+//                intent.putExtra("user", user);
                 startActivity(intent);
                 finish();
             }

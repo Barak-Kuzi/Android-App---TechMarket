@@ -23,13 +23,11 @@ import java.util.ArrayList;
 public class PopularProductsAdapter extends RecyclerView.Adapter<PopularProductsAdapter.Viewholder> {
 
     private final ArrayList<Product> products;
-    private User user;
     private Context context;
     private ViewholderPopularProductsBinding viewholderPopularProductsBinding;
 
-    public PopularProductsAdapter(ArrayList<Product> products, User user) {
+    public PopularProductsAdapter(ArrayList<Product> products) {
         this.products = products;
-        this.user = user;
     }
 
     @NonNull
@@ -44,7 +42,6 @@ public class PopularProductsAdapter extends RecyclerView.Adapter<PopularProducts
     public void onBindViewHolder(@NonNull PopularProductsAdapter.Viewholder holder, int position) {
         Product product = products.get(position);
         holder.bind(product);
-
     }
 
     @Override
@@ -78,7 +75,6 @@ public class PopularProductsAdapter extends RecyclerView.Adapter<PopularProducts
             itemView.setOnClickListener(v -> {
                 Intent intent = new Intent(context, DetailActivity.class);
                 intent.putExtra("product", product);
-                intent.putExtra("user", user);
                 context.startActivity(intent);
             });
         }

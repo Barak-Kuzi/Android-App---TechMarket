@@ -15,7 +15,10 @@ import androidx.core.content.ContextCompat;
 
 import com.example.techmarket_finalproject.Models.User;
 import com.example.techmarket_finalproject.R;
+import com.example.techmarket_finalproject.Utilities.AppUtils;
+import com.example.techmarket_finalproject.Utilities.DatabaseManager;
 import com.example.techmarket_finalproject.Utilities.ImageLoader;
+import com.example.techmarket_finalproject.Utilities.ProductManager;
 import com.example.techmarket_finalproject.databinding.ActivityDetailBinding;
 import com.example.techmarket_finalproject.Models.Product;
 
@@ -31,30 +34,33 @@ public class DetailActivity extends AppCompatActivity {
         activityDetailBinding = ActivityDetailBinding.inflate(getLayoutInflater());
         setContentView(activityDetailBinding.getRoot());
 
-        statusBarColor();
+        AppUtils.statusBarColor(this);
         getBundles();
     }
 
-    private void statusBarColor() {
-        Window window = DetailActivity.this.getWindow();
-        window.setStatusBarColor(ContextCompat.getColor(DetailActivity.this, R.color.new_green));
-    }
 
     private void getBundles() {
         this.product = (Product) getIntent().getSerializableExtra("product");
-        this.user = (User) getIntent().getSerializableExtra("user");
+        this.user = LoginActivity.getCurrentUser();
 
         if (product != null && user != null) {
 
             if (user.isAdmin()) {
                 activityDetailBinding.editDeleteLayout.setVisibility(View.VISIBLE);
+
                 activityDetailBinding.editProductButton.setOnClickListener(v -> {
                     Intent intent = new Intent(DetailActivity.this, AdminActivity.class);
                     intent.putExtra("product", product);
-                    intent.putExtra("user", user);
                     startActivity(intent);
                     finish();
                 });
+
+                activityDetailBinding.deleteProductButton.setOnClickListener(v -> {
+                    DatabaseManager.removeProductFromDatabase(getApplicationContext(), product.getProductId());
+                    ProductManager.setProductDeleted(true);
+                    finish();
+                });
+
             } else {
                 activityDetailBinding.editDeleteLayout.setVisibility(View.GONE);
             }
@@ -108,9 +114,6 @@ public class DetailActivity extends AppCompatActivity {
             });
 
             activityDetailBinding.backButton.setOnClickListener(v -> {
-                Intent intent = new Intent(DetailActivity.this, MainActivity.class);
-                intent.putExtra("user", user);
-                startActivity(intent);
                 finish();
             });
         } else {

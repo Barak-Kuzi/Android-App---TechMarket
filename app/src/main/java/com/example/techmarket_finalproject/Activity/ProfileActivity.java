@@ -12,9 +12,9 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
-import com.example.techmarket_finalproject.Models.CategoryEnum;
 import com.example.techmarket_finalproject.Models.User;
 import com.example.techmarket_finalproject.R;
+import com.example.techmarket_finalproject.Utilities.AppUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -24,18 +24,23 @@ public class ProfileActivity extends AppCompatActivity {
     private AppCompatButton logoutButton;
     private User user;
     private ImageView profileImageView;
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        user = (User) getIntent().getSerializableExtra("user");
+        user = LoginActivity.getCurrentUser();
 
         if (user != null) {
             EdgeToEdge.enable(this);
             setContentView(R.layout.activity_profile);
             initViews();
-            initBottomNavigationBar();
+
+            bottomNavigationView = findViewById(R.id.bottom_navigation_bar);
+            AppUtils.initNavigationBar(this, bottomNavigationView);
+            bottomNavigationView.setSelectedItemId(R.id.menu_profile);
+
 
             fullNameLabel.setText(user.getName());
             usernameProfile.setText(user.getName());
@@ -52,9 +57,7 @@ public class ProfileActivity extends AppCompatActivity {
         homePageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
-                intent.putExtra("user", user);
-                startActivity(intent);
+                startActivity(new Intent(ProfileActivity.this, MainActivity.class));
                 finish();
             }
         });
@@ -62,9 +65,7 @@ public class ProfileActivity extends AppCompatActivity {
         editProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ProfileActivity.this, EditProfileActivity.class);
-                intent.putExtra("user", user);
-                startActivity(intent);
+                startActivity(new Intent(ProfileActivity.this, EditProfileActivity.class));
                 finish();
             }
         });
@@ -73,9 +74,7 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (user.isAdmin()) {
-                    Intent intent = new Intent(ProfileActivity.this, AdminActivity.class);
-                    intent.putExtra("user", user);
-                    startActivity(intent);
+                    startActivity(new Intent(ProfileActivity.this, AdminActivity.class));
                     finish();
                 } else {
                     Toast.makeText(ProfileActivity.this, "You are not an admin.", Toast.LENGTH_SHORT).show();
@@ -87,6 +86,7 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
+                finish();
             }
         });
     }
@@ -103,44 +103,6 @@ public class ProfileActivity extends AppCompatActivity {
         editProfileButton = findViewById(R.id.edit_profile_button);
         adminPanelButton = findViewById(R.id.admin_panel_button);
         logoutButton = findViewById(R.id.logout_button);
-    }
-
-    private void initBottomNavigationBar() {
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_bar);
-        bottomNavigationView.setOnItemSelectedListener(item -> {
-            int itemId = item.getItemId();
-            if (itemId == R.id.menu_home) {
-                Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
-                intent.putExtra("user", user);
-                startActivity(intent);
-                finish();
-                return true;
-            } else if (itemId == R.id.menu_browse) {
-                Intent intent = new Intent(ProfileActivity.this, StoreProductsActivity.class);
-                intent.putExtra("category", CategoryEnum.ALL_PRODUCTS);
-                intent.putExtra("user", user);
-                startActivity(intent);
-                finish();
-                return true;
-            } else if (itemId == R.id.menu_cart) {
-                Intent intent = new Intent(ProfileActivity.this, CartActivity.class);
-                intent.putExtra("user", user);
-                startActivity(intent);
-                finish();
-                return true;
-            } else if (itemId == R.id.menu_favorites) {
-                Intent intent = new Intent(ProfileActivity.this, FavoriteProductsActivity.class);
-                intent.putExtra("user", user);
-                startActivity(intent);
-                finish();
-                return true;
-            } else if (itemId == R.id.menu_profile) {
-                return true;
-            } else {
-                return false;
-            }
-        });
-        bottomNavigationView.setSelectedItemId(R.id.menu_profile);
     }
 
 }

@@ -59,46 +59,12 @@ public class PaymentActivity extends AppCompatActivity {
             }
         });
 
-        createCustomer();
-
-//        StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://api.stripe.com/v1/customers", new Response.Listener<String>() {
-//            @Override
-//            public void onResponse(String response) {
-//                try {
-//                    JSONObject object = new JSONObject(response);
-//
-//                    CustomerId = object.getString("id");
-//                    Toast.makeText(PaymentActivity.this, "Customer ID: " + CustomerId, Toast.LENGTH_SHORT).show();
-//                    Log.d("PaymentActivity", "Customer ID: " + CustomerId);
-//
-//                    getEphemeralKey();
-//
-//                } catch (JSONException e) {
-//                    Log.e("PaymentActivity", "JSON Exception: " + e.getMessage());
-//                    throw new RuntimeException(e);
-//                }
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                Log.e("PaymentActivity", "Volley Error: " + error.getMessage());
-//                Toast.makeText(PaymentActivity.this, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-//            }
-//        }) {
-//            @Override
-//            public Map<String, String> getHeaders() throws AuthFailureError {
-//                Map<String, String> headers = new HashMap<>();
-//                headers.put("Authorization", "Bearer " + SecretKey);
-//                return headers;
-//            }
-//        };
-//
-//        RequestQueue requestQueue = Volley.newRequestQueue(this);
-//        requestQueue.add(stringRequest);
-
+        //new
+        double totalAmount = getIntent().getDoubleExtra("totalAmount", 0.0);
+        createCustomer(totalAmount);
     }
 
-    private void createCustomer() {
+    private void createCustomer(double totalAmount) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://api.stripe.com/v1/customers", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -106,8 +72,7 @@ public class PaymentActivity extends AppCompatActivity {
                     JSONObject object = new JSONObject(response);
                     CustomerId = object.getString("id");
                     Toast.makeText(PaymentActivity.this, "Customer ID: " + CustomerId, Toast.LENGTH_SHORT).show();
-                    Log.d("PaymentActivity", "Customer ID: " + CustomerId);
-                    getEphemeralKey();
+                    getEphemeralKey(totalAmount);
                 } catch (JSONException e) {
                     Log.e("PaymentActivity", "JSON Exception: " + e.getMessage());
                     throw new RuntimeException(e);
@@ -145,15 +110,13 @@ public class PaymentActivity extends AppCompatActivity {
             Log.d("PaymentActivity", "Payment Success");
             Toast.makeText(this, "Payment Success", Toast.LENGTH_SHORT).show();
         } else if (paymentSheetResult instanceof PaymentSheetResult.Failed) {
-//            Log.d("PaymentActivity", "Payment Failed");
-//            Toast.makeText(this, "Payment Failed", Toast.LENGTH_SHORT).show();
             PaymentSheetResult.Failed failedResult = (PaymentSheetResult.Failed) paymentSheetResult;
             Log.e("PaymentActivity", "Payment Failed: " + failedResult.getError().getMessage());
             Toast.makeText(this, "Payment Failed: " + failedResult.getError().getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void getEphemeralKey() {
+    private void getEphemeralKey(double totalAmount) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://api.stripe.com/v1/ephemeral_keys", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -162,8 +125,7 @@ public class PaymentActivity extends AppCompatActivity {
 
                     EphemeralKey = object.getString("id");
                     Toast.makeText(PaymentActivity.this, "Epherical Key: " + EphemeralKey, Toast.LENGTH_SHORT).show();
-                    Log.d("PaymentActivity", "Epherical Key: " + EphemeralKey);
-                    getClientSecret(CustomerId, EphemeralKey);
+                    getClientSecret(CustomerId, EphemeralKey, totalAmount);
 
                 } catch (JSONException e) {
                     Log.e("PaymentActivity", "JSON Exception: " + e.getMessage());
@@ -199,7 +161,7 @@ public class PaymentActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    private void getClientSecret(String customerId, String ephemeralKey) {
+    private void getClientSecret(String customerId, String ephemeralKey, double totalAmount) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://api.stripe.com/v1/payment_intents", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -208,7 +170,7 @@ public class PaymentActivity extends AppCompatActivity {
 
                     ClientSecret = object.getString("client_secret");
                     Toast.makeText(PaymentActivity.this, "Client Secret: " + ClientSecret, Toast.LENGTH_SHORT).show();
-                    Log.d("PaymentActivity", "Client Secret: " + ClientSecret);
+                    paymentFlow();
                 } catch (JSONException e) {
                     Log.e("PaymentActivity", "JSON Exception: " + e.getMessage());
                     throw new RuntimeException(e);
@@ -230,14 +192,24 @@ public class PaymentActivity extends AppCompatActivity {
                 return headers;
             }
 
+//            @Override
+//            protected Map<String, String> getParams() throws AuthFailureError {
+//                Map<String, String> params = new HashMap<>();
+//                params.put("amount", "1000");
+//                params.put("currency", "usd");
+//                params.put("customer", customerId);
+//                params.put("automatic_payment_methods[enabled]", "true");
+//
+//                return params;
+//            }
+
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("amount", "1000");
+                params.put("amount", String.valueOf((int) (totalAmount * 100))); // Convert to cents
                 params.put("currency", "usd");
                 params.put("customer", customerId);
                 params.put("automatic_payment_methods[enabled]", "true");
-
                 return params;
             }
         };

@@ -1,29 +1,24 @@
 package com.example.techmarket_finalproject.Activity;
 
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
-import android.text.Html;
 import android.view.View;
-import android.view.Window;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.core.text.HtmlCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.techmarket_finalproject.Adapters.CartAdapter;
 
-import com.example.techmarket_finalproject.Models.CategoryEnum;
 import com.example.techmarket_finalproject.Models.Product;
 import com.example.techmarket_finalproject.Models.User;
 import com.example.techmarket_finalproject.R;
 import com.example.techmarket_finalproject.Interfaces.UpdateQuantityProductsListener;
 
+import com.example.techmarket_finalproject.Utilities.AppUtils;
 import com.example.techmarket_finalproject.Utilities.ProductManager;
 import com.example.techmarket_finalproject.databinding.ActivityCartBinding;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -34,34 +29,32 @@ public class CartActivity extends AppCompatActivity {
     private User user;
     private ArrayList<Product> filteredProducts;
     private double discountPercentage = 0.0;
-    private final String[] validCouponCodes = {"SAVE10", "SAVE15", "DISCOUNT20"};
+    private final String[] validCouponCodes = {"SAVE10", "SAVE20", "SAVE50"};
+    private double totalCartPrice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        user = (User) getIntent().getSerializableExtra("user");
+        user = LoginActivity.getCurrentUser();
 
         if (user != null) {
 
             activityCartBinding = ActivityCartBinding.inflate(getLayoutInflater());
             setContentView(activityCartBinding.getRoot());
 
-            statusBarColor();
+            AppUtils.statusBarColor(this);
             setButton();
             initList();
             setupCouponButton();
-            initBottomNavigationBar();
+
+            AppUtils.initNavigationBar(this, activityCartBinding.bottomNavigationBar.getRoot());
+            activityCartBinding.bottomNavigationBar.getRoot().setSelectedItemId(R.id.menu_cart);
 
         } else {
             Toast.makeText(this, "The Page is Loading...", Toast.LENGTH_SHORT).show();
             finish();
         }
-    }
-
-    private void statusBarColor() {
-        Window window = CartActivity.this.getWindow();
-        window.setStatusBarColor(ContextCompat.getColor(CartActivity.this, R.color.new_green));
     }
 
     private void initList() {
@@ -105,7 +98,7 @@ public class CartActivity extends AppCompatActivity {
         double subtotal = user.getTotalPrice(filteredProducts);
         double deliveryPrice = user.cartIsEmpty() ? 0 : 10;
         double discount = subtotal * discountPercentage;
-        double totalCartPrice = (subtotal - discount) + deliveryPrice;
+        totalCartPrice = (subtotal - discount) + deliveryPrice;
 
 
         String formattedSubtotalPrice = String.format("%.2f", subtotal);
@@ -146,13 +139,13 @@ public class CartActivity extends AppCompatActivity {
     private void applyDiscount(String coupon) {
         switch (coupon.toUpperCase()) {
             case "SAVE10":
-                discountPercentage = 0.50; // 10% discount
+                discountPercentage = 0.10; // 10% discount
                 break;
-            case "SAVE15":
-                discountPercentage = 0.10; // 15% discount
-                break;
-            case "DISCOUNT20":
+            case "SAVE20":
                 discountPercentage = 0.20; // 20% discount
+                break;
+            case "SAVE50":
+                discountPercentage = 0.50; // 50% discount
                 break;
             default:
                 discountPercentage = 0.0;
@@ -161,49 +154,15 @@ public class CartActivity extends AppCompatActivity {
     }
 
     private void setButton() {
-        activityCartBinding.backButtonViewCart.setOnClickListener(v -> {
-            Intent intent = new Intent(CartActivity.this, MainActivity.class);
-            intent.putExtra("user", user);
+//        activityCartBinding.backButtonViewCart.setOnClickListener(v -> {
+//            finish();
+//        });
+
+        activityCartBinding.checkoutButton.setOnClickListener(v -> {
+            Intent intent = new Intent(CartActivity.this, PaymentActivity.class);
+            intent.putExtra("totalAmount", totalCartPrice);
             startActivity(intent);
-            finish();
         });
     }
 
-    private void initBottomNavigationBar() {
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_bar);
-        bottomNavigationView.setOnItemSelectedListener(item -> {
-            int itemId = item.getItemId();
-            if (itemId == R.id.menu_home) {
-                Intent intent = new Intent(CartActivity.this, MainActivity.class);
-                intent.putExtra("user", user);
-                startActivity(intent);
-                finish();
-                return true;
-            } else if (itemId == R.id.menu_browse) {
-                Intent intent = new Intent(CartActivity.this, StoreProductsActivity.class);
-                intent.putExtra("category", CategoryEnum.ALL_PRODUCTS);
-                intent.putExtra("user", user);
-                startActivity(intent);
-                finish();
-                return true;
-            } else if (itemId == R.id.menu_cart) {
-                return true;
-            } else if (itemId == R.id.menu_favorites) {
-                Intent intent = new Intent(CartActivity.this, FavoriteProductsActivity.class);
-                intent.putExtra("user", user);
-                startActivity(intent);
-                finish();
-                return true;
-            } else if (itemId == R.id.menu_profile) {
-                Intent intent = new Intent(CartActivity.this, ProfileActivity.class);
-                intent.putExtra("user", user);
-                startActivity(intent);
-                finish();
-                return true;
-            } else {
-                return false;
-            }
-        });
-        bottomNavigationView.setSelectedItemId(R.id.menu_cart);
-    }
 }
