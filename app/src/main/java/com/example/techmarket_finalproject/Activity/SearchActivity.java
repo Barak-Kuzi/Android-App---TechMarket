@@ -27,32 +27,32 @@ import java.util.List;
 
 public class SearchActivity extends AppCompatActivity {
     ActivitySearchBinding activitySearchBinding;
-//    private RecyclerView searchResultsRecyclerView;
     private ProductAdapter productAdapter;
     private List<Product> searchResults;
     private User user;
+    String query;
+    private int amountFoundProducts;
+    private String foundProducts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         user = LoginActivity.getCurrentUser();
-        String query = getIntent().getStringExtra("query");
+        query = getIntent().getStringExtra("query");
 
         if (user != null && query != null) {
             activitySearchBinding = ActivitySearchBinding.inflate(getLayoutInflater());
             setContentView(activitySearchBinding.getRoot());
 
-            String foundProducts = "Found <b>" + ProductManager.searchProductsByName(query).size() + "</b> products";
+            amountFoundProducts = ProductManager.searchProductsByName(query).size();
 
             activitySearchBinding.editTextSearchFieldStoreProducts.setText(query);
-            activitySearchBinding.resultForText.setText("Results for " + "\"" + query + "\"");
-            activitySearchBinding.amountFoundProducts.setText(HtmlCompat.fromHtml(foundProducts, HtmlCompat.FROM_HTML_MODE_LEGACY));
+            setTextResult(query, amountFoundProducts);
 
             activitySearchBinding.backButtonToHomePage.setOnClickListener(v -> {
                 finish();
             });
-
 
 
             activitySearchBinding.searchResultRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -77,9 +77,17 @@ public class SearchActivity extends AppCompatActivity {
     private void performSearch(String query) {
         searchResults = ProductManager.searchProductsByName(query);
         productAdapter.updateData(searchResults);
-        activitySearchBinding.resultForText.setText("Results for " + "\"" + query + "\"");
-        activitySearchBinding.amountFoundProducts.setText("Found " + searchResults.size() + " products");
+        setTextResult(query, searchResults.size());
     }
 
+    private void setTextResult(String query, int amountFoundProducts) {
+        activitySearchBinding.resultForText.setText("Results for " + "\"" + query + "\"");
+        if (amountFoundProducts > 0) {
+            foundProducts = "Found <b>" + amountFoundProducts + "</b> products";
+        } else {
+            foundProducts = "Not found products";
+        }
+        activitySearchBinding.amountFoundProducts.setText(HtmlCompat.fromHtml(foundProducts, HtmlCompat.FROM_HTML_MODE_LEGACY));
+    }
 
 }

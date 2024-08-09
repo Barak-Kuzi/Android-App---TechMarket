@@ -1,5 +1,7 @@
 package com.example.techmarket_finalproject.Activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -60,8 +62,8 @@ public class PaymentActivity extends AppCompatActivity {
         });
 
         //new
-        double totalAmount = getIntent().getDoubleExtra("totalAmount", 0.0);
-        createCustomer(totalAmount);
+//        double totalAmount = getIntent().getDoubleExtra("totalAmount", 0.0);
+//        createCustomer(totalAmount);
     }
 
     private void createCustomer(double totalAmount) {

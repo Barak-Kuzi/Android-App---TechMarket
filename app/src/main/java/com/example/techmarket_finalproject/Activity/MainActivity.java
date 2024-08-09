@@ -3,6 +3,8 @@ package com.example.techmarket_finalproject.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,6 +61,19 @@ public class MainActivity extends AppCompatActivity implements CategoryAdapter.O
             activityMainBinding.shoppingBagLayout.setOnClickListener(v -> {
                 startActivity(new Intent(MainActivity.this, CartActivity.class));
                 finish();
+            });
+
+            activityMainBinding.searchInputField.setOnEditorActionListener((TextView v, int actionId, KeyEvent event) -> {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN)) {
+                    String query = activityMainBinding.searchInputField.getText().toString().trim();
+                    if (!query.isEmpty()) {
+                        Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                        intent.putExtra("query", query);
+                        startActivity(intent);
+                    }
+                    return true;
+                }
+                return false;
             });
 
             AppUtils.statusBarColor(this);

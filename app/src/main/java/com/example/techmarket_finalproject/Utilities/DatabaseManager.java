@@ -49,6 +49,7 @@ public class DatabaseManager {
     public static void addUserToDatabase(Context context, String userId, String name, String email, String password, String address, String phone, boolean isAdmin) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
         User user = new User(userId, name, email, password, address, phone, isAdmin);
+        user.setRememberMe(false);
 
         user.setCart(new HashMap<>());
         user.setFavoriteProducts(new ArrayList<>());
@@ -98,6 +99,27 @@ public class DatabaseManager {
         });
     }
 
+    public static void updateRememberLastUserFlag(String userId, boolean rememberLastUser) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").child(userId);
+        databaseReference.child("rememberMe").setValue(rememberLastUser);
+    }
+
+    public static void getRememberLastUserFlag(String userId, GenericCallBack<Boolean> callback) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").child(userId).child("rememberMe");
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Boolean rememberMe = dataSnapshot.getValue(Boolean.class);
+                callback.onResponse(rememberMe != null && rememberMe);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                callback.onResponse(false);
+            }
+        });
+    }
+
     public static void addProductToCartInDatabase(Context context, String userId, String productId, int quantity) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").child(userId).child("cart");
         databaseReference.child(productId).setValue(quantity).addOnCompleteListener(task -> {
@@ -116,6 +138,17 @@ public class DatabaseManager {
                 Toast.makeText(context, "Product removed from cart successfully.", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(context, "Failed to remove product from cart.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public static void clearCartInDatabase(Context context, String userId) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").child(userId).child("cart");
+        databaseReference.removeValue().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Toast.makeText(context, "Cart cleared successfully.", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(context, "Failed to clear cart.", Toast.LENGTH_SHORT).show();
             }
         });
     }

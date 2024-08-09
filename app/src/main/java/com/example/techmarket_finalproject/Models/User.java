@@ -25,6 +25,7 @@ public class User implements Serializable {
     private HashMap<String, Integer> cart;
     private boolean isAdmin;
     private List<String> favoriteProducts;
+    private boolean rememberMe;
 
     public User() {
         this.cart = new HashMap<>();
@@ -43,7 +44,14 @@ public class User implements Serializable {
         this.favoriteProducts = new ArrayList<>();
     }
 
-    // Getter and setter for favoriteProducts
+    public boolean getRememberMe() {
+        return rememberMe;
+    }
+
+    public void setRememberMe(boolean rememberMe) {
+        this.rememberMe = rememberMe;
+    }
+
     public List<String> getFavoriteProducts() {
         return favoriteProducts;
     }

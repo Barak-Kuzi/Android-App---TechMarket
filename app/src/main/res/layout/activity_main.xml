@@ -55,7 +55,7 @@
                 android:orientation="horizontal">
 
                 <EditText
-                    android:id="@+id/edit_text_search_field"
+                    android:id="@+id/search_input_field"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
                     android:layout_weight="1"

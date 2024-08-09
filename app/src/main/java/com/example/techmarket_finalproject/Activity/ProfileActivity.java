@@ -15,7 +15,9 @@ import androidx.appcompat.widget.AppCompatButton;
 import com.example.techmarket_finalproject.Models.User;
 import com.example.techmarket_finalproject.R;
 import com.example.techmarket_finalproject.Utilities.AppUtils;
+import com.example.techmarket_finalproject.Utilities.DatabaseManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -85,6 +87,10 @@ public class ProfileActivity extends AppCompatActivity {
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                DatabaseManager.updateRememberLastUserFlag(user.getUserId(), false);
+                user.setRememberMe(false);
+                FirebaseAuth.getInstance().signOut();
+                LoginActivity.setCurrentUser(null);
                 startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
                 finish();
             }

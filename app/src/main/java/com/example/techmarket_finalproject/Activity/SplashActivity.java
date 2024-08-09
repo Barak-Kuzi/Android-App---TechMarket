@@ -1,7 +1,5 @@
 package com.example.techmarket_finalproject.Activity;
 
-import static com.example.techmarket_finalproject.Utilities.DatabaseManager.getUserFromDatabase;
-
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -34,7 +32,7 @@ import java.util.ArrayList;
 public class SplashActivity extends AppCompatActivity {
 
     // Splash screen duration in milliseconds
-    private static final long SPLASH_DURATION = 2000;
+    private static final long SPLASH_DURATION = 4500;
 
     private ImageView splashImage;
 
@@ -64,28 +62,45 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                    getUserFromDatabase(FirebaseAuth.getInstance().getCurrentUser().getUid(), new UserCallBack() {
+                    String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    DatabaseManager.getRememberLastUserFlag(userId, new GenericCallBack<Boolean>() {
                         @Override
-                        public void onSuccess(User user) {
-                            ProductManager.initialize(SplashActivity.this, new GenericCallBack<ArrayList<Product>>() {
-                                @Override
-                                public void onResponse(ArrayList<Product> response) {
-                                    LoginActivity.setCurrentUser(user);
-                                    DatabaseManager.addNewListenerForUser();
-                                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
-                                    finish();
-                                }
+                        public void onResponse(Boolean rememberLastUser) {
+                            if (rememberLastUser) {
+                                DatabaseManager.getUserFromDatabase(userId, new UserCallBack() {
+                                    @Override
+                                    public void onSuccess(User user) {
+                                        ProductManager.initialize(SplashActivity.this, new GenericCallBack<ArrayList<Product>>() {
+                                            @Override
+                                            public void onResponse(ArrayList<Product> response) {
+                                                LoginActivity.setCurrentUser(user);
+                                                DatabaseManager.addNewListenerForUser();
+                                                startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                                                finish();
+                                            }
 
-                                @Override
-                                public void onFailure(DatabaseError error) {
-                                    Toast.makeText(SplashActivity.this, "Failed to load products.", Toast.LENGTH_SHORT).show();
-                                }
-                            });
+                                            @Override
+                                            public void onFailure(DatabaseError error) {
+                                                Toast.makeText(SplashActivity.this, "Failed to load products.", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    }
+
+                                    @Override
+                                    public void onFailure(DatabaseError error) {
+                                        Toast.makeText(SplashActivity.this, "Failed to load user.", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            } else {
+                                startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                                finish();
+                            }
                         }
 
                         @Override
-                        public void onFailure(DatabaseError error) {
-                            Toast.makeText(SplashActivity.this, "Failed to load user.", Toast.LENGTH_SHORT).show();
+                        public void onFailure(DatabaseError databaseError) {
+                            Log.e("SplashActivity", "Failed to get rememberLastUser flag: " + databaseError.getMessage());
+                            Toast.makeText(SplashActivity.this, "Failed to get rememberLastUser flag.", Toast.LENGTH_SHORT).show();
                         }
                     });
 

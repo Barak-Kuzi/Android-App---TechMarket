@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,6 +53,8 @@ public class LoginActivity extends AppCompatActivity {
     private Button signInButton, signUpButton;
     private ConstraintLayout signin_page, signup_page;
     private TextView moveToSignInPage, moveToSignUpPage;
+
+    private CheckBox rememberMeCheckBox;
 
     ProgressBar progressBar;
 
@@ -100,6 +103,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String email = emailInputSignIn.getText().toString().trim();
                 String password = passwordInputSignIn.getText().toString().trim();
+                boolean rememberMe = rememberMeCheckBox.isChecked();
 
                 // Hide the keyboard
                 InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
@@ -118,6 +122,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                 if (task != null && task.isSuccessful()) {
                                     String userId = firebaseAuth.getCurrentUser().getUid();
+                                    DatabaseManager.updateRememberLastUserFlag(userId, rememberMe);
                                     getUserFromDatabase(userId, new UserCallBack() {
                                         @Override
                                         public void onSuccess(User user) {
@@ -217,6 +222,7 @@ public class LoginActivity extends AppCompatActivity {
 
         emailInputSignIn = findViewById(R.id.email_input_signin);
         passwordInputSignIn = findViewById(R.id.password_input_signin);
+        rememberMeCheckBox = findViewById(R.id.rememberme_checkbox);
 
         usernameLayoutSignUp = findViewById(R.id.username_input_layout_signup);
         emailLayoutSignUp = findViewById(R.id.email_input_layout_signup);
