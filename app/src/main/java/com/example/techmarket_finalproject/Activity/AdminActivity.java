@@ -75,7 +75,7 @@ public class AdminActivity extends AppCompatActivity {
                     CategoryEnum productCategory = CategoryEnum.valueOf(productCategoryDropdown.getText().toString().trim());
                     Product newProduct;
                     if (product != null) {
-                        newProduct = new Product(productId, productName, selectedImageUriString, productReviews, productRating, productPrice, productDescription, productCategory);
+                        newProduct = new Product(product.getProductId(), productName, selectedImageUriString, productReviews, productRating, productPrice, productDescription, productCategory);
                     } else {
                         newProduct = new Product(productId, productName, selectedImageUri.toString(), productReviews, productRating, productPrice, productDescription, productCategory);
                     }

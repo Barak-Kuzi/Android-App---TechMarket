@@ -5,7 +5,6 @@ public enum CategoryEnum {
     SMART_WATCHES,
     CELL_PHONES,
     TELEVISIONS,
-    COMPUTER_MONITORS,
     LAPTOPS,
     DESKTOPS,
     HEADPHONES

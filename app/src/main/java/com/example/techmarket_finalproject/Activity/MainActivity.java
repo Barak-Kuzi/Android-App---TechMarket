@@ -51,7 +51,6 @@ public class MainActivity extends AppCompatActivity implements CategoryAdapter.O
 
         user = LoginActivity.getCurrentUser();
 
-
         if (user != null) {
 
             activityMainBinding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -74,6 +73,15 @@ public class MainActivity extends AppCompatActivity implements CategoryAdapter.O
                     return true;
                 }
                 return false;
+            });
+
+            activityMainBinding.quantityProductsTextView.setText(String.valueOf(user.getCart().size()));
+
+            activityMainBinding.seeAllProductsButton.setOnClickListener(v -> {
+                Intent intent = new Intent(MainActivity.this, StoreProductsActivity.class);
+                intent.putExtra("category", CategoryEnum.ALL_PRODUCTS);
+                startActivity(intent);
+                finish();
             });
 
             AppUtils.statusBarColor(this);

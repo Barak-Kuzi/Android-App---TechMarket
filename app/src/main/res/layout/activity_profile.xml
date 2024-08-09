@@ -11,14 +11,13 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintBottom_toTopOf="@id/bottom_navigation_bar"
+
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="48dp">
+            android:orientation="vertical">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -35,22 +34,45 @@
                         android:id="@+id/constraintLayout2"
                         android:layout_width="match_parent"
                         android:layout_height="360dp"
-                        android:background="@drawable/top_background_profile"
+                        android:background="@drawable/profile_top_background"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <ImageView
-                        android:id="@+id/imageView14"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="48dp"
-                        android:src="@drawable/profile"
+                    <View
+                        android:id="@+id/profile_background"
+                        android:layout_width="170dp"
+                        android:layout_height="170dp"
+                        android:layout_marginTop="56dp"
+                        android:background="@drawable/profile_image_background"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/profile_image_view"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:elevation="3dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/profile"
+                        app:shapeAppearanceOverlay="@style/circleImageView"
+                        app:layout_constraintBottom_toBottomOf="@+id/profile_background"
+                        app:layout_constraintEnd_toEndOf="@+id/profile_background"
+                        app:layout_constraintStart_toStartOf="@+id/profile_background"
+                        app:layout_constraintTop_toTopOf="@+id/profile_background" />
+
+                    <ImageView
+                        android:id="@+id/upload_image_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/edit_image_icon"
+                        android:layout_marginStart="128dp"
+                        android:layout_marginBottom="1dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/profile_background"
+                        app:layout_constraintStart_toStartOf="@+id/profile_image_view" />
 
                     <TextView
                         android:id="@+id/fullName_label"
@@ -61,12 +83,12 @@
                         android:textColor="@color/black"
                         android:textSize="20sp"
                         android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="@+id/imageView14"
-                        app:layout_constraintStart_toStartOf="@+id/imageView14"
-                        app:layout_constraintTop_toBottomOf="@+id/imageView14" />
+                        app:layout_constraintEnd_toEndOf="@+id/profile_background"
+                        app:layout_constraintStart_toStartOf="@+id/profile_background"
+                        app:layout_constraintTop_toBottomOf="@+id/profile_background" />
 
                     <ImageView
-                        android:id="@+id/profile_image_view"
+                        android:id="@+id/background_profile_image_view"
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
                         android:scaleType="centerCrop"
@@ -81,16 +103,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="24dp"
-                        android:layout_marginTop="56dp"
+                        android:layout_marginTop="24dp"
                         android:layout_marginEnd="24dp"
-                        android:layout_marginBottom="24dp"
+                        android:layout_marginBottom="20dp"
                         android:background="@drawable/white_background_more_radius"
                         android:elevation="3dp"
                         android:orientation="vertical"
                         android:paddingBottom="10dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/fullName_label">
 
@@ -238,7 +259,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="@string/full_name_lbl_profile"
-                                android:textColor="#FFFF00CC"
+                                android:textColor="@color/green"
                                 android:textSize="18sp"
                                 android:textStyle="bold" />
 
@@ -275,7 +296,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="@string/email_profile"
-                                android:textColor="#FFFF00CC"
+                                android:textColor="@color/green"
                                 android:textSize="18sp"
                                 android:textStyle="bold" />
 
@@ -312,7 +333,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="@string/password_profile"
-                                android:textColor="#FFFF00CC"
+                                android:textColor="@color/green"
                                 android:textSize="18sp"
                                 android:textStyle="bold" />
 
@@ -349,7 +370,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="Phone:"
-                                android:textColor="#FFFF00CC"
+                                android:textColor="@color/green"
                                 android:textSize="18sp"
                                 android:textStyle="bold" />
 
@@ -386,7 +407,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="Address:"
-                                android:textColor="#FFFF00CC"
+                                android:textColor="@color/green"
                                 android:textSize="18sp"
                                 android:textStyle="bold" />
 
@@ -411,15 +432,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/button_background"
-                android:paddingStart="80dp"
-                android:paddingEnd="80dp"
+                android:background="@drawable/continue_btn_background"
+                android:paddingStart="72dp"
+                android:paddingEnd="72dp"
+               android:layout_marginBottom="48dp"
                 android:text="@string/logout"
+                android:fontFamily="@font/kanit_medium_italic"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="parent" />
+                android:textSize="24sp" />
         </LinearLayout>
     </ScrollView>
 

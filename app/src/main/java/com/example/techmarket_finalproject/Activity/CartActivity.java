@@ -49,6 +49,14 @@ public class CartActivity extends AppCompatActivity {
     private final String[] validCouponCodes = {"SAVE10", "SAVE20", "SAVE50"};
     private double totalCartPrice;
 
+    // For the Stripe API
+    private String PublishableKey = "pk_test_51OKSUWAFluX64oDUOw8ciGfX0NspFHsgHPJbitFIUvz5bMZYEfaErkyWUM95ENoZFqT2oGrHNPsE4H8UQL6Wyt5J00auc6GJZo";
+    private String SecretKey = "sk_test_51OKSUWAFluX64oDUMlxnBFHzPUO76MiRgTM8cA1Lo0VwuicOL6pKW4cJxGkFQi44Ngxa5PGUQBeyC9eR6L0tZrHM00lxrk3x4s";
+    private String CustomerId;
+    private String EphemeralKey;
+    private String ClientSecret;
+    private PaymentSheet paymentSheet;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +85,7 @@ public class CartActivity extends AppCompatActivity {
                 Toast.makeText(this, "Loading Payment System...", Toast.LENGTH_SHORT).show();
                 createCustomer(totalCartPrice);
             });
+
 
         } else {
             Toast.makeText(this, "The Page is Loading...", Toast.LENGTH_SHORT).show();
@@ -179,14 +188,7 @@ public class CartActivity extends AppCompatActivity {
         }
     }
 
-
-    String PublishableKey = "pk_test_51OKSUWAFluX64oDUOw8ciGfX0NspFHsgHPJbitFIUvz5bMZYEfaErkyWUM95ENoZFqT2oGrHNPsE4H8UQL6Wyt5J00auc6GJZo";
-    String SecretKey = "sk_test_51OKSUWAFluX64oDUMlxnBFHzPUO76MiRgTM8cA1Lo0VwuicOL6pKW4cJxGkFQi44Ngxa5PGUQBeyC9eR6L0tZrHM00lxrk3x4s";
-    String CustomerId;
-    String EphemeralKey;
-    String ClientSecret;
-    PaymentSheet paymentSheet;
-
+    // For the Stripe API
     private void createCustomer(double totalAmount) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://api.stripe.com/v1/customers", new Response.Listener<String>() {
             @Override

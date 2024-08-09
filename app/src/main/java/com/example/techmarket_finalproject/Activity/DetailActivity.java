@@ -114,6 +114,7 @@ public class DetailActivity extends AppCompatActivity {
             });
 
             activityDetailBinding.backButton.setOnClickListener(v -> {
+                startActivity(new Intent(DetailActivity.this, MainActivity.class));
                 finish();
             });
         } else {

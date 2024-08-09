@@ -1,6 +1,7 @@
 package com.example.techmarket_finalproject.Utilities;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -10,7 +11,6 @@ import com.example.techmarket_finalproject.Activity.LoginActivity;
 import com.example.techmarket_finalproject.Interfaces.GenericCallBack;
 import com.example.techmarket_finalproject.Interfaces.UserCallBack;
 import com.example.techmarket_finalproject.Models.Category;
-import com.example.techmarket_finalproject.Models.CategoryEnum;
 import com.example.techmarket_finalproject.Models.Product;
 import com.example.techmarket_finalproject.Models.User;
 import com.google.firebase.database.DataSnapshot;
@@ -18,6 +18,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -120,6 +122,35 @@ public class DatabaseManager {
         });
     }
 
+    public static void updateUserProfileImage(String userId, String imageUrl, GenericCallBack<Boolean> callback) {
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(userId);
+        userRef.child("profileImageUrl").setValue(imageUrl).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                callback.onResponse(true);
+            } else {
+                callback.onResponse(false);
+            }
+        });
+    }
+
+    public static void uploadImageToFirebaseStorage(User user, Uri imageUri, GenericCallBack<String> callback) {
+        if (imageUri != null) {
+            StorageReference storageReference = FirebaseStorage.getInstance().getReference()
+                    .child("profile_images/" + user.getUserId() + ".jpg");
+
+            storageReference.putFile(imageUri).addOnSuccessListener(taskSnapshot ->
+                    storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
+                        String imageUrl = uri.toString();
+                        callback.onResponse(imageUrl);
+                    })
+            ).addOnFailureListener(e ->
+                    callback.onFailure(DatabaseError.fromException(e))
+            );
+        } else {
+            callback.onFailure(DatabaseError.fromException(new Exception("Image URI is null")));
+        }
+    }
+
     public static void addProductToCartInDatabase(Context context, String userId, String productId, int quantity) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").child(userId).child("cart");
         databaseReference.child(productId).setValue(quantity).addOnCompleteListener(task -> {
@@ -178,6 +209,7 @@ public class DatabaseManager {
                 }
                 callback.onResponse(products);
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.e(TAG, "Failed to read products from database.", error.toException());

@@ -1,6 +1,7 @@
 package com.example.techmarket_finalproject.Activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -9,15 +10,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
+import com.bumptech.glide.Glide;
+import com.example.techmarket_finalproject.Interfaces.GenericCallBack;
 import com.example.techmarket_finalproject.Models.User;
 import com.example.techmarket_finalproject.R;
 import com.example.techmarket_finalproject.Utilities.AppUtils;
 import com.example.techmarket_finalproject.Utilities.DatabaseManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.imageview.ShapeableImageView;
+import com.google.android.material.shape.CornerFamily;
+import com.google.android.material.shape.ShapeAppearanceModel;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -25,8 +36,29 @@ public class ProfileActivity extends AppCompatActivity {
     private LinearLayout homePageButton, editProfileButton, adminPanelButton;
     private AppCompatButton logoutButton;
     private User user;
-    private ImageView profileImageView;
+    private ShapeableImageView profileImageView;
+    private ImageView uploadImageButton;
     private BottomNavigationView bottomNavigationView;
+
+    private final ActivityResultLauncher<Intent> imagePickerLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    Toast.makeText(ProfileActivity.this, "Uploading image...", Toast.LENGTH_SHORT).show();
+                    Uri selectedImageUri = result.getData().getData();
+                    DatabaseManager.uploadImageToFirebaseStorage(user, selectedImageUri, new GenericCallBack<String>() {
+                        @Override
+                        public void onResponse(String imageUrl) {
+                            updateUserProfileImage(imageUrl);
+                        }
+
+                        @Override
+                        public void onFailure(DatabaseError databaseError) {
+                            Toast.makeText(ProfileActivity.this, "Failed to upload image.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +82,11 @@ public class ProfileActivity extends AppCompatActivity {
             phoneProfile.setText(user.getPhone());
             addressProfile.setText(user.getAddress());
 
+            if (user.getProfileImageUrl() != null) {
+                Glide.with(this).load(user.getProfileImageUrl()).into(profileImageView);
+            }
+
+            uploadImageButton.setOnClickListener(v -> openImagePicker());
 
         } else {
             Toast.makeText(this, "The Page is Loading...", Toast.LENGTH_SHORT).show();
@@ -99,6 +136,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void initViews() {
         profileImageView = findViewById(R.id.profile_image_view);
+        uploadImageButton = findViewById(R.id.upload_image_button);
         fullNameLabel = findViewById(R.id.fullName_label);
         usernameProfile = findViewById(R.id.username_text_profile);
         emailProfile = findViewById(R.id.email_text_profile);
@@ -109,6 +147,31 @@ public class ProfileActivity extends AppCompatActivity {
         editProfileButton = findViewById(R.id.edit_profile_button);
         adminPanelButton = findViewById(R.id.admin_panel_button);
         logoutButton = findViewById(R.id.logout_button);
+    }
+
+    private void openImagePicker() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        imagePickerLauncher.launch(intent);
+    }
+
+    private void updateUserProfileImage(String imageUrl) {
+        DatabaseManager.updateUserProfileImage(user.getUserId(), imageUrl, new GenericCallBack<Boolean>() {
+            @Override
+            public void onResponse(Boolean response) {
+                if (response) {
+                    user.setProfileImageUrl(imageUrl);
+                    Glide.with(ProfileActivity.this).load(imageUrl).into(profileImageView);
+                } else {
+                    Toast.makeText(ProfileActivity.this, "Failed to update profile image.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(DatabaseError databaseError) {
+                Toast.makeText(ProfileActivity.this, "Failed to update profile image.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 }

@@ -26,6 +26,7 @@ public class User implements Serializable {
     private boolean isAdmin;
     private List<String> favoriteProducts;
     private boolean rememberMe;
+    private String profileImageUrl;
 
     public User() {
         this.cart = new HashMap<>();
@@ -42,6 +43,14 @@ public class User implements Serializable {
         this.cart = new HashMap<>();
         this.isAdmin = isAdmin;
         this.favoriteProducts = new ArrayList<>();
+    }
+
+    public String getProfileImageUrl() {
+        return profileImageUrl;
+    }
+
+    public void setProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
     }
 
     public boolean getRememberMe() {
