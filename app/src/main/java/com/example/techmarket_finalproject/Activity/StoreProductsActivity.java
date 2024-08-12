@@ -90,8 +90,13 @@ public class StoreProductsActivity extends AppCompatActivity {
         setContentView(activityStoreProductsBinding.getRoot());
 
         activityStoreProductsBinding.cartView.setLayoutManager(new LinearLayoutManager(this));
-        productAdapter = new ProductAdapter(productList, user);
+        productAdapter = new ProductAdapter(productList);
         activityStoreProductsBinding.cartView.setAdapter(productAdapter);
+
+        if (user.isAdmin()) {
+            activityStoreProductsBinding.addNewProductButton.setVisibility(AppCompatButton.VISIBLE);
+            activityStoreProductsBinding.addNewProductButton.setOnClickListener(v -> startActivity(new Intent(StoreProductsActivity.this, AdminActivity.class)));
+        }
 
         EditText searchField = findViewById(R.id.edit_text_search_field_store_products);
         searchField.setOnKeyListener((v, keyCode, event) -> {

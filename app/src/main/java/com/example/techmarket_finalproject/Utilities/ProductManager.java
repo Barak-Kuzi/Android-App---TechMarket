@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ProductManager {
-    private static final String TAG = "ProductManager";
+
     private static final Map<String, Product> productCache = new HashMap<>();
     private static final List<Product> allProducts = new ArrayList<>();
     private static boolean isInitialized = false;

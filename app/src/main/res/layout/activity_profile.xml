@@ -41,37 +41,25 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <View
-                        android:id="@+id/profile_background"
-                        android:layout_width="170dp"
-                        android:layout_height="170dp"
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/profile_image_view"
+                        android:layout_width="160dp"
+                        android:layout_height="160dp"
                         android:layout_marginTop="56dp"
-                        android:background="@drawable/profile_image_background"
+                        android:src="@drawable/sw_2"
+                        app:civ_border_color="@color/grey"
+                        app:civ_border_width="8dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
-
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:id="@+id/profile_image_view"
-                        android:layout_width="150dp"
-                        android:layout_height="150dp"
-                        android:elevation="3dp"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/profile"
-                        app:shapeAppearanceOverlay="@style/circleImageView"
-                        app:layout_constraintBottom_toBottomOf="@+id/profile_background"
-                        app:layout_constraintEnd_toEndOf="@+id/profile_background"
-                        app:layout_constraintStart_toStartOf="@+id/profile_background"
-                        app:layout_constraintTop_toTopOf="@+id/profile_background" />
 
                     <ImageView
                         android:id="@+id/upload_image_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/edit_image_icon"
                         android:layout_marginStart="128dp"
-                        android:layout_marginBottom="1dp"
-                        app:layout_constraintBottom_toBottomOf="@+id/profile_background"
+                        android:src="@drawable/edit_image_icon"
+                        app:layout_constraintBottom_toBottomOf="@+id/profile_image_view"
                         app:layout_constraintStart_toStartOf="@+id/profile_image_view" />
 
                     <TextView
@@ -83,9 +71,9 @@
                         android:textColor="@color/black"
                         android:textSize="20sp"
                         android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="@+id/profile_background"
-                        app:layout_constraintStart_toStartOf="@+id/profile_background"
-                        app:layout_constraintTop_toBottomOf="@+id/profile_background" />
+                        app:layout_constraintEnd_toEndOf="@+id/profile_image_view"
+                        app:layout_constraintStart_toStartOf="@+id/profile_image_view"
+                        app:layout_constraintTop_toBottomOf="@+id/profile_image_view" />
 
                     <ImageView
                         android:id="@+id/background_profile_image_view"
@@ -121,7 +109,7 @@
                             android:orientation="horizontal">
 
                             <LinearLayout
-                                android:id="@+id/home_page_button"
+                                android:id="@+id/purchase_history_button"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_margin="10dp"
@@ -138,10 +126,11 @@
                                     android:background="@drawable/circle_background">
 
                                     <ImageView
-                                        android:id="@+id/house_img"
+                                        android:id="@+id/purchase_history_img"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:src="@drawable/house_icon"
+                                        android:scaleType="fitCenter"
+                                        android:src="@drawable/purchase_history_icon"
                                         app:layout_constraintBottom_toBottomOf="parent"
                                         app:layout_constraintEnd_toEndOf="parent"
                                         app:layout_constraintStart_toStartOf="parent"
@@ -149,11 +138,52 @@
                                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                                 <TextView
-                                    android:id="@+id/home_page_text"
+                                    android:id="@+id/purchase_history_text"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="8dp"
-                                    android:text="@string/home_page"
+                                    android:text="@string/my_orders"
+                                    android:textAlignment="center"
+                                    android:textColor="@color/black"
+                                    android:textSize="13sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/wishlist_button"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_margin="10dp"
+                                android:layout_weight="0.3333"
+                                android:background="@drawable/grey_background_profile"
+                                android:elevation="5dp"
+                                android:orientation="vertical">
+
+                                <androidx.constraintlayout.widget.ConstraintLayout
+                                    android:layout_width="64dp"
+                                    android:layout_height="64dp"
+                                    android:layout_gravity="center_horizontal"
+                                    android:layout_margin="12dp"
+                                    android:background="@drawable/circle_background">
+
+                                    <ImageView
+                                        android:id="@+id/wishlist_img"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:scaleType="fitCenter"
+                                        android:src="@drawable/wishlist_icon"
+                                        app:layout_constraintBottom_toBottomOf="parent"
+                                        app:layout_constraintEnd_toEndOf="parent"
+                                        app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintTop_toTopOf="parent" />
+                                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                                <TextView
+                                    android:id="@+id/wishlist_text"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="8dp"
+                                    android:text="@string/my_wishlist"
                                     android:textAlignment="center"
                                     android:textColor="@color/black"
                                     android:textSize="13sp"
@@ -200,47 +230,8 @@
                                     android:textStyle="bold" />
                             </LinearLayout>
 
-                            <LinearLayout
-                                android:id="@+id/admin_panel_button"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_margin="10dp"
-                                android:layout_weight="0.3333"
-                                android:background="@drawable/grey_background_profile"
-                                android:elevation="5dp"
-                                android:orientation="vertical">
-
-                                <androidx.constraintlayout.widget.ConstraintLayout
-                                    android:layout_width="64dp"
-                                    android:layout_height="64dp"
-                                    android:layout_gravity="center_horizontal"
-                                    android:layout_margin="12dp"
-                                    android:background="@drawable/circle_background">
-
-                                    <ImageView
-                                        android:id="@+id/admin_panel_img"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:src="@drawable/admin_icon"
-                                        app:layout_constraintBottom_toBottomOf="parent"
-                                        app:layout_constraintEnd_toEndOf="parent"
-                                        app:layout_constraintStart_toStartOf="parent"
-                                        app:layout_constraintTop_toTopOf="parent" />
-                                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                                <TextView
-                                    android:id="@+id/admin_panel_text"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginBottom="8dp"
-                                    android:text="@string/admin_panel"
-                                    android:textAlignment="center"
-                                    android:textColor="@color/black"
-                                    android:textSize="13sp"
-                                    android:textStyle="bold" />
-                            </LinearLayout>
-
                         </LinearLayout>
+
 
                         <!-- Profile Information -->
 
@@ -432,15 +423,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginBottom="48dp"
                 android:background="@drawable/continue_btn_background"
+                android:fontFamily="@font/kanit_medium_italic"
                 android:paddingStart="72dp"
                 android:paddingEnd="72dp"
-               android:layout_marginBottom="48dp"
                 android:text="@string/logout"
-                android:fontFamily="@font/kanit_medium_italic"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="24sp" />
+                android:textSize="24sp"
+                android:visibility="visible" />
         </LinearLayout>
     </ScrollView>
 

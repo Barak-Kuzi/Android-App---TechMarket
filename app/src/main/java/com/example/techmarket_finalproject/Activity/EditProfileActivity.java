@@ -13,6 +13,7 @@ import androidx.appcompat.widget.AppCompatButton;
 
 import com.example.techmarket_finalproject.Models.User;
 import com.example.techmarket_finalproject.R;
+import com.example.techmarket_finalproject.Utilities.AppUtils;
 import com.example.techmarket_finalproject.Utilities.DatabaseManager;
 import com.example.techmarket_finalproject.Utilities.ValidationManagement;
 import com.google.android.material.textfield.TextInputEditText;
@@ -41,7 +42,6 @@ public class EditProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        User user = (User) getIntent().getSerializableExtra("user");
         user = LoginActivity.getCurrentUser();
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
@@ -49,6 +49,7 @@ public class EditProfileActivity extends AppCompatActivity {
         if (user != null) {
             EdgeToEdge.enable(this);
             setContentView(R.layout.activity_edit_profile);
+            AppUtils.statusBarColor(this);
             init();
 
             usernameInputSignUp.setText(user.getName());
@@ -86,16 +87,13 @@ public class EditProfileActivity extends AppCompatActivity {
                 DatabaseManager.updateUserInDatabase(EditProfileActivity.this, user.getUserId(), userMap);
 
                 Intent intent = new Intent(EditProfileActivity.this, ProfileActivity.class);
-//                intent.putExtra("user", user);
                 startActivity(intent);
                 finish();
             }
         });
 
         cancelUpdateButton.setOnClickListener(v -> {
-            Intent intent = new Intent(EditProfileActivity.this, ProfileActivity.class);
-            intent.putExtra("user", user);
-            startActivity(intent);
+            startActivity(new Intent(EditProfileActivity.this, ProfileActivity.class));
             finish();
         });
 

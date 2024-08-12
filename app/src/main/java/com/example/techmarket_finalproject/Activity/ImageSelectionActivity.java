@@ -7,12 +7,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.techmarket_finalproject.Adapters.ImageAdapter;
 import com.example.techmarket_finalproject.Models.User;
-import com.example.techmarket_finalproject.R;
 import com.example.techmarket_finalproject.Utilities.ImagePicker;
 import com.example.techmarket_finalproject.databinding.ActivityImageSelectionBinding;
 
@@ -20,7 +17,7 @@ import java.util.List;
 
 public class ImageSelectionActivity extends AppCompatActivity {
 
-    ActivityImageSelectionBinding activityImageSelectionBinding;
+    private ActivityImageSelectionBinding activityImageSelectionBinding;
     private ImageAdapter imageAdapter;
     private User user;
 

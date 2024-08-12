@@ -61,4 +61,6 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.4")
 
     implementation("com.github.kittinunf.fuel:fuel:2.3.1")
+
+    implementation("de.hdodenhof:circleimageview:3.1.0")
 }

@@ -36,6 +36,26 @@
                 android:hint="Search"
                 android:inputType="text"
                 android:padding="8dp" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/add_new_product_button"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/edit_text_grey_background"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/add_product_icon"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
 
         <HorizontalScrollView

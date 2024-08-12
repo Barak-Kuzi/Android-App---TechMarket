@@ -35,8 +35,11 @@ import com.stripe.android.paymentsheet.PaymentSheetResult;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -188,6 +191,23 @@ public class CartActivity extends AppCompatActivity {
         }
     }
 
+    private void savePurchaseToHistory() {
+        HashMap<String, Object> purchase = new HashMap<>();
+        HashMap<String, Integer> products = new HashMap<>();
+        for (Product product : filteredProducts) {
+            products.put(product.getProductId(), user.getCart().get(product.getProductId()));
+        }
+        purchase.put("products", products);
+        purchase.put("totalPrice", totalCartPrice);
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
+        String currentDate = dateFormat.format(new Date());
+        purchase.put("purchaseDate", currentDate);
+
+        user.addPurchaseToHistory(purchase);
+        DatabaseManager.savePurchaseToHistory(this, user.getUserId(), user.getPurchaseHistory().size() - 1, purchase);
+    }
+
     // For the Stripe API
     private void createCustomer(double totalAmount) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://api.stripe.com/v1/customers", new Response.Listener<String>() {
@@ -227,16 +247,16 @@ public class CartActivity extends AppCompatActivity {
 
     private void onPaymentResult(PaymentSheetResult paymentSheetResult) {
         if (paymentSheetResult instanceof PaymentSheetResult.Canceled) {
-            Log.d("PaymentActivity", "Payment Canceled");
             Toast.makeText(this, "Payment Canceled", Toast.LENGTH_SHORT).show();
         } else if (paymentSheetResult instanceof PaymentSheetResult.Completed) {
 
+            savePurchaseToHistory();
             user.clearCart();
             DatabaseManager.clearCartInDatabase(this, user.getUserId());
             startActivity(new Intent(CartActivity.this, MainActivity.class));
-
-            Log.d("PaymentActivity", "Payment Success");
+            finish();
             Toast.makeText(this, "Payment Success", Toast.LENGTH_SHORT).show();
+
         } else if (paymentSheetResult instanceof PaymentSheetResult.Failed) {
             PaymentSheetResult.Failed failedResult = (PaymentSheetResult.Failed) paymentSheetResult;
             Log.e("PaymentActivity", "Payment Failed: " + failedResult.getError().getMessage());

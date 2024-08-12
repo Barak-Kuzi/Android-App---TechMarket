@@ -1,13 +1,9 @@
 package com.example.techmarket_finalproject.Activity;
 
-import static com.example.techmarket_finalproject.Utilities.DatabaseManager.addAllProductsToDatabase;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
@@ -18,7 +14,6 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.techmarket_finalproject.Models.CategoryEnum;
@@ -29,8 +24,6 @@ import com.example.techmarket_finalproject.Utilities.AppUtils;
 import com.example.techmarket_finalproject.Utilities.DatabaseManager;
 import com.example.techmarket_finalproject.Utilities.ImageLoader;
 import com.google.android.material.textfield.TextInputEditText;
-
-import java.util.ArrayList;
 
 public class AdminActivity extends AppCompatActivity {
 
@@ -80,7 +73,6 @@ public class AdminActivity extends AppCompatActivity {
                         newProduct = new Product(productId, productName, selectedImageUri.toString(), productReviews, productRating, productPrice, productDescription, productCategory);
                     }
 
-
                     DatabaseManager.addProductToDatabase(AdminActivity.this, newProduct);
                 }
             });
@@ -94,7 +86,7 @@ public class AdminActivity extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                     } else {
-                        startActivity(new Intent(AdminActivity.this, ProfileActivity.class));
+//                        startActivity(new Intent(AdminActivity.this, ProfileActivity.class));
                         finish();
                     }
                 }

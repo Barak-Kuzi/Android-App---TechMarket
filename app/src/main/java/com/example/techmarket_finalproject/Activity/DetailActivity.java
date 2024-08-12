@@ -5,13 +5,10 @@ import static com.example.techmarket_finalproject.Utilities.DatabaseManager.upda
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import com.example.techmarket_finalproject.Models.User;
 import com.example.techmarket_finalproject.R;
@@ -114,7 +111,6 @@ public class DetailActivity extends AppCompatActivity {
             });
 
             activityDetailBinding.backButton.setOnClickListener(v -> {
-                startActivity(new Intent(DetailActivity.this, MainActivity.class));
                 finish();
             });
         } else {

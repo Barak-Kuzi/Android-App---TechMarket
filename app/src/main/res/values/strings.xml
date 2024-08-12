@@ -64,4 +64,9 @@
     <string name="delete_product">Delete Product</string>
     <string name="update_product">Update Product</string>
     <string name="edit_product">Edit Product</string>
+    <string name="my_orders">My Orders</string>
+    <string name="my_wishlist">My Wishlist</string>
+    <string name="search">Search</string>
+    <string name="example_result_text">Result for Macbook</string>
+    <string name="example_found_text">Found 24 products</string>
 </resources>

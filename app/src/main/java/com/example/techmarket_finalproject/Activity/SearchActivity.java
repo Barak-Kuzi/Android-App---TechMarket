@@ -50,7 +50,7 @@ public class SearchActivity extends AppCompatActivity {
             activitySearchBinding.editTextSearchFieldStoreProducts.setText(query);
             setTextResult(query, amountFoundProducts);
 
-            activitySearchBinding.backButtonToHomePage.setOnClickListener(v -> {
+            activitySearchBinding.backButtonSearch.setOnClickListener(v -> {
                 finish();
             });
 
@@ -58,7 +58,7 @@ public class SearchActivity extends AppCompatActivity {
             activitySearchBinding.searchResultRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
             searchResults = ProductManager.searchProductsByName(query);
-            productAdapter = new ProductAdapter(searchResults, user);
+            productAdapter = new ProductAdapter(searchResults);
             activitySearchBinding.searchResultRecyclerView.setAdapter(productAdapter);
 
             activitySearchBinding.editTextSearchFieldStoreProducts.setOnEditorActionListener((TextView v, int actionId, KeyEvent event) -> {

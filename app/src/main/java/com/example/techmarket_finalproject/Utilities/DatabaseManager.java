@@ -55,6 +55,7 @@ public class DatabaseManager {
 
         user.setCart(new HashMap<>());
         user.setFavoriteProducts(new ArrayList<>());
+        user.setPurchaseHistory(new ArrayList<>());
 
         try {
             databaseReference.child(user.getUserId()).setValue(user).addOnCompleteListener(task -> {
@@ -306,4 +307,16 @@ public class DatabaseManager {
             }
         });
     }
+
+    public static void savePurchaseToHistory(Context context, String userId, int orderNumber, HashMap<String, Object> purchase) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").child(userId).child("purchaseHistory");
+        databaseReference.child(String.valueOf(orderNumber)).setValue(purchase).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Toast.makeText(context, "Purchase saved to history.", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(context, "Failed to save purchase to history.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 }

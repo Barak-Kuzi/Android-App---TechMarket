@@ -12,7 +12,7 @@ public class DataManager {
         ArrayList<Product> allProducts = new ArrayList<>();
 
         // Smart Watches
-        allProducts.add(new Product("SW_1", "Apple Watch 45mm Series-9", R.drawable.sw_1, 45, 4.7, 638.58,
+        allProducts.add(new Product("SW_1", "Apple Watch 45mm", R.drawable.sw_1, 45, 4.7, 638.58,
                 "Smart Watch A with multiple features including fitness tracking, sleep monitoring, customizable watch faces, and notifications for calls, texts, and apps. It also has a sleek design and is water-resistant up to 50 meters.",
                 CategoryEnum.SMART_WATCHES));
         allProducts.add(new Product("SW_2", "Garmin Forerunner", R.drawable.sw_2, 20, 3.5, 423.84,
@@ -37,7 +37,7 @@ public class DataManager {
         allProducts.add(new Product("TV_1", "LG OLED A3", R.drawable.tv_1, 80, 4.8, 1210.32,
                 "Television A with 4K Ultra HD resolution, HDR support, and built-in streaming apps like Netflix, Hulu, and Disney+. It also features voice control via Amazon Alexa and Google Assistant.",
                 CategoryEnum.TELEVISIONS));
-        allProducts.add(new Product("TV_2", "Samsung 55'' OLED UHD 4K", R.drawable.tv_2, 20, 3.5, 1937.75,
+        allProducts.add(new Product("TV_2", "Samsung 55'' 4K", R.drawable.tv_2, 20, 3.5, 1937.75,
                 "Television B with Smart TV features, voice control, a sleek slim design, and a 55-inch screen. It also includes Dolby Vision and Atmos for an immersive viewing experience.",
                 CategoryEnum.TELEVISIONS));
         allProducts.add(new Product("TV_3", "Sony Bravia 4K", R.drawable.tv_3, 210, 4.7, 1302.59,

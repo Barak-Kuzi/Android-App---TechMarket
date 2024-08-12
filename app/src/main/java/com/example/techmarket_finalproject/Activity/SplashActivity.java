@@ -1,10 +1,12 @@
 package com.example.techmarket_finalproject.Activity;
 
+import android.animation.Animator;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -12,10 +14,12 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
+
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatImageView;
 
 import com.example.techmarket_finalproject.Interfaces.GenericCallBack;
 import com.example.techmarket_finalproject.Interfaces.UserCallBack;
@@ -31,10 +35,7 @@ import java.util.ArrayList;
 
 public class SplashActivity extends AppCompatActivity {
 
-    // Splash screen duration in milliseconds
-    private static final long SPLASH_DURATION = 4500;
-
-    private ImageView splashImage;
+    private AppCompatImageView splashImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,81 +54,96 @@ public class SplashActivity extends AppCompatActivity {
         splashImage = findViewById(R.id.icon);
 
         if (getSupportActionBar() != null) {  //hide action bar
-            getSupportActionBar().hide();}
+            getSupportActionBar().hide();
+        }
 
-        animateSplashScreen();
+        startAnimation(splashImage);
+    }
 
-        // Delay the transition to the LoginActivity
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                    String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                    DatabaseManager.getRememberLastUserFlag(userId, new GenericCallBack<Boolean>() {
-                        @Override
-                        public void onResponse(Boolean rememberLastUser) {
-                            if (rememberLastUser) {
-                                DatabaseManager.getUserFromDatabase(userId, new UserCallBack() {
+    private void startApp() {
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            DatabaseManager.getRememberLastUserFlag(userId, new GenericCallBack<Boolean>() {
+                @Override
+                public void onResponse(Boolean rememberLastUser) {
+                    if (rememberLastUser) {
+                        DatabaseManager.getUserFromDatabase(userId, new UserCallBack() {
+                            @Override
+                            public void onSuccess(User user) {
+                                ProductManager.initialize(SplashActivity.this, new GenericCallBack<ArrayList<Product>>() {
                                     @Override
-                                    public void onSuccess(User user) {
-                                        ProductManager.initialize(SplashActivity.this, new GenericCallBack<ArrayList<Product>>() {
-                                            @Override
-                                            public void onResponse(ArrayList<Product> response) {
-                                                LoginActivity.setCurrentUser(user);
-                                                DatabaseManager.addNewListenerForUser();
-                                                startActivity(new Intent(SplashActivity.this, MainActivity.class));
-                                                finish();
-                                            }
-
-                                            @Override
-                                            public void onFailure(DatabaseError error) {
-                                                Toast.makeText(SplashActivity.this, "Failed to load products.", Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
+                                    public void onResponse(ArrayList<Product> response) {
+                                        LoginActivity.setCurrentUser(user);
+                                        DatabaseManager.addNewListenerForUser();
+                                        startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                                        finish();
                                     }
 
                                     @Override
                                     public void onFailure(DatabaseError error) {
-                                        Toast.makeText(SplashActivity.this, "Failed to load user.", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(SplashActivity.this, "Failed to load products.", Toast.LENGTH_SHORT).show();
                                     }
                                 });
-                            } else {
-                                startActivity(new Intent(SplashActivity.this, IntroActivity.class));
-                                finish();
                             }
-                        }
 
-                        @Override
-                        public void onFailure(DatabaseError databaseError) {
-                            Log.e("SplashActivity", "Failed to get rememberLastUser flag: " + databaseError.getMessage());
-                            Toast.makeText(SplashActivity.this, "Failed to get rememberLastUser flag.", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-                } else {
-                    startActivity(new Intent(SplashActivity.this, IntroActivity.class));
-                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                    finish();
+                            @Override
+                            public void onFailure(DatabaseError error) {
+                                Toast.makeText(SplashActivity.this, "Failed to load user.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    } else {
+                        startActivity(new Intent(SplashActivity.this, IntroActivity.class));
+                        finish();
+                    }
                 }
 
-            }
-        }, SPLASH_DURATION);
+                @Override
+                public void onFailure(DatabaseError databaseError) {
+                    Log.e("SplashActivity", "Failed to get rememberLastUser flag: " + databaseError.getMessage());
+                    Toast.makeText(SplashActivity.this, "Failed to get rememberLastUser flag.", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        } else {
+            startActivity(new Intent(SplashActivity.this, IntroActivity.class));
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            finish();
+        }
     }
 
-    private void animateSplashScreen() {
-        Animation fadeIn = new AlphaAnimation(0, 1);
-        fadeIn.setInterpolator(new LinearInterpolator());
-        fadeIn.setDuration(1500);
+    private void startAnimation(View view) {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        view.setY(-displayMetrics.heightPixels / 2 - view.getHeight());
+        view.setScaleX(0.0f);
+        view.setScaleY(0.0f);
+        view
+                .animate()
+                .scaleY(1.0f)
+                .scaleX(1.0f)
+                .translationY(0)
+                .translationY(0)
+                .setDuration(2000)
+                .setInterpolator(new LinearInterpolator())
+                .setListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animator) {
+                        view.setVisibility(View.VISIBLE);
+                    }
 
-        Animation fadeOut = new AlphaAnimation(1, 0);
-        fadeOut.setInterpolator(new DecelerateInterpolator());
-        fadeOut.setStartOffset(3500);
-        fadeOut.setDuration(1500);
+                    @Override
+                    public void onAnimationEnd(Animator animator) {
+                        startApp();
+                    }
 
-        AnimationSet animation = new AnimationSet(false);
-        animation.addAnimation(fadeIn);
-        animation.addAnimation(fadeOut);
+                    @Override
+                    public void onAnimationCancel(Animator animator) {
+                    }
 
-        splashImage.startAnimation(animation);
+                    @Override
+                    public void onAnimationRepeat(Animator animator) {
+                    }
+                });
     }
+
 }

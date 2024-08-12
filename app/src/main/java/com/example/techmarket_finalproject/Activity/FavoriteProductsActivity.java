@@ -1,13 +1,10 @@
 package com.example.techmarket_finalproject.Activity;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
-
 
 import com.example.techmarket_finalproject.Adapters.FavoriteProductsAdapter;
 import com.example.techmarket_finalproject.Models.Product;
@@ -21,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FavoriteProductsActivity extends AppCompatActivity {
-    ActivityFavoriteProductsBinding activityFavoriteProductsBinding;
+    private ActivityFavoriteProductsBinding activityFavoriteProductsBinding;
     private ArrayList<Product> favoriteProducts;
     private User user;
 
@@ -51,13 +48,6 @@ public class FavoriteProductsActivity extends AppCompatActivity {
     private void initViews() {
         activityFavoriteProductsBinding = ActivityFavoriteProductsBinding.inflate(getLayoutInflater());
         setContentView(activityFavoriteProductsBinding.getRoot());
-
-//        activityFavoriteProductsBinding.backButtonFavoriteProducts.setOnClickListener(v -> {
-//            Intent intent = new Intent(FavoriteProductsActivity.this, MainActivity.class);
-//            intent.putExtra("user", user);
-//            startActivity(intent);
-//            finish();
-//        });
 
         if (user.getFavoriteProducts().isEmpty()) {
             activityFavoriteProductsBinding.emptyFavoriteProductsMessage.setVisibility(android.view.View.VISIBLE);

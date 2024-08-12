@@ -1,12 +1,10 @@
 package com.example.techmarket_finalproject.Models;
 
-import static com.example.techmarket_finalproject.Utilities.DatabaseManager.addProductToCartInDatabase;
-import static com.example.techmarket_finalproject.Utilities.DatabaseManager.removeProductFromCartInDatabase;
-
 import android.content.Context;
 import android.util.Log;
 
 import com.example.techmarket_finalproject.Interfaces.UpdateQuantityProductsListener;
+import com.example.techmarket_finalproject.Utilities.DatabaseManager;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -22,15 +20,17 @@ public class User implements Serializable {
     private String password;
     private String address;
     private String phone;
-    private HashMap<String, Integer> cart;
-    private boolean isAdmin;
-    private List<String> favoriteProducts;
-    private boolean rememberMe;
     private String profileImageUrl;
+    private boolean isAdmin;
+    private boolean rememberMe;
+    private HashMap<String, Integer> cart;
+    private List<String> favoriteProducts;
+    private List<HashMap<String, Object>> purchaseHistory;
 
     public User() {
         this.cart = new HashMap<>();
         this.favoriteProducts = new ArrayList<>();
+        this.purchaseHistory = new ArrayList<>();
     }
 
     public User(String userId, String name, String email, String password, String address, String phone, boolean isAdmin) {
@@ -40,9 +40,22 @@ public class User implements Serializable {
         this.password = password;
         this.address = address;
         this.phone = phone;
-        this.cart = new HashMap<>();
         this.isAdmin = isAdmin;
+        this.cart = new HashMap<>();
         this.favoriteProducts = new ArrayList<>();
+        this.purchaseHistory = new ArrayList<>();
+    }
+
+    public List<HashMap<String, Object>> getPurchaseHistory() {
+        return purchaseHistory;
+    }
+
+    public void setPurchaseHistory(List<HashMap<String, Object>> purchaseHistory) {
+        this.purchaseHistory = purchaseHistory;
+    }
+
+    public void addPurchaseToHistory(HashMap<String, Object> purchase) {
+        this.purchaseHistory.add(purchase);
     }
 
     public String getProfileImageUrl() {
@@ -183,7 +196,7 @@ public class User implements Serializable {
         if (this.cart.containsKey(productId)) {
             this.cart.put(productId, this.cart.get(productId) + 1);
         }
-        addProductToCartInDatabase(context, userId, productId, this.cart.get(productId));
+        DatabaseManager.addProductToCartInDatabase(context, userId, productId, this.cart.get(productId));
         updateQuantityProductsListener.update();
     }
 
@@ -192,10 +205,10 @@ public class User implements Serializable {
             int currentQuantity = this.cart.get(productId);
             if (currentQuantity > 1) {
                 this.cart.put(productId, currentQuantity - 1);
-                addProductToCartInDatabase(context, userId, productId, this.cart.get(productId));
+                DatabaseManager.addProductToCartInDatabase(context, userId, productId, this.cart.get(productId));
             } else {
                 this.cart.remove(productId);
-                removeProductFromCartInDatabase(context, userId, productId);
+                DatabaseManager.removeProductFromCartInDatabase(context, userId, productId);
             }
             updateQuantityProductsListener.update();
         }

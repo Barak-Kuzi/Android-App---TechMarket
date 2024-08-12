@@ -56,14 +56,14 @@
 
                 <EditText
                     android:id="@+id/search_input_field"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_weight="1"
                     android:background="@drawable/edit_text_grey_background"
                     android:drawableStart="@drawable/search_icon"
                     android:drawablePadding="8dp"
                     android:ems="10"
-                    android:hint="Search"
+                    android:hint="@string/search"
                     android:inputType="text"
                     android:padding="8dp" />
 
@@ -227,8 +227,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    />
+                    app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
@@ -242,8 +241,7 @@
 
         <include
             android:id="@+id/bottom_navigation_bar"
-            layout="@layout/bottom_navigation_bar"
-            />
+            layout="@layout/bottom_navigation_bar" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

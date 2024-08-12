@@ -20,17 +20,10 @@ import java.util.List;
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
 
     private ArrayList<Product> productList;
-    private User user;
     private Context context;
 
-    public ProductAdapter(ArrayList<Product> productList, User user) {
-        this.productList = productList;
-        this.user = user;
-    }
-
-    public ProductAdapter(List<Product> productList, User user) {
+    public ProductAdapter(List<Product> productList) {
         this.productList = (ArrayList<Product>) productList;
-        this.user = user;
     }
 
     @NonNull
@@ -50,7 +43,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, DetailActivity.class);
             intent.putExtra("product", product);
-            intent.putExtra("user", user);
             context.startActivity(intent);
         });
     }

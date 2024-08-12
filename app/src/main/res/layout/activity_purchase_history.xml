@@ -5,13 +5,12 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.FavoriteProductsActivity">
+    tools:context=".Activity.PurchaseHistoryActivity">
 
     <ScrollView
         android:id="@+id/scrollViewItems"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintBottom_toTopOf="@id/bottom_navigation_bar"
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
@@ -29,6 +28,14 @@
                 android:paddingEnd="16dp"
                 android:paddingBottom="16dp">
 
+                <ImageView
+                    android:id="@+id/back_button_purchase_history"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/coupon_background"
+                    android:padding="8dp"
+                    android:src="@drawable/arrow" />
+
                 <TextView
                     android:id="@+id/textView19"
                     android:layout_width="wrap_content"
@@ -36,14 +43,14 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:fontFamily="@font/kanit_semi_bold_italic"
-                    android:text="@string/my_favorite_products"
+                    android:text="@string/my_orders"
                     android:textAlignment="center"
                     android:textColor="@color/black"
                     android:textSize="28sp" />
             </LinearLayout>
 
             <TextView
-                android:id="@+id/empty_favorite_products_message"
+                android:id="@+id/empty_order_list_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -57,18 +64,11 @@
                 android:visibility="gone" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/favorite_products_recycler_view"
+                android:id="@+id/purchase_history_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="visible" />
         </LinearLayout>
     </ScrollView>
-
-    <include
-        android:id="@+id/bottom_navigation_bar"
-        layout="@layout/bottom_navigation_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
