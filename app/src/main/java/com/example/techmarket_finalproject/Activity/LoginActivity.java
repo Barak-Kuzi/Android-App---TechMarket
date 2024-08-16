@@ -52,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private Button signInButton, signUpButton;
     private ConstraintLayout signin_page, signup_page;
-    private TextView moveToSignInPage, moveToSignUpPage;
+    private TextView moveToSignInPage, moveToSignUpPage, forgotPassword;
 
     private CheckBox rememberMeCheckBox;
 
@@ -155,6 +155,12 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        forgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this, ForgotPasswordActivity.class));
+            }
+        });
 
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -240,6 +246,7 @@ public class LoginActivity extends AppCompatActivity {
 
         signInButton = findViewById(R.id.signin_button);
         signUpButton = findViewById(R.id.signup_button);
+        forgotPassword = findViewById(R.id.forgot_password_button);
 
         signin_page = findViewById(R.id.signin_page);
         signup_page = findViewById(R.id.signup_page);

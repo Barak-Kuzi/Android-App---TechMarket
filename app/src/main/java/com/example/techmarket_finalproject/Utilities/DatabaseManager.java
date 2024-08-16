@@ -319,4 +319,28 @@ public class DatabaseManager {
         });
     }
 
+    public static void checkEmailExistsInDatabase(String email, Context context, GenericCallBack<Boolean> callback) {
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
+        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                boolean emailExists = false;
+                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                    User user = userSnapshot.getValue(User.class);
+                    if (user != null && email.equals(user.getEmail())) {
+                        emailExists = true;
+                        break;
+                    }
+                }
+                callback.onResponse(emailExists);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(context, "Database error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                callback.onResponse(false);
+            }
+        });
+    }
+
 }

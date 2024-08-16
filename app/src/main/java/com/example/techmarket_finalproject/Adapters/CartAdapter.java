@@ -9,8 +9,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.GranularRoundedCorners;
 import com.example.techmarket_finalproject.Activity.DetailActivity;
 import com.example.techmarket_finalproject.Interfaces.UpdateQuantityProductsListener;
 import com.example.techmarket_finalproject.Models.User;
@@ -71,15 +69,21 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.Viewholder> {
             });
         });
 
+
         holder.binding.minusButton.setOnClickListener(v -> {
             user.decreaseQuantity(product.getProductId(), v.getContext(), user.getUserId(), () -> {
                 if (user.productInCart(product.getProductId())) {
                     notifyItemChanged(position);
                 } else {
-                    products.remove(position);
-                    notifyItemRemoved(position);
-                    notifyItemRangeChanged(position, products.size());
+                    removeProduct(position);
                 }
+                updateQuantityProductsListener.update();
+            });
+        });
+
+        holder.binding.removeProductCart.setOnClickListener(v -> {
+            user.removeProductFromCart(product.getProductId(), v.getContext(), user.getUserId(), () -> {
+                removeProduct(position);
                 updateQuantityProductsListener.update();
             });
         });
@@ -90,6 +94,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.Viewholder> {
             context.startActivity(intent);
         });
 
+    }
+
+    private void removeProduct(int position) {
+        products.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, products.size());
     }
 
     @Override

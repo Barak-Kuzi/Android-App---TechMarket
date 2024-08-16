@@ -24,6 +24,7 @@
         android:id="@+id/product_image_order_history"
         android:layout_width="72dp"
         android:layout_height="72dp"
+        android:src="@drawable/cp_1"
         app:layout_constraintBottom_toBottomOf="@+id/view6"
         app:layout_constraintEnd_toEndOf="@+id/view6"
         app:layout_constraintStart_toStartOf="@+id/view6"

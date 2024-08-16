@@ -1,8 +1,6 @@
 package com.example.techmarket_finalproject.Activity;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -10,13 +8,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.text.HtmlCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.techmarket_finalproject.Adapters.CartAdapter;
 
 import com.example.techmarket_finalproject.Models.Product;
@@ -26,21 +17,15 @@ import com.example.techmarket_finalproject.Interfaces.UpdateQuantityProductsList
 
 import com.example.techmarket_finalproject.Utilities.AppUtils;
 import com.example.techmarket_finalproject.Utilities.DatabaseManager;
+import com.example.techmarket_finalproject.Utilities.PaymentService;
 import com.example.techmarket_finalproject.Utilities.ProductManager;
 import com.example.techmarket_finalproject.databinding.ActivityCartBinding;
-import com.stripe.android.PaymentConfiguration;
-import com.stripe.android.paymentsheet.PaymentSheet;
-import com.stripe.android.paymentsheet.PaymentSheetResult;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 
 public class CartActivity extends AppCompatActivity {
@@ -53,12 +38,9 @@ public class CartActivity extends AppCompatActivity {
     private double totalCartPrice;
 
     // For the Stripe API
+    private PaymentService paymentService;
     private String PublishableKey = "pk_test_51OKSUWAFluX64oDUOw8ciGfX0NspFHsgHPJbitFIUvz5bMZYEfaErkyWUM95ENoZFqT2oGrHNPsE4H8UQL6Wyt5J00auc6GJZo";
     private String SecretKey = "sk_test_51OKSUWAFluX64oDUMlxnBFHzPUO76MiRgTM8cA1Lo0VwuicOL6pKW4cJxGkFQi44Ngxa5PGUQBeyC9eR6L0tZrHM00lxrk3x4s";
-    private String CustomerId;
-    private String EphemeralKey;
-    private String ClientSecret;
-    private PaymentSheet paymentSheet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,15 +60,11 @@ public class CartActivity extends AppCompatActivity {
             AppUtils.initNavigationBar(this, activityCartBinding.bottomNavigationBar.getRoot());
             activityCartBinding.bottomNavigationBar.getRoot().setSelectedItemId(R.id.menu_cart);
 
-            PaymentConfiguration.init(getApplicationContext(), PublishableKey);
-
-            paymentSheet = new PaymentSheet(this, paymentSheetResult -> {
-                onPaymentResult(paymentSheetResult);
-            });
+            paymentService = new PaymentService(this, PublishableKey, SecretKey);
 
             activityCartBinding.checkoutButton.setOnClickListener(v -> {
                 Toast.makeText(this, "Loading Payment System...", Toast.LENGTH_SHORT).show();
-                createCustomer(totalCartPrice);
+                paymentService.createCustomer(totalCartPrice);
             });
 
 
@@ -191,7 +169,7 @@ public class CartActivity extends AppCompatActivity {
         }
     }
 
-    private void savePurchaseToHistory() {
+    public void savePurchaseToHistory() {
         HashMap<String, Object> purchase = new HashMap<>();
         HashMap<String, Integer> products = new HashMap<>();
         for (Product product : filteredProducts) {
@@ -208,143 +186,4 @@ public class CartActivity extends AppCompatActivity {
         DatabaseManager.savePurchaseToHistory(this, user.getUserId(), user.getPurchaseHistory().size() - 1, purchase);
     }
 
-    // For the Stripe API
-    private void createCustomer(double totalAmount) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://api.stripe.com/v1/customers", new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    JSONObject object = new JSONObject(response);
-                    CustomerId = object.getString("id");
-                    getEphemeralKey(totalAmount);
-                } catch (JSONException e) {
-                    Log.e("PaymentActivity", "JSON Exception: " + e.getMessage());
-                    throw new RuntimeException(e);
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("PaymentActivity", "Volley Error: " + error.getMessage());
-                Toast.makeText(CartActivity.this, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> headers = new HashMap<>();
-                headers.put("Authorization", "Bearer " + SecretKey);
-                return headers;
-            }
-        };
-
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(stringRequest);
-    }
-
-    private void paymentFlow() {
-        paymentSheet.presentWithPaymentIntent(ClientSecret);
-    }
-
-    private void onPaymentResult(PaymentSheetResult paymentSheetResult) {
-        if (paymentSheetResult instanceof PaymentSheetResult.Canceled) {
-            Toast.makeText(this, "Payment Canceled", Toast.LENGTH_SHORT).show();
-        } else if (paymentSheetResult instanceof PaymentSheetResult.Completed) {
-
-            savePurchaseToHistory();
-            user.clearCart();
-            DatabaseManager.clearCartInDatabase(this, user.getUserId());
-            startActivity(new Intent(CartActivity.this, MainActivity.class));
-            finish();
-            Toast.makeText(this, "Payment Success", Toast.LENGTH_SHORT).show();
-
-        } else if (paymentSheetResult instanceof PaymentSheetResult.Failed) {
-            PaymentSheetResult.Failed failedResult = (PaymentSheetResult.Failed) paymentSheetResult;
-            Log.e("PaymentActivity", "Payment Failed: " + failedResult.getError().getMessage());
-            Toast.makeText(this, "Payment Failed: " + failedResult.getError().getMessage(), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void getEphemeralKey(double totalAmount) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://api.stripe.com/v1/ephemeral_keys", new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    JSONObject object = new JSONObject(response);
-
-                    EphemeralKey = object.getString("id");
-                    getClientSecret(CustomerId, EphemeralKey, totalAmount);
-
-                } catch (JSONException e) {
-                    Log.e("PaymentActivity", "JSON Exception: " + e.getMessage());
-                    throw new RuntimeException(e);
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("PaymentActivity", "Volley Error: " + error.getMessage());
-                Toast.makeText(CartActivity.this, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> headers = new HashMap<>();
-                headers.put("Authorization", "Bearer " + SecretKey);
-                headers.put("Stripe-Version", "2024-06-20");
-                return headers;
-            }
-
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("customer", CustomerId);
-                return params;
-            }
-        };
-
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(stringRequest);
-    }
-
-    private void getClientSecret(String customerId, String ephemeralKey, double totalAmount) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://api.stripe.com/v1/payment_intents", new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    JSONObject object = new JSONObject(response);
-                    ClientSecret = object.getString("client_secret");
-                    paymentFlow();
-                } catch (JSONException e) {
-                    Log.e("PaymentActivity", "JSON Exception: " + e.getMessage());
-                    throw new RuntimeException(e);
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("PaymentActivity", "Volley Error: " + error.getMessage());
-                Toast.makeText(CartActivity.this, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> headers = new HashMap<>();
-                headers.put("Authorization", "Bearer " + SecretKey);
-                return headers;
-            }
-
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("amount", String.valueOf((int) (totalAmount * 100)));
-                params.put("currency", "usd");
-                params.put("customer", customerId);
-                params.put("automatic_payment_methods[enabled]", "true");
-                return params;
-            }
-        };
-
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(stringRequest);
-    }
 }

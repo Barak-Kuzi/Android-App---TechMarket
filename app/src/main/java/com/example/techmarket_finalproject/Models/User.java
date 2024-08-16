@@ -206,10 +206,17 @@ public class User implements Serializable {
             if (currentQuantity > 1) {
                 this.cart.put(productId, currentQuantity - 1);
                 DatabaseManager.addProductToCartInDatabase(context, userId, productId, this.cart.get(productId));
+                updateQuantityProductsListener.update();
             } else {
-                this.cart.remove(productId);
-                DatabaseManager.removeProductFromCartInDatabase(context, userId, productId);
+                removeProductFromCart(productId, context, userId, updateQuantityProductsListener);
             }
+        }
+    }
+
+    public void removeProductFromCart(String productId, Context context, String userId, UpdateQuantityProductsListener updateQuantityProductsListener) {
+        if (this.cart.containsKey(productId)) {
+            this.cart.remove(productId);
+            DatabaseManager.removeProductFromCartInDatabase(context, userId, productId);
             updateQuantityProductsListener.update();
         }
     }
