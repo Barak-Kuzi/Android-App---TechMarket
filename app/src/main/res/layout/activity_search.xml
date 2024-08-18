@@ -43,7 +43,7 @@
                 android:drawableStart="@drawable/search_icon2"
                 android:drawablePadding="8dp"
                 android:ems="10"
-                android:hint="Search"
+                android:hint="@string/search"
                 android:inputType="text"
                 android:padding="8dp" />
         </LinearLayout>
@@ -79,15 +79,16 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginTop="2dp">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/search_result_recycler_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                tools:itemCount="4"
-                tools:listitem="@layout/viewholder_store_product" />
+                tools:itemCount="3"
+                tools:listitem="@layout/viewholder_products_list" />
         </ScrollView>
 
 

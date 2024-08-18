@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="2dp"
-        android:text="Title"
+        android:text="@string/title"
         android:textColor="@color/black"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -47,24 +47,48 @@
         android:id="@+id/product_quantity_order_history"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:text="Quantity: 1"
+        android:layout_marginBottom="1dp"
+        android:text="@string/quantity_example"
         android:textColor="@color/black"
         android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="@+id/product_price_order_history"
-        app:layout_constraintTop_toBottomOf="@+id/product_title_order_history" />
+        app:layout_constraintBottom_toTopOf="@+id/on_sale_layout"
+        app:layout_constraintStart_toStartOf="@+id/on_sale_layout" />
 
-    <TextView
-        android:id="@+id/product_price_order_history"
+    <LinearLayout
+        android:id="@+id/on_sale_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="2dp"
-        android:text="$570.00"
-        android:textColor="@color/black"
-        android:textSize="17sp"
-        app:layout_constraintStart_toEndOf="@+id/view6"
-        app:layout_constraintTop_toBottomOf="@+id/product_quantity_order_history" />
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/view6"
+        app:layout_constraintStart_toEndOf="@+id/view6">
+
+        <TextView
+            android:id="@+id/currentPriceDetailText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/example_price"
+            android:textColor="@color/black"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/oldPriceDetailText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="2dp"
+            android:text="@string/example_price"
+            android:textSize="14sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/newPriceDetailText" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -1,7 +1,6 @@
 package com.example.techmarket_finalproject.Models;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.example.techmarket_finalproject.Interfaces.UpdateQuantityProductsListener;
 import com.example.techmarket_finalproject.Utilities.DatabaseManager;
@@ -9,9 +8,7 @@ import com.example.techmarket_finalproject.Utilities.DatabaseManager;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class User implements Serializable {
     private String userId;
@@ -186,7 +183,8 @@ public class User implements Serializable {
         double totalPrice = 0;
         for (Product product : cart) {
             if (this.cart.containsKey(product.getProductId())) {
-                totalPrice += product.getPrice() * this.cart.get(product.getProductId());
+                double productPrice = product.isOnSale() ? product.getNewPrice() : product.getPrice();
+                totalPrice += productPrice * this.cart.get(product.getProductId());
             }
         }
         return totalPrice;

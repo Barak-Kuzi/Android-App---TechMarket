@@ -4,6 +4,13 @@ public class Category {
     private String title;
     private int id;
     private String imageUrl;
+    private int imageResourceId;
+
+    public Category(String title, int id, int imageResourceId) {
+        this.title = title;
+        this.id = id;
+        this.imageResourceId = imageResourceId;
+    }
 
     public Category(String title, int id, String imageUrl) {
         this.title = title;
@@ -36,5 +43,13 @@ public class Category {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public int getImageResourceId() {
+        return imageResourceId;
+    }
+
+    public void setImageResourceId(int imageResourceId) {
+        this.imageResourceId = imageResourceId;
     }
 }

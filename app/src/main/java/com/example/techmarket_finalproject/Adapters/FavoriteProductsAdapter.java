@@ -2,14 +2,14 @@ package com.example.techmarket_finalproject.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.GranularRoundedCorners;
 import com.example.techmarket_finalproject.Activity.DetailActivity;
 import com.example.techmarket_finalproject.Models.Product;
 import com.example.techmarket_finalproject.Models.User;
@@ -17,6 +17,7 @@ import com.example.techmarket_finalproject.R;
 import com.example.techmarket_finalproject.Utilities.DatabaseManager;
 import com.example.techmarket_finalproject.Utilities.ImageLoader;
 import com.example.techmarket_finalproject.databinding.ViewholderFavoriteProductsBinding;
+import com.example.techmarket_finalproject.databinding.ViewholderProductsListBinding;
 
 import java.util.ArrayList;
 
@@ -32,20 +33,39 @@ public class FavoriteProductsAdapter extends RecyclerView.Adapter<FavoriteProduc
         this.user = user;
     }
 
+//    @NonNull
+//    @Override
+//    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+//        viewholderFavoriteProductsBinding = ViewholderFavoriteProductsBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+//        this.context = parent.getContext();
+//        return new ViewHolder(viewholderFavoriteProductsBinding);
+//    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        viewholderFavoriteProductsBinding = ViewholderFavoriteProductsBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+        ViewholderProductsListBinding binding = ViewholderProductsListBinding.inflate(layoutInflater, parent, false);
         this.context = parent.getContext();
-        return new ViewHolder(viewholderFavoriteProductsBinding);
+        return new ViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull FavoriteProductsAdapter.ViewHolder holder, int position) {
         Product product = favoriteProducts.get(position);
 
+        if (product.isOnSale()) {
+            holder.binding.currentPriceDetailText.setText("$" + product.getNewPrice());
+            holder.binding.oldPriceDetailText.setVisibility(View.VISIBLE);
+            holder.binding.oldPriceDetailText.setText("$" + product.getPrice());
+            holder.binding.oldPriceDetailText.setPaintFlags(holder.binding.oldPriceDetailText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        } else {
+            holder.binding.currentPriceDetailText.setText("$" + product.getPrice());
+            holder.binding.oldPriceDetailText.setVisibility(View.GONE);
+        }
+
         holder.binding.titleTextOrder.setText(product.getTitle());
-        holder.binding.priceForOneItemText.setText("$" + product.getPrice());
+
         holder.binding.heartButton.setImageResource(R.drawable.heart);
 
         if (product.getImageUri() != null && !product.getImageUri().isEmpty()) {
@@ -76,13 +96,24 @@ public class FavoriteProductsAdapter extends RecyclerView.Adapter<FavoriteProduc
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+//    public class ViewHolder extends RecyclerView.ViewHolder {
+//
+//        ViewholderFavoriteProductsBinding binding;
+//
+//        public ViewHolder(ViewholderFavoriteProductsBinding itemView) {
+//            super(itemView.getRoot());
+//            this.binding = itemView;
+//        }
+//    }
 
-        ViewholderFavoriteProductsBinding binding;
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public ViewHolder(ViewholderFavoriteProductsBinding itemView) {
+        ViewholderProductsListBinding binding;
+
+        public ViewHolder(ViewholderProductsListBinding itemView) {
             super(itemView.getRoot());
             this.binding = itemView;
+            itemView.heartButton.setVisibility(View.VISIBLE);
         }
     }
 }

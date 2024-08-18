@@ -2,14 +2,11 @@ package com.example.techmarket_finalproject.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -26,6 +23,7 @@ import com.example.techmarket_finalproject.Models.CategoryEnum;
 import com.example.techmarket_finalproject.Models.User;
 
 import com.example.techmarket_finalproject.Utilities.AppUtils;
+import com.example.techmarket_finalproject.Utilities.DataManager;
 import com.example.techmarket_finalproject.Utilities.DatabaseManager;
 import com.example.techmarket_finalproject.Utilities.ProductManager;
 import com.example.techmarket_finalproject.Utilities.SliderItems;
@@ -36,13 +34,11 @@ import com.google.firebase.database.DatabaseError;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements CategoryAdapter.OnCategoryClickListener {
-    ActivityMainBinding activityMainBinding;
-    private TextView welcomeUser;
-
+    private ActivityMainBinding activityMainBinding;
     private User user;
-    ArrayList<SliderItems> sliderItems;
+    private ArrayList<SliderItems> sliderItems;
     private ArrayList<Category> categories;
-    private ArrayList<Product> products;
+    private ArrayList<Product> onSaleProducts;
     private PopularProductsAdapter productsAdapter;
 
     @Override
@@ -86,14 +82,14 @@ public class MainActivity extends AppCompatActivity implements CategoryAdapter.O
 
             AppUtils.statusBarColor(this);
 
-            sliderItems = new ArrayList<>();
+            sliderItems = DataManager.getBannerImages();
             initBannerSlider();
 
-            categories = new ArrayList<>();
+            categories = DataManager.getCategories();
             initCategoryRecyclerView();
 
-            products = new ArrayList<>();
-            productsAdapter = new PopularProductsAdapter(products);
+            onSaleProducts = new ArrayList<>();
+            productsAdapter = new PopularProductsAdapter(onSaleProducts);
             activityMainBinding.recyclerViewProducts.setLayoutManager(new GridLayoutManager(MainActivity.this, 2));
             activityMainBinding.recyclerViewProducts.setAdapter(productsAdapter);
             initProductsRecyclerView();
@@ -117,56 +113,39 @@ public class MainActivity extends AppCompatActivity implements CategoryAdapter.O
 
     private void initBannerSlider() {
         activityMainBinding.progressBarBanners.setVisibility(TextView.VISIBLE);
-        DatabaseManager.setBannerSliderImages(this, new GenericCallBack<ArrayList<SliderItems>>() {
-            @Override
-            public void onResponse(ArrayList<SliderItems> response) {
-                sliderItems = response;
-                SliderAdapter sliderAdapter = new SliderAdapter(MainActivity.this, sliderItems, activityMainBinding.viewPagerSlider);
-                activityMainBinding.viewPagerSlider.setAdapter(sliderAdapter);
-                activityMainBinding.viewPagerSlider.setClipToPadding(false);
-                activityMainBinding.viewPagerSlider.setClipChildren(false);
-                activityMainBinding.viewPagerSlider.setOffscreenPageLimit(3);
-                activityMainBinding.viewPagerSlider.getChildAt(0).setOverScrollMode(RecyclerView.OVER_SCROLL_NEVER);
 
-                CompositePageTransformer compositePageTransformer = new CompositePageTransformer();
-                compositePageTransformer.addTransformer(new MarginPageTransformer(40));
+        SliderAdapter sliderAdapter = new SliderAdapter(MainActivity.this, sliderItems, activityMainBinding.viewPagerSlider);
+        activityMainBinding.viewPagerSlider.setAdapter(sliderAdapter);
+        activityMainBinding.viewPagerSlider.setClipToPadding(false);
+        activityMainBinding.viewPagerSlider.setClipChildren(false);
+        activityMainBinding.viewPagerSlider.setOffscreenPageLimit(3);
+        activityMainBinding.viewPagerSlider.getChildAt(0).setOverScrollMode(RecyclerView.OVER_SCROLL_NEVER);
 
-                activityMainBinding.viewPagerSlider.setPageTransformer(compositePageTransformer);
-                activityMainBinding.progressBarBanners.setVisibility(TextView.GONE);
-            }
+        CompositePageTransformer compositePageTransformer = new CompositePageTransformer();
+        compositePageTransformer.addTransformer(new MarginPageTransformer(40));
 
-            @Override
-            public void onFailure(DatabaseError databaseError) {
-                Toast.makeText(MainActivity.this, "Failed to load banner images.", Toast.LENGTH_SHORT).show();
-            }
-        });
+        activityMainBinding.viewPagerSlider.setPageTransformer(compositePageTransformer);
+        activityMainBinding.progressBarBanners.setVisibility(TextView.GONE);
+
     }
 
     private void initCategoryRecyclerView() {
         activityMainBinding.progressBarCategories.setVisibility(TextView.VISIBLE);
-        DatabaseManager.getAllCategoriesFromDatabase(new GenericCallBack<ArrayList<Category>>() {
-            @Override
-            public void onResponse(ArrayList<Category> response) {
-                categories.clear();
-                categories.addAll(response);
-                CategoryAdapter categoryAdapter = new CategoryAdapter(MainActivity.this, response, MainActivity.this);
-                activityMainBinding.recyclerViewCategories.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false));
-                activityMainBinding.recyclerViewCategories.setAdapter(categoryAdapter);
-                activityMainBinding.progressBarCategories.setVisibility(TextView.GONE);
-            }
-
-            @Override
-            public void onFailure(DatabaseError databaseError) {
-                Toast.makeText(MainActivity.this, "Failed to load categories.", Toast.LENGTH_SHORT).show();
-            }
-        });
+        CategoryAdapter categoryAdapter = new CategoryAdapter(MainActivity.this, categories, MainActivity.this);
+        activityMainBinding.recyclerViewCategories.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false));
+        activityMainBinding.recyclerViewCategories.setAdapter(categoryAdapter);
+        activityMainBinding.progressBarCategories.setVisibility(TextView.GONE);
     }
 
     private void initProductsRecyclerView() {
         activityMainBinding.progressBarProducts.setVisibility(TextView.VISIBLE);
         ArrayList<Product> fetchedProducts = ProductManager.getAllProducts();
-        products.clear();
-        products.addAll(fetchedProducts);
+        onSaleProducts.clear();
+        for (Product product : fetchedProducts) {
+            if (product.isOnSale()) {
+                onSaleProducts.add(product);
+            }
+        }
         productsAdapter.notifyDataSetChanged();
         activityMainBinding.progressBarProducts.setVisibility(TextView.GONE);
     }
@@ -211,9 +190,14 @@ public class MainActivity extends AppCompatActivity implements CategoryAdapter.O
         DatabaseManager.getAllProductsFromDatabase(new GenericCallBack<ArrayList<Product>>() {
             @Override
             public void onResponse(ArrayList<Product> response) {
-                products.clear();
-                products.addAll(response);
-                productsAdapter.notifyDataSetChanged();
+                onSaleProducts.clear();
+//                onSaleProducts.addAll(response);
+                for (Product product : response) {
+                    if (product.isOnSale()) {
+                        onSaleProducts.add(product);
+                    }
+                    productsAdapter.notifyDataSetChanged();
+                }
             }
 
             @Override
@@ -221,6 +205,12 @@ public class MainActivity extends AppCompatActivity implements CategoryAdapter.O
                 Toast.makeText(MainActivity.this, "Failed to refresh products.", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshProductList();
     }
 
 }

@@ -1,6 +1,8 @@
 package com.example.techmarket_finalproject.Models;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class Product implements Serializable {
     private String productId;
@@ -13,11 +15,13 @@ public class Product implements Serializable {
     private boolean isFavorite;
     private CategoryEnum category;
     private String imageUri;
+    private boolean isOnSale;
+    private double newPrice;
 
     public Product() {
     }
 
-    public Product(String productId, String title, int imageResourceId, int review, double score, double price, String description, CategoryEnum category) {
+    public Product(String productId, String title, int imageResourceId, int review, double score, double price, String description, CategoryEnum category, boolean isOnSale, double discountPercentage) {
         this.productId = productId;
         this.title = title;
         this.imageResourceId = imageResourceId;
@@ -27,9 +31,11 @@ public class Product implements Serializable {
         this.description = description;
         this.isFavorite = false;
         this.category = category;
+        this.isOnSale = isOnSale;
+        this.newPrice = calculateDiscountedPrice(price, discountPercentage);
     }
 
-    public Product(String productId, String title, String imageUri, int review, double score, double price, String description, CategoryEnum category) {
+    public Product(String productId, String title, String imageUri, int review, double score, double price, String description, CategoryEnum category, boolean isOnSale, double discountPercentage) {
         this.productId = productId;
         this.title = title;
         this.imageUri = imageUri;
@@ -39,6 +45,31 @@ public class Product implements Serializable {
         this.description = description;
         this.isFavorite = false;
         this.category = category;
+        this.isOnSale = isOnSale;
+        this.newPrice = calculateDiscountedPrice(price, discountPercentage);
+    }
+
+    private double calculateDiscountedPrice(double price, double discountPercentage) {
+        double discountedPrice = price * (1 - (discountPercentage / 100));
+        BigDecimal bd = new BigDecimal(Double.toString(discountedPrice));
+        bd = bd.setScale(2, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
+
+    public boolean isOnSale() {
+        return isOnSale;
+    }
+
+    public void setOnSale(boolean onSale) {
+        isOnSale = onSale;
+    }
+
+    public double getNewPrice() {
+        return newPrice;
+    }
+
+    public void setNewPrice(double newPrice) {
+        this.newPrice = newPrice;
     }
 
     public String getImageUri() {

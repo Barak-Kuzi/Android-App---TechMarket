@@ -1,13 +1,13 @@
 package com.example.techmarket_finalproject.Activity;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -26,18 +26,17 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    ActivityProfileBinding activityProfileBinding;
+    private ActivityProfileBinding activityProfileBinding;
     private User user;
     private CircleImageView profileImage;
     private BottomNavigationView bottomNavigationView;
-
-    private final ActivityResultLauncher<Intent> imagePickerLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+    
+    private final ActivityResultLauncher<PickVisualMediaRequest> imagePickerLauncher = registerForActivityResult(
+            new ActivityResultContracts.PickVisualMedia(),
+            uri -> {
+                if (uri != null) {
                     Toast.makeText(ProfileActivity.this, "Uploading image...", Toast.LENGTH_SHORT).show();
-                    Uri selectedImageUri = result.getData().getData();
-                    DatabaseManager.uploadImageToFirebaseStorage(user, selectedImageUri, new GenericCallBack<String>() {
+                    DatabaseManager.uploadImageToFirebaseStorage(user, uri, new GenericCallBack<String>() {
                         @Override
                         public void onResponse(String imageUrl) {
                             updateUserProfileImage(imageUrl);
@@ -49,7 +48,8 @@ public class ProfileActivity extends AppCompatActivity {
                         }
                     });
                 }
-            });
+            }
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,9 +126,9 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void openImagePicker() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        imagePickerLauncher.launch(intent);
+        imagePickerLauncher.launch(new PickVisualMediaRequest.Builder()
+                .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                .build());
     }
 
     private void updateUserProfileImage(String imageUrl) {

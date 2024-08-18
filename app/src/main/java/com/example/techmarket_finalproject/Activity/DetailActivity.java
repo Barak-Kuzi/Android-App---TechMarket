@@ -1,9 +1,7 @@
 package com.example.techmarket_finalproject.Activity;
 
-import static com.example.techmarket_finalproject.Utilities.DatabaseManager.addProductToCartInDatabase;
-import static com.example.techmarket_finalproject.Utilities.DatabaseManager.updateFavoriteProductsInDatabase;
-
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -32,11 +30,10 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(activityDetailBinding.getRoot());
 
         AppUtils.statusBarColor(this);
-        getBundles();
+        initializeProductDetails();
     }
 
-
-    private void getBundles() {
+    private void initializeProductDetails() {
         this.product = (Product) getIntent().getSerializableExtra("product");
         this.user = LoginActivity.getCurrentUser();
 
@@ -54,6 +51,7 @@ public class DetailActivity extends AppCompatActivity {
 
                 activityDetailBinding.deleteProductButton.setOnClickListener(v -> {
                     DatabaseManager.removeProductFromDatabase(getApplicationContext(), product.getProductId());
+                    ProductManager.removeProductById(product.getProductId());
                     ProductManager.setProductDeleted(true);
                     finish();
                 });
@@ -69,18 +67,30 @@ public class DetailActivity extends AppCompatActivity {
             }
 
             activityDetailBinding.titleDetailText.setText(product.getTitle());
-            activityDetailBinding.priceDetailText.setText("$" + product.getPrice());
             activityDetailBinding.descriptionDetailText.setText(product.getDescription());
-
             activityDetailBinding.ratingDetailText.setText(String.valueOf(product.getScore()));
             activityDetailBinding.ratingBar.setRating((float) product.getScore());
+
+            if (product.isOnSale()) {
+                activityDetailBinding.priceDetailText.setVisibility(View.GONE);
+                activityDetailBinding.onSaleProductIcon.setVisibility(View.VISIBLE);
+                activityDetailBinding.onSaleLayout.setVisibility(View.VISIBLE);
+                activityDetailBinding.oldPriceDetailText.setText("$" + product.getPrice());
+                activityDetailBinding.oldPriceDetailText.setPaintFlags(activityDetailBinding.oldPriceDetailText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                activityDetailBinding.newPriceDetailText.setText("$" + product.getNewPrice());
+            } else {
+                activityDetailBinding.onSaleProductIcon.setVisibility(View.GONE);
+                activityDetailBinding.priceDetailText.setVisibility(View.VISIBLE);
+                activityDetailBinding.onSaleLayout.setVisibility(View.GONE);
+
+                activityDetailBinding.priceDetailText.setText("$" + product.getPrice());
+            }
 
             if (user.isFavoriteProduct(product.getProductId())) {
                 activityDetailBinding.heartButton.setImageResource(R.drawable.heart);
             } else {
                 activityDetailBinding.heartButton.setImageResource(R.drawable.empty_heart);
             }
-
 
             activityDetailBinding.heartButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -92,21 +102,16 @@ public class DetailActivity extends AppCompatActivity {
                         user.addFavoriteProduct(product.getProductId());
                         activityDetailBinding.heartButton.setImageResource(R.drawable.heart);
                     }
-                    updateFavoriteProductsInDatabase(getApplicationContext(), user.getUserId(), user.getFavoriteProducts());
+                    DatabaseManager.updateFavoriteProductsInDatabase(getApplicationContext(), user.getUserId(), user.getFavoriteProducts());
                 }
             });
 
             activityDetailBinding.addToCartButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (user.productInCart(product.getProductId())) {
-                        int quantity = user.getQuantity(product.getProductId()) + 1;
-                        addProductToCartInDatabase(getApplicationContext(), user.getUserId(), product.getProductId(), quantity);
-                        user.setItemToCart(product.getProductId(), quantity);
-                    } else {
-                        addProductToCartInDatabase(getApplicationContext(), user.getUserId(), product.getProductId(), 1);
-                        user.setItemToCart(product.getProductId(), 1);
-                    }
+                    int quantity = user.productInCart(product.getProductId()) ? user.getQuantity(product.getProductId()) + 1 : 1;
+                    DatabaseManager.addProductToCartInDatabase(getApplicationContext(), user.getUserId(), product.getProductId(), quantity);
+                    user.setItemToCart(product.getProductId(), quantity);
                 }
             });
 

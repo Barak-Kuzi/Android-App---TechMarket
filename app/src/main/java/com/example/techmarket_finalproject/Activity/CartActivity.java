@@ -30,7 +30,7 @@ import java.util.Set;
 
 public class CartActivity extends AppCompatActivity {
 
-    ActivityCartBinding activityCartBinding;
+    private ActivityCartBinding activityCartBinding;
     private User user;
     private ArrayList<Product> filteredProducts;
     private double discountPercentage = 0.0;

@@ -9,15 +9,13 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
 
 import com.example.techmarket_finalproject.Models.User;
 import com.example.techmarket_finalproject.R;
 import com.example.techmarket_finalproject.Utilities.AppUtils;
 import com.example.techmarket_finalproject.Utilities.DatabaseManager;
 import com.example.techmarket_finalproject.Utilities.ValidationManagement;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
+import com.example.techmarket_finalproject.databinding.ActivityEditProfileBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -26,50 +24,44 @@ import java.util.Map;
 
 public class EditProfileActivity extends AppCompatActivity {
 
-    private AppCompatButton confirmUpdateButton, cancelUpdateButton;
-
-    private TextInputLayout passwordLayoutSignUp, usernameLayoutSignUp,
-            re_passwordLayoutSignUp, addressLayoutSignUp, phoneLayoutSignUp;
-
-    private TextInputEditText passwordInputSignUp, usernameInputSignUp,
-            re_passwordInputSignUp, addressInputSignUp, phoneInputSignUp;
-
+    private ActivityEditProfileBinding activityEditProfileBinding;
     private final ValidationManagement validationManagement = new ValidationManagement();
-
     private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        activityEditProfileBinding = ActivityEditProfileBinding.inflate(getLayoutInflater());
+        setContentView(activityEditProfileBinding.getRoot());
+        EdgeToEdge.enable(this);
+
         user = LoginActivity.getCurrentUser();
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
         if (user != null) {
-            EdgeToEdge.enable(this);
-            setContentView(R.layout.activity_edit_profile);
-            AppUtils.statusBarColor(this);
-            init();
 
-            usernameInputSignUp.setText(user.getName());
-            addressInputSignUp.setText(user.getAddress());
-            phoneInputSignUp.setText(user.getPhone());
-            passwordInputSignUp.setText(user.getPassword());
-            re_passwordInputSignUp.setText(user.getPassword());
-            confirmUpdateButton.setEnabled(false);
+            AppUtils.statusBarColor(this);
+            initTextWatchers();
+
+            activityEditProfileBinding.usernameInputSignup.setText(user.getName());
+            activityEditProfileBinding.addressInputSignup.setText(user.getAddress());
+            activityEditProfileBinding.phoneInputSignup.setText(user.getPhone());
+            activityEditProfileBinding.passwordInputSignup.setText(user.getPassword());
+            activityEditProfileBinding.rePasswordInputSignup.setText(user.getPassword());
+            activityEditProfileBinding.confirmButtonEditProfile.setEnabled(false);
 
         } else {
             Toast.makeText(this, "The Page is Loading...", Toast.LENGTH_SHORT).show();
             finish();
         }
 
-        confirmUpdateButton.setOnClickListener(v -> {
-            // Update user profile
-            String newUsername = usernameInputSignUp.getText().toString();
-            String newAddress = addressInputSignUp.getText().toString();
-            String newPhone = phoneInputSignUp.getText().toString();
-            String newPassword = passwordInputSignUp.getText().toString();
+        activityEditProfileBinding.confirmButtonEditProfile.setOnClickListener(v -> {
+            String newUsername = activityEditProfileBinding.usernameInputSignup.getText().toString();
+            String newAddress = activityEditProfileBinding.addressInputSignup.getText().toString();
+            String newPhone = activityEditProfileBinding.phoneInputSignup.getText().toString();
+            String newPassword = activityEditProfileBinding.passwordInputSignup.getText().toString();
 
             if (firebaseUser != null && user != null) {
                 Map<String, Object> userMap = new HashMap<>();
@@ -86,41 +78,24 @@ public class EditProfileActivity extends AppCompatActivity {
 
                 DatabaseManager.updateUserInDatabase(EditProfileActivity.this, user.getUserId(), userMap);
 
-                Intent intent = new Intent(EditProfileActivity.this, ProfileActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(EditProfileActivity.this, ProfileActivity.class));
                 finish();
             }
         });
 
-        cancelUpdateButton.setOnClickListener(v -> {
+        activityEditProfileBinding.cancelButtonEditProfile.setOnClickListener(v -> {
             startActivity(new Intent(EditProfileActivity.this, ProfileActivity.class));
             finish();
         });
 
     }
 
-    private void init() {
-        usernameLayoutSignUp = findViewById(R.id.username_input_layout_signup);
-        addressLayoutSignUp = findViewById(R.id.address_input_layout_signup);
-        phoneLayoutSignUp = findViewById(R.id.phone_input_layout_signup);
-        passwordLayoutSignUp = findViewById(R.id.password_input_layout_signup);
-        re_passwordLayoutSignUp = findViewById(R.id.re_password_input_layout_signup);
-
-        usernameInputSignUp = findViewById(R.id.username_input_signup);
-        addressInputSignUp = findViewById(R.id.address_input_signup);
-        phoneInputSignUp = findViewById(R.id.phone_input_signup);
-        passwordInputSignUp = findViewById(R.id.password_input_signup);
-        re_passwordInputSignUp = findViewById(R.id.re_password_input_signup);
-
-        confirmUpdateButton = findViewById(R.id.update_profile_button);
-        cancelUpdateButton = findViewById(R.id.cancel_update_profile_button);
-
-        // TextWatchers for real-time validation
-        usernameInputSignUp.addTextChangedListener(new ValidationTextWatcher(usernameInputSignUp));
-        addressInputSignUp.addTextChangedListener(new ValidationTextWatcher(addressInputSignUp));
-        phoneInputSignUp.addTextChangedListener(new ValidationTextWatcher(phoneInputSignUp));
-        passwordInputSignUp.addTextChangedListener(new ValidationTextWatcher(passwordInputSignUp));
-        re_passwordInputSignUp.addTextChangedListener(new ValidationTextWatcher(re_passwordInputSignUp));
+    private void initTextWatchers() {
+        activityEditProfileBinding.usernameInputSignup.addTextChangedListener(new ValidationTextWatcher(activityEditProfileBinding.usernameInputSignup));
+        activityEditProfileBinding.addressInputSignup.addTextChangedListener(new ValidationTextWatcher(activityEditProfileBinding.addressInputSignup));
+        activityEditProfileBinding.phoneInputSignup.addTextChangedListener(new ValidationTextWatcher(activityEditProfileBinding.phoneInputSignup));
+        activityEditProfileBinding.passwordInputSignup.addTextChangedListener(new ValidationTextWatcher(activityEditProfileBinding.passwordInputSignup));
+        activityEditProfileBinding.rePasswordInputSignup.addTextChangedListener(new ValidationTextWatcher(activityEditProfileBinding.rePasswordInputSignup));
     }
 
     private void updatePassword(FirebaseUser firebaseUser, String newPassword) {
@@ -150,11 +125,11 @@ public class EditProfileActivity extends AppCompatActivity {
 
         @Override
         public void afterTextChanged(Editable editable) {
-            String name = usernameInputSignUp.getText().toString();
-            String password = passwordInputSignUp.getText().toString().trim();
-            String rePassword = re_passwordInputSignUp.getText().toString().trim();
-            String address = addressInputSignUp.getText().toString();
-            String phone = phoneInputSignUp.getText().toString();
+            String name = activityEditProfileBinding.usernameInputSignup.getText().toString();
+            String password = activityEditProfileBinding.passwordInputSignup.getText().toString().trim();
+            String rePassword = activityEditProfileBinding.rePasswordInputSignup.getText().toString().trim();
+            String address = activityEditProfileBinding.addressInputSignup.getText().toString();
+            String phone = activityEditProfileBinding.phoneInputSignup.getText().toString();
 
             int viewId = view.getId();
             if (viewId == R.id.password_input_signup) {
@@ -170,7 +145,7 @@ public class EditProfileActivity extends AppCompatActivity {
             }
 
             // Check if all fields are valid to enable/disable buttons
-            confirmUpdateButton.setEnabled(validationManagement
+            activityEditProfileBinding.confirmButtonEditProfile.setEnabled(validationManagement
                     .allEditProfileFieldsAreValid(name, address, phone, password, rePassword)
             );
 
@@ -178,58 +153,58 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void validatePasswordSignUp() {
-        String password = passwordInputSignUp.getText().toString().trim();
+        String password = activityEditProfileBinding.passwordInputSignup.getText().toString().trim();
         validationManagement.validatePassword(password);
         if (!validationManagement.passwordIsValid()) {
-            passwordLayoutSignUp.setError(validationManagement.getPasswordErrorMessage());
+            activityEditProfileBinding.passwordInputLayoutSignup.setError(validationManagement.getPasswordErrorMessage());
         } else {
-            passwordLayoutSignUp.setError(null);
-            passwordLayoutSignUp.setErrorEnabled(false);
+            activityEditProfileBinding.passwordInputLayoutSignup.setError(null);
+            activityEditProfileBinding.passwordInputLayoutSignup.setErrorEnabled(false);
         }
     }
 
     private void validateRePasswordSignUp() {
-        String password = passwordInputSignUp.getText().toString().trim();
-        String rePassword = re_passwordInputSignUp.getText().toString().trim();
+        String password = activityEditProfileBinding.passwordInputSignup.getText().toString().trim();
+        String rePassword = activityEditProfileBinding.rePasswordInputSignup.getText().toString().trim();
         validationManagement.validateRePassword(password, rePassword);
         if (!validationManagement.rePasswordIsValid()) {
-            re_passwordLayoutSignUp.setError(validationManagement.getRePasswordErrorMessage());
+            activityEditProfileBinding.rePasswordInputLayoutSignup.setError(validationManagement.getRePasswordErrorMessage());
         } else {
-            re_passwordLayoutSignUp.setError(null);
-            re_passwordLayoutSignUp.setErrorEnabled(false);
+            activityEditProfileBinding.rePasswordInputLayoutSignup.setError(null);
+            activityEditProfileBinding.rePasswordInputLayoutSignup.setErrorEnabled(false);
         }
     }
 
     private void validateUsernameSignUp() {
-        String username = usernameInputSignUp.getText().toString().trim();
+        String username = activityEditProfileBinding.usernameInputSignup.getText().toString().trim();
         validationManagement.validateUsername(username);
         if (!validationManagement.usernameIsValid()) {
-            usernameLayoutSignUp.setError(validationManagement.getUsernameErrorMessage());
+            activityEditProfileBinding.usernameInputLayoutSignup.setError(validationManagement.getUsernameErrorMessage());
         } else {
-            usernameLayoutSignUp.setError(null);
-            usernameLayoutSignUp.setErrorEnabled(false);
+            activityEditProfileBinding.usernameInputLayoutSignup.setError(null);
+            activityEditProfileBinding.usernameInputLayoutSignup.setErrorEnabled(false);
         }
     }
 
     private void validateAddressSignUp() {
-        String address = addressInputSignUp.getText().toString().trim();
+        String address = activityEditProfileBinding.addressInputSignup.getText().toString().trim();
         validationManagement.validateAddress(address);
         if (!validationManagement.addressIsValid()) {
-            addressLayoutSignUp.setError(validationManagement.getAddressErrorMessage());
+            activityEditProfileBinding.addressInputLayoutSignup.setError(validationManagement.getAddressErrorMessage());
         } else {
-            addressLayoutSignUp.setError(null);
-            addressLayoutSignUp.setErrorEnabled(false);
+            activityEditProfileBinding.addressInputLayoutSignup.setError(null);
+            activityEditProfileBinding.addressInputLayoutSignup.setErrorEnabled(false);
         }
     }
 
     private void validatePhoneSignUp() {
-        String phone = phoneInputSignUp.getText().toString().trim();
+        String phone = activityEditProfileBinding.phoneInputSignup.getText().toString().trim();
         validationManagement.validatePhone(phone);
         if (!validationManagement.phoneIsValid()) {
-            phoneLayoutSignUp.setError(validationManagement.getPhoneErrorMessage());
+            activityEditProfileBinding.phoneInputLayoutSignup.setError(validationManagement.getPhoneErrorMessage());
         } else {
-            phoneLayoutSignUp.setError(null);
-            phoneLayoutSignUp.setErrorEnabled(false);
+            activityEditProfileBinding.phoneInputLayoutSignup.setError(null);
+            activityEditProfileBinding.phoneInputLayoutSignup.setErrorEnabled(false);
         }
     }
 

@@ -26,14 +26,14 @@
 
             <EditText
                 android:id="@+id/edit_text_search_field_store_products"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_weight="1"
                 android:background="@drawable/edit_text_grey_background"
                 android:drawableStart="@drawable/search_icon2"
                 android:drawablePadding="8dp"
                 android:ems="10"
-                android:hint="Search"
+                android:hint="@string/search"
                 android:inputType="text"
                 android:padding="8dp" />
 
@@ -75,7 +75,7 @@
                     android:layout_height="40dp"
                     android:layout_margin="5dp"
                     android:background="@drawable/category_button_background"
-                    android:text="All"
+                    android:text="@string/all"
                     android:textAllCaps="false"
                     android:textColor="@color/black"
                     android:textSize="15sp" />
@@ -86,7 +86,7 @@
                     android:layout_height="40dp"
                     android:layout_margin="5dp"
                     android:background="@drawable/category_button_background"
-                    android:text="Smartphones"
+                    android:text="@string/smartphones"
                     android:textAllCaps="false"
                     android:textColor="@color/black"
                     android:textSize="15sp" />
@@ -97,7 +97,7 @@
                     android:layout_height="40dp"
                     android:layout_margin="5dp"
                     android:background="@drawable/category_button_background"
-                    android:text="Headphones"
+                    android:text="@string/headphones"
                     android:textAllCaps="false"
                     android:textColor="@color/black"
                     android:textSize="15sp" />
@@ -108,7 +108,7 @@
                     android:layout_height="40dp"
                     android:layout_margin="5dp"
                     android:background="@drawable/category_button_background"
-                    android:text="Smartwatches"
+                    android:text="@string/smartwatches"
                     android:textAllCaps="false"
                     android:textColor="@color/black"
                     android:textSize="15sp" />
@@ -119,7 +119,7 @@
                     android:layout_height="40dp"
                     android:layout_margin="5dp"
                     android:background="@drawable/category_button_background"
-                    android:text="Laptops"
+                    android:text="@string/laptops"
                     android:textAllCaps="false"
                     android:textColor="@color/black"
                     android:textSize="15sp" />
@@ -130,7 +130,7 @@
                     android:layout_height="40dp"
                     android:layout_margin="5dp"
                     android:background="@drawable/category_button_background"
-                    android:text="Desktops"
+                    android:text="@string/desktops"
                     android:textAllCaps="false"
                     android:textColor="@color/black"
                     android:textSize="15sp" />
@@ -141,7 +141,7 @@
                     android:layout_height="40dp"
                     android:layout_margin="5dp"
                     android:background="@drawable/category_button_background"
-                    android:text="Televisions"
+                    android:text="@string/televisions"
                     android:textAllCaps="false"
                     android:textColor="@color/black"
                     android:textSize="15sp" />
@@ -152,18 +152,27 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/cartView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             tools:itemCount="3"
-            tools:listitem="@layout/viewholder_store_product" />
+            tools:listitem="@layout/viewholder_products_list" />
+
 
     </LinearLayout>
 
-    <include
-        android:id="@+id/bottom_navigation_bar"
-        layout="@layout/bottom_navigation_bar"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/navigation_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <include
+            android:id="@+id/bottom_navigation_bar"
+            layout="@layout/bottom_navigation_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

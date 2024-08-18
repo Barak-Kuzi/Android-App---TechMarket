@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DatabaseManager {
     private static final String TAG = "DatabaseManager";    // TAG for logging
@@ -177,9 +178,7 @@ public class DatabaseManager {
     public static void clearCartInDatabase(Context context, String userId) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").child(userId).child("cart");
         databaseReference.removeValue().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Toast.makeText(context, "Cart cleared successfully.", Toast.LENGTH_SHORT).show();
-            } else {
+            if (!task.isSuccessful()) {
                 Toast.makeText(context, "Failed to clear cart.", Toast.LENGTH_SHORT).show();
             }
         });
@@ -187,14 +186,18 @@ public class DatabaseManager {
 
     public static void addAllProductsToDatabase(Context context, ArrayList<Product> products) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("products");
+        AtomicBoolean isSuccessful = new AtomicBoolean(true);
         for (Product product : products) {
             databaseReference.child(product.getProductId()).setValue(product).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    Toast.makeText(context, "Product added successfully.", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(context, "Failed to add product.", Toast.LENGTH_SHORT).show();
+                if (!task.isSuccessful()) {
+                    isSuccessful.set(false);
                 }
             });
+        }
+        if (isSuccessful.get()) {
+            Toast.makeText(context, "All products added successfully.", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Failed to add all products.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -251,44 +254,25 @@ public class DatabaseManager {
         });
     }
 
-    public static void setBannerSliderImages(Context context, GenericCallBack<ArrayList<SliderItems>> callback) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("banners");
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                ArrayList<SliderItems> sliderItems = new ArrayList<>();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    SliderItems sliderItem = snapshot.getValue(SliderItems.class);
-                    sliderItems.add(sliderItem);
-                }
-                callback.onResponse(sliderItems);
+    public static void setBannerSliderImages(GenericCallBack<ArrayList<SliderItems>> callback) {
+        StorageReference bannersRef = FirebaseStorage.getInstance().getReference().child("banners");
+        bannersRef.listAll().addOnSuccessListener(listResult -> {
+            ArrayList<SliderItems> sliderItems = new ArrayList<>();
+            for (StorageReference itemRef : listResult.getItems()) {
+                itemRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                    SliderItems item = new SliderItems(uri.toString());
+                    sliderItems.add(item);
+                    if (sliderItems.size() == listResult.getItems().size()) {
+                        callback.onResponse(sliderItems);
+                    }
+                }).addOnFailureListener(e -> {
+                    Log.e("DatabaseManager", "Failed to get download URL: " + e.getMessage());
+                    callback.onFailure(DatabaseError.fromException(e));
+                });
             }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e(TAG, "Failed to read banner slider images from database.", databaseError.toException());
-                callback.onFailure(databaseError);
-            }
-        });
-    }
-
-    public static void getAllCategoriesFromDatabase(GenericCallBack<ArrayList<Category>> callback) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("categories");
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                ArrayList<Category> categories = new ArrayList<>();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Category category = snapshot.getValue(Category.class);
-                    categories.add(category);
-                }
-                callback.onResponse(categories);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                callback.onFailure(databaseError);
-            }
+        }).addOnFailureListener(e -> {
+            Log.e("DatabaseManager", "Failed to list banner images: " + e.getMessage());
+            callback.onFailure(DatabaseError.fromException(e));
         });
     }
 
@@ -311,9 +295,7 @@ public class DatabaseManager {
     public static void savePurchaseToHistory(Context context, String userId, int orderNumber, HashMap<String, Object> purchase) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").child(userId).child("purchaseHistory");
         databaseReference.child(String.valueOf(orderNumber)).setValue(purchase).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Toast.makeText(context, "Purchase saved to history.", Toast.LENGTH_SHORT).show();
-            } else {
+            if (!task.isSuccessful()) {
                 Toast.makeText(context, "Failed to save purchase to history.", Toast.LENGTH_SHORT).show();
             }
         });

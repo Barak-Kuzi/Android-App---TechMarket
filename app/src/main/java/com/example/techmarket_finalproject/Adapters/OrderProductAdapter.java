@@ -1,7 +1,9 @@
 package com.example.techmarket_finalproject.Adapters;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -52,7 +54,16 @@ public class OrderProductAdapter extends RecyclerView.Adapter<OrderProductAdapte
 
         holder.binding.productTitleOrderHistory.setText(product.getTitle());
         holder.binding.productQuantityOrderHistory.setText("Quantity: " + quantity);
-        holder.binding.productPriceOrderHistory.setText("$" + product.getPrice());
+
+        if (product.isOnSale()) {
+            holder.binding.currentPriceDetailText.setText("$" + product.getNewPrice());
+            holder.binding.oldPriceDetailText.setVisibility(View.VISIBLE);
+            holder.binding.oldPriceDetailText.setText("$" + product.getPrice());
+            holder.binding.oldPriceDetailText.setPaintFlags(holder.binding.oldPriceDetailText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        } else {
+            holder.binding.currentPriceDetailText.setText("$" + product.getPrice());
+            holder.binding.oldPriceDetailText.setVisibility(View.GONE);
+        }
     }
 
     @Override

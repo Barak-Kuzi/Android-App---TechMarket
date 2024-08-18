@@ -87,4 +87,17 @@
     <string name="forgot_password_subtitle">Provide your accout\'s email for which you want to reset the password</string>
     <string name="reset_password">Reset Password</string>
     <string name="full_name_profile_title">Full Name</string>
+    <string name="on_sale_products">On sale Products</string>
+    <string name="see_all">See all</string>
+    <string name="categories">Categories</string>
+    <string name="content_des_image_product">Image of the product</string>
+    <string name="content_des_on_sale_icon">An icon indicating that the product is on sale</string>
+    <string name="all">All</string>
+    <string name="smartphones">Smartphones</string>
+    <string name="headphones">Headphones</string>
+    <string name="smartwatches">Smartwatches</string>
+    <string name="laptops">Laptops</string>
+    <string name="desktops">Desktops</string>
+    <string name="televisions">Televisions</string>
+    <string name="quantity_example">Quantity: 1</string>
 </resources>

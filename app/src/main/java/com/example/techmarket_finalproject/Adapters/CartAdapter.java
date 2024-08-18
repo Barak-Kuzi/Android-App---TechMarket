@@ -47,12 +47,13 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.Viewholder> {
     public void onBindViewHolder(@NonNull CartAdapter.Viewholder holder, @SuppressLint("RecyclerView") int position) {
         Product product = products.get(position);
         int productQuantity = userCart.get(product.getProductId());
-        double productPrice = product.getPrice();
+        double productPrice = product.isOnSale() ? product.getNewPrice() : product.getPrice();
+
         double totalPrice = productPrice * productQuantity;
         String formattedTotalPrice = String.format("%.2f", totalPrice);
 
         holder.binding.productTitleCart.setText(product.getTitle());
-        holder.binding.priceForOneProductCart.setText("$" + product.getPrice());
+        holder.binding.priceForOneProductCart.setText("$" + productPrice);
         holder.binding.totalProductPriceCart.setText("$" + formattedTotalPrice);
         holder.binding.quantityProductText.setText(String.valueOf(productQuantity));
 

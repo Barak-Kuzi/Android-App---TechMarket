@@ -58,14 +58,10 @@ public class PopularProductsAdapter extends RecyclerView.Adapter<PopularProducts
         }
 
         public void bind(Product product) {
-
-            double newPrice = product.getPrice() * 0.75;
-            String formattedNewPrice = String.format("%.2f", newPrice);
-
             binding.productTitleText.setText(product.getTitle());
             binding.oldPriceProductText.setText("$" + product.getPrice());
             binding.oldPriceProductText.setPaintFlags(binding.oldPriceProductText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            binding.newPriceProductText.setText("$" + formattedNewPrice);
+            binding.newPriceProductText.setText("$" + product.getNewPrice());
             binding.ratingBarProduct.setRating((float) product.getScore());
             binding.ratingProductText.setText("(" + product.getScore() + ")");
             binding.reviewsProductText.setText(String.valueOf(product.getReview()));

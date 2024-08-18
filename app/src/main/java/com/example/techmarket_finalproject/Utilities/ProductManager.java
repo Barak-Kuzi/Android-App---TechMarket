@@ -1,9 +1,6 @@
 package com.example.techmarket_finalproject.Utilities;
 
-import static com.example.techmarket_finalproject.Utilities.DatabaseManager.getAllProductsFromDatabase;
-
 import android.content.Context;
-import android.util.Log;
 
 import com.example.techmarket_finalproject.Interfaces.GenericCallBack;
 import com.example.techmarket_finalproject.Models.CategoryEnum;
@@ -12,6 +9,7 @@ import com.google.firebase.database.DatabaseError;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +22,7 @@ public class ProductManager {
 
     public static void initialize(Context context, GenericCallBack<ArrayList<Product>> callback) {
         if (!isInitialized) {
-            getAllProductsFromDatabase(new GenericCallBack<ArrayList<Product>>() {
+            DatabaseManager.getAllProductsFromDatabase(new GenericCallBack<ArrayList<Product>>() {
                 @Override
                 public void onResponse(ArrayList<Product> response) {
                     for (Product product : response) {
@@ -53,10 +51,6 @@ public class ProductManager {
         return new ArrayList<>(productCache.values());
     }
 
-    public static List<Product> getAllProductsList() {
-        return allProducts;
-    }
-
     public static ArrayList<Product> getProductsByCategory(CategoryEnum category) {
         ArrayList<Product> filteredProducts = new ArrayList<>();
         for (Product product : productCache.values()) {
@@ -83,6 +77,17 @@ public class ProductManager {
 
     public static void setProductDeleted(boolean productDeleted) {
         ProductManager.productDeleted = productDeleted;
+    }
+
+    public static void removeProductById(String productId) {
+        productCache.remove(productId);
+        for (Iterator<Product> iterator = allProducts.iterator(); iterator.hasNext(); ) {
+            Product product = iterator.next();
+            if (product.getProductId().equals(productId)) {
+                iterator.remove();
+                break;
+            }
+        }
     }
 
 }
