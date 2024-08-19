@@ -17,6 +17,7 @@ public class Product implements Serializable {
     private String imageUri;
     private boolean isOnSale;
     private double newPrice;
+    private double discountPercentage;
 
     public Product() {
     }
@@ -32,6 +33,7 @@ public class Product implements Serializable {
         this.isFavorite = false;
         this.category = category;
         this.isOnSale = isOnSale;
+        this.discountPercentage = discountPercentage;
         this.newPrice = calculateDiscountedPrice(price, discountPercentage);
     }
 
@@ -46,6 +48,7 @@ public class Product implements Serializable {
         this.isFavorite = false;
         this.category = category;
         this.isOnSale = isOnSale;
+        this.discountPercentage = discountPercentage;
         this.newPrice = calculateDiscountedPrice(price, discountPercentage);
     }
 
@@ -54,6 +57,10 @@ public class Product implements Serializable {
         BigDecimal bd = new BigDecimal(Double.toString(discountedPrice));
         bd = bd.setScale(2, RoundingMode.HALF_UP);
         return bd.doubleValue();
+    }
+
+    public double getDiscountPercentage() {
+        return discountPercentage;
     }
 
     public boolean isOnSale() {

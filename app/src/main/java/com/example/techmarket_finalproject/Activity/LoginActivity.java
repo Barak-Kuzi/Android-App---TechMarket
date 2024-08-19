@@ -1,17 +1,11 @@
 package com.example.techmarket_finalproject.Activity;
 
-import static com.example.techmarket_finalproject.Utilities.DatabaseManager.addUserToDatabase;
-import static com.example.techmarket_finalproject.Utilities.DatabaseManager.getUserFromDatabase;
-
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -20,47 +14,43 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import com.example.techmarket_finalproject.Interfaces.GenericCallBack;
-import com.example.techmarket_finalproject.Models.Product;
 import com.example.techmarket_finalproject.Models.User;
 import com.example.techmarket_finalproject.R;
-import com.example.techmarket_finalproject.Interfaces.UserCallBack;
 import com.example.techmarket_finalproject.Utilities.AppUtils;
+import com.example.techmarket_finalproject.Utilities.States.SignInButtonState;
 import com.example.techmarket_finalproject.Utilities.DatabaseManager;
-import com.example.techmarket_finalproject.Utilities.ProductManager;
-import com.example.techmarket_finalproject.Utilities.ValidationManagement;
+import com.example.techmarket_finalproject.Utilities.States.EmailState;
+import com.example.techmarket_finalproject.Utilities.States.AddressState;
+import com.example.techmarket_finalproject.Utilities.States.PasswordState;
+import com.example.techmarket_finalproject.Utilities.States.PhoneState;
+import com.example.techmarket_finalproject.Utilities.States.RePasswordState;
+import com.example.techmarket_finalproject.Utilities.States.SignUpButtonState;
+import com.example.techmarket_finalproject.Utilities.States.UsernameState;
+import com.example.techmarket_finalproject.Utilities.UserUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseError;
-
-import java.util.ArrayList;
-
 
 public class LoginActivity extends AppCompatActivity {
+    private EmailState emailStateSignIn, emailStateSignUp;
+    private PasswordState passwordStateSignIn, passwordStateSignUp;
+    private RePasswordState rePasswordStateSignUp;
+    private PhoneState phoneStateSignUp;
+    private UsernameState usernameStateSignUp;
+    private AddressState addressStateSignUp;
+    private SignInButtonState signInButtonState;
+    private SignUpButtonState signUpButtonState;
 
-    private TextInputLayout emailLayoutSignIn, passwordLayoutSignIn,
-            emailLayoutSignUp, passwordLayoutSignUp, usernameLayoutSignUp,
-            re_passwordLayoutSignUp, addressLayoutSignUp, phoneLayoutSignUp;
-
-    private TextInputEditText emailInputSignIn, passwordInputSignIn,
-            emailInputSignUp, passwordInputSignUp, usernameInputSignUp,
-            re_passwordInputSignUp, addressInputSignUp, phoneInputSignUp;
-
-    private Button signInButton, signUpButton;
     private ConstraintLayout signin_page, signup_page;
     private TextView moveToSignInPage, moveToSignUpPage, forgotPassword;
 
     private CheckBox rememberMeCheckBox;
 
-    ProgressBar progressBar;
+    private ProgressBar progressBar;
 
     private FirebaseAuth firebaseAuth;
-
-    private final ValidationManagement validationManagement = new ValidationManagement();
 
     private static User currentUser;
 
@@ -98,11 +88,11 @@ public class LoginActivity extends AppCompatActivity {
             signup_page.setVisibility(View.VISIBLE);
         }
 
-        signInButton.setOnClickListener(new View.OnClickListener() {
+        signInButtonState.getButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = emailInputSignIn.getText().toString().trim();
-                String password = passwordInputSignIn.getText().toString().trim();
+                String email = emailStateSignIn.getEmailInput().getText().toString().trim();
+                String password = passwordStateSignIn.getPasswordInput().getText().toString().trim();
                 boolean rememberMe = rememberMeCheckBox.isChecked();
 
                 // Hide the keyboard
@@ -123,30 +113,7 @@ public class LoginActivity extends AppCompatActivity {
                                 if (task != null && task.isSuccessful()) {
                                     String userId = firebaseAuth.getCurrentUser().getUid();
                                     DatabaseManager.updateRememberLastUserFlag(userId, rememberMe);
-                                    getUserFromDatabase(userId, new UserCallBack() {
-                                        @Override
-                                        public void onSuccess(User user) {
-                                            ProductManager.initialize(LoginActivity.this, new GenericCallBack<ArrayList<Product>>() {
-                                                @Override
-                                                public void onResponse(ArrayList<Product> response) {
-                                                    currentUser = user;
-                                                    DatabaseManager.addNewListenerForUser();
-                                                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                                                    finish();
-                                                }
-
-                                                @Override
-                                                public void onFailure(DatabaseError error) {
-                                                    Toast.makeText(LoginActivity.this, "Failed to load products.", Toast.LENGTH_SHORT).show();
-                                                }
-                                            });
-                                        }
-
-                                        @Override
-                                        public void onFailure(DatabaseError error) {
-                                            Toast.makeText(LoginActivity.this, "Failed to load user.", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
+                                    UserUtils.fetchUserAndInitializeProductManager(LoginActivity.this, userId);
                                 } else {
                                     Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                                 }
@@ -162,15 +129,15 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        signUpButton.setOnClickListener(new View.OnClickListener() {
+        signUpButtonState.getButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name = usernameInputSignUp.getText().toString();
-                String email = emailInputSignUp.getText().toString().trim();
-                String password = passwordInputSignUp.getText().toString().trim();
-                String rePassword = re_passwordInputSignUp.getText().toString().trim();
-                String address = addressInputSignUp.getText().toString();
-                String phone = phoneInputSignUp.getText().toString();
+                String name = usernameStateSignUp.getUsernameInput().getText().toString();
+                String email = emailStateSignUp.getEmailInput().getText().toString().trim();
+                String password = passwordStateSignUp.getPasswordInput().getText().toString().trim();
+                String rePassword = rePasswordStateSignUp.getRePasswordInput().getText().toString().trim();
+                String address = addressStateSignUp.getAddressInput().getText().toString();
+                String phone = phoneStateSignUp.getPhoneInput().getText().toString();
 
                 firebaseAuth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
@@ -179,13 +146,13 @@ public class LoginActivity extends AppCompatActivity {
                             public void onComplete(Task<AuthResult> task) {
                                 if (task != null && task.isSuccessful()) {
                                     String userId = firebaseAuth.getCurrentUser().getUid();
-                                    addUserToDatabase(LoginActivity.this, userId, name, email, password, address, phone, false);
+                                    DatabaseManager.addUserToDatabase(LoginActivity.this, userId, name, email, password, address, phone, false);
                                     signup_page.setVisibility(View.GONE);
                                     signin_page.setVisibility(View.VISIBLE);
                                     clearFields();
                                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                                 } else {
-                                    if (task.getException() != null) {
+                                    if (task != null && task.getException() != null) {
                                         Log.e("SignUpError", "Sign Up Failed", task.getException());
                                     }
                                     Toast.makeText(LoginActivity.this, "Sign Up Failed", Toast.LENGTH_SHORT).show();
@@ -223,29 +190,27 @@ public class LoginActivity extends AppCompatActivity {
     private void init() {
         firebaseAuth = FirebaseAuth.getInstance();
 
-        emailLayoutSignIn = findViewById(R.id.email_input_layout_signin);
-        passwordLayoutSignIn = findViewById(R.id.password_input_layout_signin);
+        TextInputEditText passwordInputSignUp = findViewById(R.id.password_input_signup);
 
-        emailInputSignIn = findViewById(R.id.email_input_signin);
-        passwordInputSignIn = findViewById(R.id.password_input_signin);
+        emailStateSignIn = new EmailState(findViewById(R.id.email_input_signin), findViewById(R.id.email_input_layout_signin));
+        passwordStateSignIn = new PasswordState(findViewById(R.id.password_input_signin), findViewById(R.id.password_input_layout_signin));
+        emailStateSignUp = new EmailState(findViewById(R.id.email_input_signup), findViewById(R.id.email_input_layout_signup));
+        passwordStateSignUp = new PasswordState(passwordInputSignUp, findViewById(R.id.password_input_layout_signup));
+        rePasswordStateSignUp = new RePasswordState(findViewById(R.id.re_password_input_signup), findViewById(R.id.re_password_input_layout_signup), passwordInputSignUp);
+        phoneStateSignUp = new PhoneState(findViewById(R.id.phone_input_signup), findViewById(R.id.phone_input_layout_signup));
+        usernameStateSignUp = new UsernameState(findViewById(R.id.username_input_signup), findViewById(R.id.username_input_layout_signup));
+        addressStateSignUp = new AddressState(findViewById(R.id.address_input_signup), findViewById(R.id.address_input_layout_signup));
+
+        signInButtonState = new SignInButtonState(findViewById(R.id.signin_button),
+                emailStateSignIn.getEmailLayout(), passwordStateSignIn.getPasswordLayout(), emailStateSignIn.getEmailInput(), passwordStateSignIn.getPasswordInput());
+
+        signUpButtonState = new SignUpButtonState(findViewById(R.id.signup_button),
+                emailStateSignUp.getEmailLayout(), passwordStateSignUp.getPasswordLayout(), rePasswordStateSignUp.getRePasswordLayout(),
+                usernameStateSignUp.getUsernameLayout(), phoneStateSignUp.getPhoneLayout(), addressStateSignUp.getAddressLayout(),
+                emailStateSignUp.getEmailInput(), passwordStateSignUp.getPasswordInput(), rePasswordStateSignUp.getRePasswordInput(),
+                usernameStateSignUp.getUsernameInput(), phoneStateSignUp.getPhoneInput(), addressStateSignUp.getAddressInput());
+
         rememberMeCheckBox = findViewById(R.id.rememberme_checkbox);
-
-        usernameLayoutSignUp = findViewById(R.id.username_input_layout_signup);
-        emailLayoutSignUp = findViewById(R.id.email_input_layout_signup);
-        passwordLayoutSignUp = findViewById(R.id.password_input_layout_signup);
-        re_passwordLayoutSignUp = findViewById(R.id.re_password_input_layout_signup);
-        addressLayoutSignUp = findViewById(R.id.address_input_layout_signup);
-        phoneLayoutSignUp = findViewById(R.id.phone_input_layout_signup);
-
-        usernameInputSignUp = findViewById(R.id.username_input_signup);
-        emailInputSignUp = findViewById(R.id.email_input_signup);
-        passwordInputSignUp = findViewById(R.id.password_input_signup);
-        re_passwordInputSignUp = findViewById(R.id.re_password_input_signup);
-        addressInputSignUp = findViewById(R.id.address_input_signup);
-        phoneInputSignUp = findViewById(R.id.phone_input_signup);
-
-        signInButton = findViewById(R.id.signin_button);
-        signUpButton = findViewById(R.id.signup_button);
         forgotPassword = findViewById(R.id.forgot_password_button);
 
         signin_page = findViewById(R.id.signin_page);
@@ -254,186 +219,20 @@ public class LoginActivity extends AppCompatActivity {
         moveToSignInPage = findViewById(R.id.signin);
         moveToSignUpPage = findViewById(R.id.signup);
 
-        // TextWatchers for real-time validation
-        emailInputSignIn.addTextChangedListener(new ValidationTextWatcher(emailInputSignIn));
-        passwordInputSignIn.addTextChangedListener(new ValidationTextWatcher(passwordInputSignIn));
-
-        emailInputSignUp.addTextChangedListener(new ValidationTextWatcher(emailInputSignUp));
-        passwordInputSignUp.addTextChangedListener(new ValidationTextWatcher(passwordInputSignUp));
-        re_passwordInputSignUp.addTextChangedListener(new ValidationTextWatcher(re_passwordInputSignUp));
-        usernameInputSignUp.addTextChangedListener(new ValidationTextWatcher(usernameInputSignUp));
-        addressInputSignUp.addTextChangedListener(new ValidationTextWatcher(addressInputSignUp));
-        phoneInputSignUp.addTextChangedListener(new ValidationTextWatcher(phoneInputSignUp));
-
         // Disable buttons initially
-        signInButton.setEnabled(false);
-        signUpButton.setEnabled(false);
-
+        signInButtonState.getButton().setEnabled(false);
+        signUpButtonState.getButton().setEnabled(false);
 
         progressBar = findViewById(R.id.progressBar);
     }
 
     private void clearFields() {
-        usernameInputSignUp.setText("");
-        emailInputSignUp.setText("");
-        phoneInputSignUp.setText("");
-        addressInputSignUp.setText("");
-        passwordInputSignUp.setText("");
-        re_passwordInputSignUp.setText("");
-    }
-
-    private class ValidationTextWatcher implements TextWatcher {
-        private final View view;
-
-        private ValidationTextWatcher(View view) {
-            this.view = view;
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        }
-
-        @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        }
-
-        @Override
-        public void afterTextChanged(Editable editable) {
-            String name = usernameInputSignUp.getText().toString();
-            String email = emailInputSignUp.getText().toString().trim();
-            String password = passwordInputSignUp.getText().toString().trim();
-            String rePassword = re_passwordInputSignUp.getText().toString().trim();
-            String address = addressInputSignUp.getText().toString();
-            String phone = phoneInputSignUp.getText().toString();
-
-            int viewId = view.getId();
-            if (viewId == R.id.email_input_signin) {
-                validateEmailSignIn();
-            } else if (viewId == R.id.password_input_signin) {
-                validatePasswordSignIn();
-            } else if (viewId == R.id.email_input_signup) {
-                validateEmailSignUp();
-            } else if (viewId == R.id.password_input_signup) {
-                validatePasswordSignUp();
-            } else if (viewId == R.id.re_password_input_signup) {
-                validateRePasswordSignUp();
-            } else if (viewId == R.id.username_input_signup) {
-                validateUsernameSignUp();
-            } else if (viewId == R.id.address_input_signup) {
-                validateAddressSignUp();
-            } else if (viewId == R.id.phone_input_signup) {
-                validatePhoneSignUp();
-            }
-
-            // Check if all fields are valid to enable/disable buttons
-            signInButton.setEnabled(validationManagement.allSingInFieldsAreValid(
-                    emailInputSignIn.getText().toString().trim(),
-                    passwordInputSignIn.getText().toString().trim()
-            ));
-
-            signUpButton.setEnabled(validationManagement.allSingUpFieldsAreValid(
-                    emailInputSignUp.getText().toString().trim(),
-                    passwordInputSignUp.getText().toString().trim(),
-                    re_passwordInputSignUp.getText().toString().trim(),
-                    usernameInputSignUp.getText().toString().trim(),
-                    phoneInputSignUp.getText().toString().trim(),
-                    addressInputSignUp.getText().toString().trim()
-            ));
-
-        }
-    }
-
-    private void validateEmailSignIn() {
-        String email = emailInputSignIn.getText().toString().trim();
-        validationManagement.validateEmail(email);
-        if (!validationManagement.emailIsValid()) {
-            emailLayoutSignIn.setError(validationManagement.getEmailErrorMessage());
-        } else {
-            emailLayoutSignIn.setError(null);
-            emailLayoutSignIn.setErrorEnabled(false);
-        }
-    }
-
-    private void validatePasswordSignIn() {
-        String password = passwordInputSignIn.getText().toString().trim();
-        validationManagement.validatePassword(password);
-        if (!validationManagement.passwordIsValid()) {
-            passwordLayoutSignIn.setError(validationManagement.getPasswordErrorMessage());
-        } else {
-            passwordLayoutSignIn.setError(null);
-            passwordLayoutSignIn.setErrorEnabled(false);
-        }
-    }
-
-    private void validateEmailSignUp() {
-        String email = emailInputSignUp.getText().toString().trim();
-        validationManagement.validateEmail(email);
-        if (!validationManagement.emailIsValid()) {
-            emailLayoutSignUp.setError(validationManagement.getEmailErrorMessage());
-        } else {
-            emailLayoutSignUp.setError(null);
-            emailLayoutSignUp.setErrorEnabled(false);
-        }
-    }
-
-    private void validatePasswordSignUp() {
-        String password = passwordInputSignUp.getText().toString().trim();
-        validationManagement.validatePassword(password);
-        if (!validationManagement.passwordIsValid()) {
-            passwordLayoutSignUp.setError(validationManagement.getPasswordErrorMessage());
-        } else {
-            passwordLayoutSignUp.setError(null);
-            passwordLayoutSignUp.setErrorEnabled(false);
-        }
-    }
-
-    private void validateRePasswordSignUp() {
-        String password = passwordInputSignUp.getText().toString().trim();
-        String rePassword = re_passwordInputSignUp.getText().toString().trim();
-        validationManagement.validateRePassword(password, rePassword);
-        if (!validationManagement.rePasswordIsValid()) {
-            re_passwordLayoutSignUp.setError(validationManagement.getRePasswordErrorMessage());
-        } else {
-            re_passwordLayoutSignUp.setError(null);
-            re_passwordLayoutSignUp.setErrorEnabled(false);
-        }
-    }
-
-    private void validateUsernameSignUp() {
-        String username = usernameInputSignUp.getText().toString().trim();
-        validationManagement.validateUsername(username);
-        if (!validationManagement.usernameIsValid()) {
-            usernameLayoutSignUp.setError(validationManagement.getUsernameErrorMessage());
-        } else {
-            usernameLayoutSignUp.setError(null);
-            usernameLayoutSignUp.setErrorEnabled(false);
-        }
-    }
-
-    private void validateAddressSignUp() {
-        String address = addressInputSignUp.getText().toString().trim();
-        validationManagement.validateAddress(address);
-        if (!validationManagement.addressIsValid()) {
-            addressLayoutSignUp.setError(validationManagement.getAddressErrorMessage());
-        } else {
-            addressLayoutSignUp.setError(null);
-            addressLayoutSignUp.setErrorEnabled(false);
-        }
-    }
-
-    private void validatePhoneSignUp() {
-        String phone = phoneInputSignUp.getText().toString().trim();
-        validationManagement.validatePhone(phone);
-        if (!validationManagement.phoneIsValid()) {
-            phoneLayoutSignUp.setError(validationManagement.getPhoneErrorMessage());
-        } else {
-            phoneLayoutSignUp.setError(null);
-            phoneLayoutSignUp.setErrorEnabled(false);
-        }
+        usernameStateSignUp.getUsernameInput().setText("");
+        emailStateSignUp.getEmailInput().setText("");
+        phoneStateSignUp.getPhoneInput().setText("");
+        addressStateSignUp.getAddressInput().setText("");
+        passwordStateSignUp.getPasswordInput().setText("");
+        rePasswordStateSignUp.getRePasswordInput().setText("");
     }
 
 }
-
-
-
-

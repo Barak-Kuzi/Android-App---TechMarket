@@ -28,12 +28,12 @@ import com.google.android.material.textfield.TextInputEditText;
 public class AdminActivity extends AppCompatActivity {
 
     private TextView adminPanelLabel;
-    private TextInputEditText productIdInput, productNameInput, productPriceInput, productRatingInput, productReviewsInput, productDescriptionInput;
+    private TextInputEditText productIdInput, productNameInput, productPriceInput, discountPercentageInput, productRatingInput, productReviewsInput, productDescriptionInput;
     private AutoCompleteTextView productCategoryDropdown;
     private AppCompatButton addProductButton, cancelAddProductButton;
 
-    Uri selectedImageUri;
-    String selectedImageUriString;
+    private Uri selectedImageUri;
+    private String selectedImageUriString;
     private ImageView productImageView;
     private AppCompatButton selectImageButton;
     private static final int IMAGE_SELECTION_REQUEST_CODE = 1;
@@ -66,11 +66,19 @@ public class AdminActivity extends AppCompatActivity {
                     int productReviews = Integer.parseInt(productReviewsInput.getText().toString().trim());
                     String productDescription = productDescriptionInput.getText().toString().trim();
                     CategoryEnum productCategory = CategoryEnum.valueOf(productCategoryDropdown.getText().toString().trim());
+                    double discountPercentage = discountPercentageInput.getText().toString().isEmpty() ? 0 : Double.parseDouble(discountPercentageInput.getText().toString().trim());
+                    boolean isOnSale = discountPercentage > 0;
+                    Object imageUri = getImageUri();
+
                     Product newProduct;
                     if (product != null) {
-                        newProduct = new Product(product.getProductId(), productName, selectedImageUriString, productReviews, productRating, productPrice, productDescription, productCategory, false, 0);
+                        if (imageUri instanceof String) {
+                            newProduct = new Product(productId, productName, (String) imageUri, productReviews, productRating, productPrice, productDescription, productCategory, isOnSale, discountPercentage);
+                        } else {
+                            newProduct = new Product(productId, productName, (int) imageUri, productReviews, productRating, productPrice, productDescription, productCategory, isOnSale, discountPercentage);
+                        }
                     } else {
-                        newProduct = new Product(productId, productName, selectedImageUri.toString(), productReviews, productRating, productPrice, productDescription, productCategory, false, 0);
+                        newProduct = new Product(productId, productName, selectedImageUri.toString(), productReviews, productRating, productPrice, productDescription, productCategory, isOnSale, discountPercentage);
                     }
 
                     DatabaseManager.addProductToDatabase(AdminActivity.this, newProduct);
@@ -121,6 +129,7 @@ public class AdminActivity extends AppCompatActivity {
         productIdInput = findViewById(R.id.product_id_input);
         productNameInput = findViewById(R.id.product_name_input);
         productPriceInput = findViewById(R.id.product_price_input);
+        discountPercentageInput = findViewById(R.id.discount_percentage_input);
         productRatingInput = findViewById(R.id.product_rating_input);
         productReviewsInput = findViewById(R.id.product_review_input);
         productDescriptionInput = findViewById(R.id.product_description_input);
@@ -143,6 +152,7 @@ public class AdminActivity extends AppCompatActivity {
             productIdInput.setText(product.getProductId());
             productNameInput.setText(product.getTitle());
             productPriceInput.setText(String.valueOf(product.getPrice()));
+            discountPercentageInput.setText(String.valueOf(product.getDiscountPercentage()));
             productRatingInput.setText(String.valueOf(product.getScore()));
             productReviewsInput.setText(String.valueOf(product.getReview()));
             productDescriptionInput.setText(product.getDescription());
@@ -153,6 +163,18 @@ public class AdminActivity extends AppCompatActivity {
             } else {
                 ImageLoader.loadImage(productImageView, product.getImageResourceId());
             }
+        }
+    }
+
+    private boolean hasImageChanged() {
+        return selectedImageUri != null && !selectedImageUri.toString().equals(product.getImageUri());
+    }
+
+    private Object getImageUri() {
+        if (hasImageChanged()) {
+            return selectedImageUri.toString();
+        } else {
+            return product.getImageUri() != null ? product.getImageUri() : product.getImageResourceId();
         }
     }
 

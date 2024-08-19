@@ -16,20 +16,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 
 import com.example.techmarket_finalproject.Interfaces.GenericCallBack;
-import com.example.techmarket_finalproject.Interfaces.UserCallBack;
-import com.example.techmarket_finalproject.Models.Product;
-import com.example.techmarket_finalproject.Models.User;
 import com.example.techmarket_finalproject.R;
 import com.example.techmarket_finalproject.Utilities.DatabaseManager;
-import com.example.techmarket_finalproject.Utilities.ProductManager;
+import com.example.techmarket_finalproject.Utilities.UserUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseError;
 
-import java.util.ArrayList;
-
 public class SplashActivity extends AppCompatActivity {
-
-    private AppCompatImageView splashImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,12 +38,11 @@ public class SplashActivity extends AppCompatActivity {
             getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
 
-        splashImage = findViewById(R.id.icon);
-
         if (getSupportActionBar() != null) {  //hide action bar
             getSupportActionBar().hide();
         }
 
+        AppCompatImageView splashImage = findViewById(R.id.icon);
         startAnimation(splashImage);
     }
 
@@ -61,30 +53,7 @@ public class SplashActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Boolean rememberLastUser) {
                     if (rememberLastUser) {
-                        DatabaseManager.getUserFromDatabase(userId, new UserCallBack() {
-                            @Override
-                            public void onSuccess(User user) {
-                                ProductManager.initialize(SplashActivity.this, new GenericCallBack<ArrayList<Product>>() {
-                                    @Override
-                                    public void onResponse(ArrayList<Product> response) {
-                                        LoginActivity.setCurrentUser(user);
-                                        DatabaseManager.addNewListenerForUser();
-                                        startActivity(new Intent(SplashActivity.this, MainActivity.class));
-                                        finish();
-                                    }
-
-                                    @Override
-                                    public void onFailure(DatabaseError error) {
-                                        Toast.makeText(SplashActivity.this, "Failed to load products.", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                            }
-
-                            @Override
-                            public void onFailure(DatabaseError error) {
-                                Toast.makeText(SplashActivity.this, "Failed to load user.", Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                        UserUtils.fetchUserAndInitializeProductManager(SplashActivity.this, userId);
                     } else {
                         startActivity(new Intent(SplashActivity.this, IntroActivity.class));
                         finish();

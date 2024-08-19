@@ -100,4 +100,7 @@
     <string name="desktops">Desktops</string>
     <string name="televisions">Televisions</string>
     <string name="quantity_example">Quantity: 1</string>
+    <string name="select_image">Select Image</string>
+    <string name="product_rating">Product Rating</string>
+    <string name="discount_percentage">Discount Percentage</string>
 </resources>
