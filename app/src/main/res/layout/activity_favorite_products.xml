@@ -47,20 +47,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="32dp"
                 android:layout_marginBottom="8dp"
-                android:text="@string/favorite_products_message"
+                android:text="@string/empty_wishlist_message"
                 android:textAlignment="center"
                 android:textColor="@color/red"
                 android:textSize="24sp"
                 android:textStyle="bold|italic"
-                android:visibility="gone" />
+                android:visibility="visible" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/favorite_products_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="visible"
+                android:visibility="gone"
                 tools:itemCount="2"
                 tools:listitem="@layout/viewholder_products_list" />
         </LinearLayout>

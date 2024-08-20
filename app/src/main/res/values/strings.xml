@@ -103,4 +103,6 @@
     <string name="select_image">Select Image</string>
     <string name="product_rating">Product Rating</string>
     <string name="discount_percentage">Discount Percentage</string>
+    <string name="empty_order_history_message">Your order history is empty\n\n Hope you make a purchase soon!</string>
+    <string name="empty_wishlist_message">You haven\'t saved a product \nyou liked yet\n\n Hope you find a product soon!</string>
 </resources>
