@@ -84,7 +84,7 @@
     <string name="discount_example">40%</string>
     <string name="checkout_button_text">Checkhout for $485.00</string>
     <string name="forgot_password_title">Forgot Password</string>
-    <string name="forgot_password_subtitle">Provide your accout\'s email for which you want to reset the password</string>
+    <string name="forgot_password_subtitle">Provide your account\'s email for which you want to reset the password</string>
     <string name="reset_password">Reset Password</string>
     <string name="full_name_profile_title">Full Name</string>
     <string name="on_sale_products">On sale Products</string>

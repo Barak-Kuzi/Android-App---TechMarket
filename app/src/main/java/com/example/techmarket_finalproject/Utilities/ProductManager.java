@@ -20,11 +20,17 @@ public class ProductManager {
     private static boolean isInitialized = false;
     private static boolean productDeleted = false;
 
+    public static boolean isInitialized() {
+        return isInitialized;
+    }
+
     public static void initialize(Context context, GenericCallBack<ArrayList<Product>> callback) {
         if (!isInitialized) {
             DatabaseManager.getAllProductsFromDatabase(new GenericCallBack<ArrayList<Product>>() {
                 @Override
                 public void onResponse(ArrayList<Product> response) {
+                    productCache.clear();
+                    allProducts.clear();
                     for (Product product : response) {
                         productCache.put(product.getProductId(), product);
                         allProducts.add(product);

@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements CategoryAdapter.O
                         Intent intent = new Intent(MainActivity.this, SearchActivity.class);
                         intent.putExtra("query", query);
                         startActivity(intent);
+                        activityMainBinding.searchInputField.setText("");
                     }
                     return true;
                 }
@@ -96,10 +97,6 @@ public class MainActivity extends AppCompatActivity implements CategoryAdapter.O
 
             AppUtils.initNavigationBar(this, activityMainBinding.bottomNavigationBar.getRoot());
 
-            // Initialize database with products if not already done
-            DatabaseManager.initializeDatabaseWithProducts(this);
-
-            // Refresh products list
             if (ProductManager.isProductDeleted()) {
                 refreshProductList();
                 ProductManager.setProductDeleted(false);
@@ -211,6 +208,12 @@ public class MainActivity extends AppCompatActivity implements CategoryAdapter.O
     protected void onResume() {
         super.onResume();
         refreshProductList();
+        updateCartQuantity();
+    }
+
+    private void updateCartQuantity() {
+        user = LoginActivity.getCurrentUser();
+        activityMainBinding.quantityProductsTextView.setText(String.valueOf(user.getCart().size()));
     }
 
 }

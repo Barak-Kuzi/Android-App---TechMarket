@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import com.example.techmarket_finalproject.Activity.LoginActivity;
 import com.example.techmarket_finalproject.Interfaces.GenericCallBack;
 import com.example.techmarket_finalproject.Interfaces.UserCallBack;
-import com.example.techmarket_finalproject.Models.Category;
 import com.example.techmarket_finalproject.Models.Product;
 import com.example.techmarket_finalproject.Models.User;
 import com.google.firebase.database.DataSnapshot;
@@ -30,24 +29,42 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class DatabaseManager {
     private static final String TAG = "DatabaseManager";    // TAG for logging
 
-    public static void initializeDatabaseWithProducts(Context context) {
+    public static void initializeDatabaseWithProducts(Context context, GenericCallBack<Void> callback) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("products");
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (!dataSnapshot.exists()) {
                     ArrayList<Product> products = DataManager.getAllProducts();
-                    addAllProductsToDatabase(context, products);
+                    addAllProductsToDatabase(context, products, callback);
+                } else {
+                    callback.onResponse(null);
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.e(TAG, "Failed to check products in database.", databaseError.toException());
+                callback.onFailure(databaseError);
             }
         });
     }
 
+    private static void addAllProductsToDatabase(Context context, ArrayList<Product> products, GenericCallBack<Void> callback) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("products");
+        AtomicBoolean isSuccessful = new AtomicBoolean(true);
+        for (Product product : products) {
+            databaseReference.child(product.getProductId()).setValue(product).addOnCompleteListener(task -> {
+                if (!task.isSuccessful()) {
+                    isSuccessful.set(false);
+                }
+            });
+        }
+        if (isSuccessful.get()) {
+            callback.onResponse(null);
+        } else {
+            callback.onFailure(DatabaseError.fromException(new Exception("Failed to add all products.")));
+        }
+    }
 
     public static void addUserToDatabase(Context context, String userId, String name, String email, String password, String address, String phone, boolean isAdmin) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
@@ -182,23 +199,6 @@ public class DatabaseManager {
                 Toast.makeText(context, "Failed to clear cart.", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    public static void addAllProductsToDatabase(Context context, ArrayList<Product> products) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("products");
-        AtomicBoolean isSuccessful = new AtomicBoolean(true);
-        for (Product product : products) {
-            databaseReference.child(product.getProductId()).setValue(product).addOnCompleteListener(task -> {
-                if (!task.isSuccessful()) {
-                    isSuccessful.set(false);
-                }
-            });
-        }
-        if (isSuccessful.get()) {
-            Toast.makeText(context, "All products added successfully.", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(context, "Failed to add all products.", Toast.LENGTH_SHORT).show();
-        }
     }
 
     public static void getAllProductsFromDatabase(GenericCallBack<ArrayList<Product>> callback) {

@@ -94,7 +94,6 @@ public class AdminActivity extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                     } else {
-//                        startActivity(new Intent(AdminActivity.this, ProfileActivity.class));
                         finish();
                     }
                 }
@@ -167,14 +166,14 @@ public class AdminActivity extends AppCompatActivity {
     }
 
     private boolean hasImageChanged() {
-        return selectedImageUri != null && !selectedImageUri.toString().equals(product.getImageUri());
+        return selectedImageUri != null && (product == null || !selectedImageUri.toString().equals(product.getImageUri()));
     }
 
     private Object getImageUri() {
         if (hasImageChanged()) {
             return selectedImageUri.toString();
         } else {
-            return product.getImageUri() != null ? product.getImageUri() : product.getImageResourceId();
+            return product != null && product.getImageUri() != null ? product.getImageUri() : product.getImageResourceId();
         }
     }
 

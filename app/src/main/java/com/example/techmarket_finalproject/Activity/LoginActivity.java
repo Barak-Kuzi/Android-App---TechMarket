@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.example.techmarket_finalproject.Interfaces.GenericCallBack;
 import com.example.techmarket_finalproject.Models.User;
 import com.example.techmarket_finalproject.R;
 import com.example.techmarket_finalproject.Utilities.AppUtils;
@@ -32,6 +33,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseError;
 
 public class LoginActivity extends AppCompatActivity {
     private EmailState emailStateSignIn, emailStateSignUp;
@@ -50,9 +52,11 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
 
     private static User currentUser;
+
     public static User getCurrentUser() {
         return currentUser;
     }
+
     public static void setCurrentUser(User user) {
         currentUser = user;
     }
@@ -102,7 +106,6 @@ public class LoginActivity extends AppCompatActivity {
                         .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(Task<AuthResult> task) {
-
                                 progressBar.setVisibility(View.GONE);
 
                                 if (task != null && task.isSuccessful()) {
@@ -110,7 +113,19 @@ public class LoginActivity extends AppCompatActivity {
                                     clearSignInFields();
                                     String userId = firebaseAuth.getCurrentUser().getUid();
                                     DatabaseManager.updateRememberLastUserFlag(userId, rememberMe);
-                                    UserUtils.fetchUserAndInitializeProductManager(LoginActivity.this, userId);
+
+                                    DatabaseManager.initializeDatabaseWithProducts(LoginActivity.this, new GenericCallBack<Void>() {
+                                        @Override
+                                        public void onResponse(Void response) {
+                                            UserUtils.fetchUserAndInitializeProductManager(LoginActivity.this, userId);
+                                        }
+
+                                        @Override
+                                        public void onFailure(DatabaseError error) {
+                                            Toast.makeText(LoginActivity.this, "Failed to initialize products.", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+
                                 } else {
                                     errorMassage.setVisibility(View.VISIBLE);
                                     errorMassage.setText(task.getException().getMessage());
@@ -219,7 +234,6 @@ public class LoginActivity extends AppCompatActivity {
         moveToSignInPage = findViewById(R.id.signin);
         moveToSignUpPage = findViewById(R.id.signup);
 
-        // Disable buttons initially
         signInButtonState.getButton().setEnabled(false);
         signUpButtonState.getButton().setEnabled(false);
 

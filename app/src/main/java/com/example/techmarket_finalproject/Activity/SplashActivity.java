@@ -16,8 +16,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 
 import com.example.techmarket_finalproject.Interfaces.GenericCallBack;
+import com.example.techmarket_finalproject.Interfaces.UserCallBack;
+import com.example.techmarket_finalproject.Models.User;
 import com.example.techmarket_finalproject.R;
 import com.example.techmarket_finalproject.Utilities.DatabaseManager;
+import com.example.techmarket_finalproject.Utilities.ProductManager;
 import com.example.techmarket_finalproject.Utilities.UserUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseError;
@@ -53,7 +56,17 @@ public class SplashActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Boolean rememberLastUser) {
                     if (rememberLastUser) {
-                        UserUtils.fetchUserAndInitializeProductManager(SplashActivity.this, userId);
+                        DatabaseManager.initializeDatabaseWithProducts(SplashActivity.this, new GenericCallBack<Void>() {
+                            @Override
+                            public void onResponse(Void response) {
+                                UserUtils.fetchUserAndInitializeProductManager(SplashActivity.this, userId);
+                            }
+
+                            @Override
+                            public void onFailure(DatabaseError error) {
+                                Toast.makeText(SplashActivity.this, "Failed to initialize products.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     } else {
                         startActivity(new Intent(SplashActivity.this, IntroActivity.class));
                         finish();
@@ -73,6 +86,7 @@ public class SplashActivity extends AppCompatActivity {
             finish();
         }
     }
+
 
     private void startAnimation(View view) {
         DisplayMetrics displayMetrics = new DisplayMetrics();

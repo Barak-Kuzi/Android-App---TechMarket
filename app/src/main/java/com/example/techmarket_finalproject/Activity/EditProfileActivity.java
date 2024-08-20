@@ -17,6 +17,8 @@ import com.example.techmarket_finalproject.Utilities.States.PhoneState;
 import com.example.techmarket_finalproject.Utilities.States.RePasswordState;
 import com.example.techmarket_finalproject.Utilities.States.UsernameState;
 import com.example.techmarket_finalproject.databinding.ActivityEditProfileBinding;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -120,11 +122,18 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void updatePassword(FirebaseUser firebaseUser, String newPassword) {
-        firebaseUser.updatePassword(newPassword).addOnCompleteListener(task -> {
+        AuthCredential credential = EmailAuthProvider.getCredential(firebaseUser.getEmail(), user.getPassword());
+        firebaseUser.reauthenticate(credential).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                Toast.makeText(this, "Password updated successfully.", Toast.LENGTH_SHORT).show();
+                firebaseUser.updatePassword(newPassword).addOnCompleteListener(updateTask -> {
+                    if (!updateTask.isSuccessful()) {
+                        String errorMessage = updateTask.getException() != null ? updateTask.getException().getMessage() : "Unknown error";
+                        Toast.makeText(this, "Failed to update password: " + errorMessage, Toast.LENGTH_SHORT).show();
+                    }
+                });
             } else {
-                Toast.makeText(this, "Failed to update password.", Toast.LENGTH_SHORT).show();
+                String errorMessage = task.getException() != null ? task.getException().getMessage() : "Unknown error";
+                Toast.makeText(this, "Re-authentication failed: " + errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
     }

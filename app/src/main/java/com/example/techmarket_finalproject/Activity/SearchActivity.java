@@ -1,25 +1,18 @@
 package com.example.techmarket_finalproject.Activity;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.text.HtmlCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.techmarket_finalproject.Adapters.ProductAdapter;
 import com.example.techmarket_finalproject.Models.Product;
 import com.example.techmarket_finalproject.Models.User;
-import com.example.techmarket_finalproject.R;
 import com.example.techmarket_finalproject.Utilities.ProductManager;
 import com.example.techmarket_finalproject.databinding.ActivitySearchBinding;
 
@@ -45,7 +38,9 @@ public class SearchActivity extends AppCompatActivity {
             activitySearchBinding = ActivitySearchBinding.inflate(getLayoutInflater());
             setContentView(activitySearchBinding.getRoot());
 
-            amountFoundProducts = ProductManager.searchProductsByName(query).size();
+            searchResults = ProductManager.searchProductsByName(query);
+
+            amountFoundProducts = searchResults.size();
 
             activitySearchBinding.editTextSearchFieldStoreProducts.setText(query);
             setTextResult(query, amountFoundProducts);
@@ -54,10 +49,8 @@ public class SearchActivity extends AppCompatActivity {
                 finish();
             });
 
-
             activitySearchBinding.searchResultRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-            searchResults = ProductManager.searchProductsByName(query);
             productAdapter = new ProductAdapter(searchResults);
             activitySearchBinding.searchResultRecyclerView.setAdapter(productAdapter);
 
@@ -75,6 +68,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void performSearch(String query) {
+        searchResults.clear();
         searchResults = ProductManager.searchProductsByName(query);
         productAdapter.updateData(searchResults);
         setTextResult(query, searchResults.size());
