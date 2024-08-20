@@ -15,6 +15,7 @@
 - **Cart Management**: Efficiently add, remove, and update products in the cart.
 - **Order History**: View past orders and purchase history.
 - **Wishlist**: Save products for future reference.
+- **Search Product**: Easily search for products using the search bar and filtering by categories.
 - **Real-Time Data Syncing**: Synchronized data updates and offline persistence through Firebase.
 
 
