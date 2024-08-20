@@ -26,6 +26,8 @@
   - **Authentication**: Providing secure user access.
   - **Storage**: Hosting and managing user-uploaded media.
 - **Material Design**: Consistent and modern design language.
+- **Stripe API**: Handling secure payment processing.
+- **CircleImageView**: Displaying user profile images in a circular format.
 
 ## Project Architecture
 
@@ -37,6 +39,13 @@ The project is organized for scalability and maintainability:
 - **Database**: API interactions and database models.
 - **Views**: XML layouts representing each screen.
 
+### Stripe API
+
+The **Stripe API** is integrated into the project to handle secure payment processing. It allows users to make payments seamlessly within the app. The integration ensures that all transactions are secure and compliant with industry standards.
+
+### CircleImageView
+
+**CircleImageView** is used in the project to display user profile images in a circular format. This enhances the visual appeal of the user interface by providing a consistent and modern look for profile images.
 
 ### Prerequisites
 
@@ -73,10 +82,12 @@ Special thanks to the following resources:
 - [Firebase](https://firebase.google.com/)
 - [Material Design](https://material.io/design)
 - [Java](https://www.oracle.com/java/)
+- [Stripe](https://stripe.com/)
+- [CircleImageView](https://github.com/hdodenhof/CircleImageView)
 
 ## Contact
 
-For inquiries or feedback, reach out at [barak.kuzi@example.com](mailto:barak.kuzi@example.com).
+For inquiries or feedback, reach out at [barakkuzi1997@gmail.com](mailto:barakkuzi1997@gmail.com).
 
 ---
 
