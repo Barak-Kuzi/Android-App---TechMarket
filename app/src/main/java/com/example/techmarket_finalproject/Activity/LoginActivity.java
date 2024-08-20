@@ -44,20 +44,15 @@ public class LoginActivity extends AppCompatActivity {
     private SignUpButtonState signUpButtonState;
 
     private ConstraintLayout signin_page, signup_page;
-    private TextView moveToSignInPage, moveToSignUpPage, forgotPassword;
-
+    private TextView moveToSignInPage, moveToSignUpPage, forgotPassword, errorMassage;
     private CheckBox rememberMeCheckBox;
-
     private ProgressBar progressBar;
-
     private FirebaseAuth firebaseAuth;
 
     private static User currentUser;
-
     public static User getCurrentUser() {
         return currentUser;
     }
-
     public static void setCurrentUser(User user) {
         currentUser = user;
     }
@@ -111,11 +106,14 @@ public class LoginActivity extends AppCompatActivity {
                                 progressBar.setVisibility(View.GONE);
 
                                 if (task != null && task.isSuccessful()) {
+                                    errorMassage.setVisibility(View.GONE);
+                                    clearSignInFields();
                                     String userId = firebaseAuth.getCurrentUser().getUid();
                                     DatabaseManager.updateRememberLastUserFlag(userId, rememberMe);
                                     UserUtils.fetchUserAndInitializeProductManager(LoginActivity.this, userId);
                                 } else {
-                                    Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                                    errorMassage.setVisibility(View.VISIBLE);
+                                    errorMassage.setText(task.getException().getMessage());
                                 }
                             }
                         });
@@ -149,7 +147,7 @@ public class LoginActivity extends AppCompatActivity {
                                     DatabaseManager.addUserToDatabase(LoginActivity.this, userId, name, email, password, address, phone, false);
                                     signup_page.setVisibility(View.GONE);
                                     signin_page.setVisibility(View.VISIBLE);
-                                    clearFields();
+                                    clearSignUpFields();
                                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                                 } else {
                                     if (task != null && task.getException() != null) {
@@ -167,6 +165,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 signup_page.setVisibility(View.GONE);
                 signin_page.setVisibility(View.VISIBLE);
+                clearSignUpFields();
             }
         });
 
@@ -175,6 +174,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 signin_page.setVisibility(View.GONE);
                 signup_page.setVisibility(View.VISIBLE);
+                clearSignInFields();
             }
         });
 
@@ -224,15 +224,39 @@ public class LoginActivity extends AppCompatActivity {
         signUpButtonState.getButton().setEnabled(false);
 
         progressBar = findViewById(R.id.progressBar);
+
+        errorMassage = findViewById(R.id.error_message_auth);
     }
 
-    private void clearFields() {
+    private void clearSignUpFields() {
         usernameStateSignUp.getUsernameInput().setText("");
         emailStateSignUp.getEmailInput().setText("");
         phoneStateSignUp.getPhoneInput().setText("");
         addressStateSignUp.getAddressInput().setText("");
         passwordStateSignUp.getPasswordInput().setText("");
         rePasswordStateSignUp.getRePasswordInput().setText("");
+        usernameStateSignUp.getUsernameLayout().setError(null);
+        usernameStateSignUp.getUsernameLayout().setErrorEnabled(false);
+        emailStateSignUp.getEmailLayout().setError(null);
+        emailStateSignUp.getEmailLayout().setErrorEnabled(false);
+        phoneStateSignUp.getPhoneLayout().setError(null);
+        phoneStateSignUp.getPhoneLayout().setErrorEnabled(false);
+        addressStateSignUp.getAddressLayout().setError(null);
+        addressStateSignUp.getAddressLayout().setErrorEnabled(false);
+        passwordStateSignUp.getPasswordLayout().setError(null);
+        passwordStateSignUp.getPasswordLayout().setErrorEnabled(false);
+        rePasswordStateSignUp.getRePasswordLayout().setError(null);
+        rePasswordStateSignUp.getRePasswordLayout().setErrorEnabled(false);
+    }
+
+    private void clearSignInFields() {
+        emailStateSignIn.getEmailInput().setText("");
+        passwordStateSignIn.getPasswordInput().setText("");
+        emailStateSignIn.getEmailLayout().setError(null);
+        emailStateSignIn.getEmailLayout().setErrorEnabled(false);
+        passwordStateSignIn.getPasswordLayout().setError(null);
+        passwordStateSignIn.getPasswordLayout().setErrorEnabled(false);
+        errorMassage.setVisibility(View.GONE);
     }
 
 }

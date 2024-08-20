@@ -105,4 +105,5 @@
     <string name="discount_percentage">Discount Percentage</string>
     <string name="empty_order_history_message">Your order history is empty\n\n Hope you make a purchase soon!</string>
     <string name="empty_wishlist_message">You haven\'t saved a product \nyou liked yet\n\n Hope you find a product soon!</string>
+    <string name="error_message_auth">The supplied auth credential is incorrect, malformed or has expired.</string>
 </resources>

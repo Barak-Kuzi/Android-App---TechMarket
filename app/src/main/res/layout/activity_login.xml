@@ -120,6 +120,23 @@
                 app:layout_constraintLeft_toRightOf="@id/rememberme_textview"
                 app:layout_constraintTop_toTopOf="@+id/rememberme_textview" />
 
+            <TextView
+                android:id="@+id/error_message_auth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:paddingStart="25dp"
+                android:paddingEnd="25dp"
+                android:text="@string/error_message_auth"
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:textColor="@color/red"
+                android:textSize="17sp"
+                android:textStyle="bold|italic"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rememberme_textview" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/signin_button"
@@ -135,7 +152,7 @@
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/rememberme_textview" />
+                app:layout_constraintTop_toBottomOf="@id/error_message_auth" />
 
             <LinearLayout
                 android:id="@+id/linearLayout2"
