@@ -11,6 +11,7 @@
 ## Key Features
 
 - **Secure User Authentication**: Reliable sign-up and login processes ensure user data security.
+- **Edit Profile**: Updating user profile information and uploading profile pictures.
 - **Product Management**: Admin capabilities to add, edit, and manage products.
 - **Cart Management**: Efficiently add, remove, and update products in the cart.
 - **Order History**: View past orders and purchase history.
